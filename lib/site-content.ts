@@ -14,5 +14,12 @@ export const PHONE_TEL = "+33100000000";
 export const EMAIL = "contact@oneconnexion.fr";
 export const FOUNDED_YEAR = "2019";
 
+/**
+ * PLACEHOLDER — domaine de production à confirmer avant mise en ligne.
+ * Consommé par metadataBase, les URLs canoniques et le sitemap : une valeur
+ * erronée produit des canoniques pointant vers un domaine inexistant.
+ */
+export const SITE_URL = "https://www.oneconnexion.fr";
+
 // Bascule pour afficher/masquer les témoignages en attendant les vrais retours clients.
 export const SHOW_TESTIMONIALS = true;

@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import ClientShell from "@/components/ClientShell";
+import { SITE_URL } from "@/lib/site-content";
 
 const archivo = Archivo({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
   description:
     "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
