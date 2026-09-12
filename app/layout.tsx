@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import ClientShell from "@/components/ClientShell";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/site-content";
 
 const archivo = Archivo({
@@ -53,7 +55,9 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-paper text-ink antialiased">
+        <Header />
         <ClientShell>{children}</ClientShell>
+        <Footer />
       </body>
     </html>
   );
