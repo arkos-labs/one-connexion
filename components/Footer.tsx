@@ -3,20 +3,16 @@
  * Footer sobre en 4 colonnes + bandeau légal. Aucune interactivité
  * client requise : Server Component.
  */
+import Link from "next/link";
+import { SERVICES } from "@/lib/services";
 import { EMAIL, FOUNDED_YEAR, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
-const SERVICE_LINKS = [
-  "Plis confidentiels",
-  "Transports santé",
-  "Livraison jour même",
-  "Comptes entreprises",
-];
-
+// Ancres préfixées par "/" : nues, elles ne résolvent rien depuis une sous-page.
 const COMPANY_LINKS = [
-  { label: "Notre méthode", href: "#methode" },
-  { label: "Flotte & couverture", href: "#flotte" },
-  { label: "Devenir coursier partenaire", href: "#contact" },
-  { label: "Mentions légales", href: "#contact" },
+  { label: "Notre méthode", href: "/#methode" },
+  { label: "Flotte & couverture", href: "/#flotte" },
+  { label: "Devenir coursier partenaire", href: "/#contact" },
+  { label: "Mentions légales", href: "/#contact" },
 ];
 
 export default function Footer() {
@@ -38,10 +34,14 @@ export default function Footer() {
             Prestations
           </div>
           <div className="grid gap-2.5 text-sm">
-            {SERVICE_LINKS.map((label) => (
-              <a key={label} href="#services" className="text-white/70 hover:text-white">
-                {label}
-              </a>
+            {SERVICES.map((service) => (
+              <Link
+                key={service.slug}
+                href={`/services/${service.slug}`}
+                className="text-white/70 hover:text-white"
+              >
+                {service.card.title}
+              </Link>
             ))}
           </div>
         </div>
@@ -52,9 +52,13 @@ export default function Footer() {
           </div>
           <div className="grid gap-2.5 text-sm">
             {COMPANY_LINKS.map((link) => (
-              <a key={link.label} href={link.href} className="text-white/70 hover:text-white">
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-white/70 hover:text-white"
+              >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

@@ -4,10 +4,14 @@
  * Wrapper client pour Lenis smooth scroll (nécessite le navigateur,
  * ne peut pas vivre dans un Server Component).
  */
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 export default function ClientShell({ children }: { children: React.ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
+
   useEffect(() => {
     const lenis = new Lenis({
       lerp: 0.1,
@@ -17,6 +21,7 @@ export default function ClientShell({ children }: { children: React.ReactNode })
       gestureOrientation: "vertical",
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
 
     let rafId: number;
     function raf(time: number) {
@@ -28,8 +33,18 @@ export default function ClientShell({ children }: { children: React.ReactNode })
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  // Lenis pilote le défilement : la restauration de position de Next ne
+  // s'applique pas. Sans cette remise à zéro, un changement de route laisse
+  // le visiteur au milieu de la page suivante. Les ancres (/#flotte) sont
+  // exclues : elles doivent conserver leur cible.
+  useEffect(() => {
+    if (window.location.hash) return;
+    lenisRef.current?.scrollTo(0, { immediate: true });
+  }, [pathname]);
 
   return <main>{children}</main>;
 }

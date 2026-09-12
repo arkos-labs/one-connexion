@@ -1,33 +1,11 @@
 /**
  * components/sections/Services.tsx
  * "Prestations" — quatre métiers, chacun avec sa procédure propre.
+ * Les données proviennent de lib/services : source unique partagée avec
+ * les pages de détail, l'index et le sitemap.
  */
-const SERVICES = [
-  {
-    tag: "01 — Juridique & notarial",
-    title: "Plis confidentiels",
-    body: "Remise contre signature, chaîne de responsabilité documentée, coursiers dédiés aux cabinets et études.",
-    note: "Preuve de dépôt horodatée",
-  },
-  {
-    tag: "02 — Santé & laboratoires",
-    title: "Transports urgents",
-    body: "Prélèvements, pièces critiques et matériel technique. Contenants isothermes et relevés de température à la demande.",
-    note: "Course dédiée, sans regroupement",
-  },
-  {
-    tag: "03 — E-commerce",
-    title: "Livraison jour même",
-    body: "Collecte en boutique ou en entrepôt, livraison dans la journée sur Paris et première couronne. Créneaux au choix du destinataire.",
-    note: "Tournées récurrentes possibles",
-  },
-  {
-    tag: "04 — Comptes entreprises",
-    title: "Suivi & facturation",
-    body: "Position en temps réel, justificatifs de livraison archivés, facturation mensuelle centralisée et export comptable.",
-    note: "Interlocuteur unique",
-  },
-];
+import Link from "next/link";
+import { SERVICES } from "@/lib/services";
 
 export default function Services() {
   return (
@@ -50,19 +28,21 @@ export default function Services() {
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
         {SERVICES.map((service) => (
-          <article
-            key={service.title}
-            className="flex flex-col gap-3.5 border border-line bg-paper-card px-[30px] pb-[30px] pt-[34px]"
+          <Link
+            key={service.slug}
+            href={`/services/${service.slug}`}
+            className="flex flex-col gap-3.5 border border-line bg-paper-card px-[30px] pb-[30px] pt-[34px] text-ink hover:border-ink hover:text-ink"
           >
             <div className="font-mono text-[10px] tracking-[0.16em] text-label uppercase">
-              {service.tag}
+              {service.card.tag}
             </div>
-            <h3 className="text-xl font-bold tracking-[-0.02em]">{service.title}</h3>
-            <p className="text-[15px] leading-[1.6] text-muted">{service.body}</p>
-            <div className="mt-auto pt-5 font-mono text-[10.5px] tracking-[0.1em] text-accent-dark uppercase">
-              {service.note}
+            <h3 className="text-xl font-bold tracking-[-0.02em]">{service.card.title}</h3>
+            <p className="text-[15px] leading-[1.6] text-muted">{service.card.body}</p>
+            <div className="mt-auto flex items-center justify-between gap-4 pt-5 font-mono text-[10.5px] tracking-[0.1em] uppercase">
+              <span className="text-accent-dark">{service.card.note}</span>
+              <span className="text-label">Voir →</span>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>
