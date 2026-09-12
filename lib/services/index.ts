@@ -5,6 +5,9 @@
  */
 import type { Service } from "./types";
 import { plisConfidentiels } from "./plis-confidentiels";
+import { transportMedical } from "./transport-medical";
+import { livraisonEcommerce } from "./livraison-e-commerce";
+import { compteEntreprise } from "./compte-entreprise";
 
 export type {
   Service,
@@ -14,7 +17,12 @@ export type {
   FaqItem,
 } from "./types";
 
-export const SERVICES: Service[] = [plisConfidentiels];
+export const SERVICES: Service[] = [
+  plisConfidentiels,
+  transportMedical,
+  livraisonEcommerce,
+  compteEntreprise,
+];
 
 export const SERVICE_SLUGS: string[] = SERVICES.map((service) => service.slug);
 
