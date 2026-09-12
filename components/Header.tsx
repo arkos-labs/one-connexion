@@ -32,13 +32,13 @@ export default function Header() {
 
         <nav className="ml-auto hidden shrink-0 items-center gap-[22px] whitespace-nowrap md:flex">
           {NAV_ITEMS.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href}
               className="text-sm font-medium text-white/78 hover:text-white"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -71,14 +71,14 @@ export default function Header() {
         <div className="border-t border-white/10 bg-ink px-[clamp(20px,4vw,28px)] py-5 md:hidden">
           <nav className="flex flex-col gap-4">
             {NAV_ITEMS.map((item) => (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
                 className="text-sm font-medium text-white/78 hover:text-white"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
           <div className="mt-5 flex flex-col gap-3">
