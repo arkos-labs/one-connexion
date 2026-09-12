@@ -3,7 +3,11 @@
  * Section d'ouverture sombre : promesse, engagements de service chiffrés,
  * bandeau logos clients (placeholders en attente des vrais logos).
  */
+"use client";
+
+import { useState } from "react";
 import { FOUNDED_YEAR } from "@/lib/site-content";
+import { MapPin, Flag } from "lucide-react";
 
 const COMMITMENTS = [
   { label: "Prise en charge", value: "< 45 min" },
@@ -16,9 +20,15 @@ const COMMITMENTS = [
 const CLIENT_LOGO_SLOTS = 5;
 
 export default function Hero() {
+  const [pickup, setPickup] = useState("");
+  const [dropoff, setDropoff] = useState("");
+
+  const orderUrl = `/?pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}#commander`;
+
   return (
-    <section id="top" className="border-b border-white/10 bg-ink text-white">
-      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
+    <section id="top" className="relative border-b border-white/10 bg-ink text-white" style={{ backgroundImage: "url('/images/hero-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <div className="absolute inset-0 bg-ink/80"></div>
+      <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
         <div className="grid items-end gap-14 pt-24 sm:grid-cols-[1.15fr_0.85fr]">
           <div className="min-w-0">
             <div className="mb-7 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
@@ -32,6 +42,7 @@ export default function Hero() {
               laboratoires et e-commerçants d&rsquo;Île-de-France. Une flotte deux-roues,
               une traçabilité complète, un interlocuteur unique.
             </p>
+            
             <div className="mb-16 flex flex-wrap gap-3">
               <a
                 href="#contact"
@@ -40,7 +51,7 @@ export default function Hero() {
                 Ouvrir un compte entreprise
               </a>
               <a
-                href="#services"
+                href="/services"
                 className="rounded-[2px] border border-white/22 px-[26px] py-[15px] text-[15px] font-semibold text-white hover:border-white"
               >
                 Voir les prestations
@@ -69,6 +80,54 @@ export default function Hero() {
               </dl>
             </div>
           </div>
+        </div>
+        
+        {/* Barre de commande rapide pleine largeur */}
+        <div className="mb-12 mt-4 bg-[#11111E]/90 backdrop-blur-md p-4 rounded-2xl flex flex-col md:flex-row gap-4 border border-white/10 shadow-2xl relative z-10">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <MapPin className="h-5 w-5 text-[#E60000]" />
+            </div>
+            <input 
+              type="text" 
+              value={pickup}
+              onChange={(e) => setPickup(e.target.value)}
+              placeholder="59 Rivoli, Rue de Rivoli, Paris" 
+              className="w-full bg-white rounded-xl pl-12 pr-4 py-4 text-[15px] font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#E60000]" 
+            />
+          </div>
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Flag className="h-5 w-5 text-[#E60000]" />
+            </div>
+            <input 
+              type="text" 
+              value={dropoff}
+              onChange={(e) => setDropoff(e.target.value)}
+              placeholder="51 Avenue d'Iéna, Paris" 
+              className="w-full bg-white rounded-xl pl-12 pr-4 py-4 text-[15px] font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#E60000]" 
+            />
+          </div>
+          <a 
+            href={orderUrl}
+            onClick={(e) => {
+              e.preventDefault();
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('update-order-form', { detail: { pickup, dropoff } }));
+                setTimeout(() => {
+                  const submitBtn = document.getElementById('submit-btn');
+                  if (submitBtn) {
+                    submitBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }, 300);
+                // Optionnel : mettre à jour l'URL sans recharger la page
+                window.history.pushState({}, '', orderUrl);
+              }
+            }}
+            className="flex items-center justify-center bg-gradient-to-r from-[#E60000] to-[#FF0000] text-white rounded-xl px-10 py-4 text-[15px] font-bold hover:opacity-90 transition-opacity whitespace-nowrap shadow-lg shadow-red-500/20"
+          >
+            JE COMMANDE MA COURSE
+          </a>
         </div>
       </div>
 

@@ -13,17 +13,21 @@ const STATS = [
 
 const COVERAGE = ["Paris 1–20", "92", "93", "94", "Roissy · Orly sur devis"];
 
-export default function Flotte() {
+export default function Flotte({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (
     <section id="flotte" className="bg-ink text-white">
       <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-start gap-14 px-[clamp(20px,4vw,28px)] py-24">
         <div className="min-w-0">
-          <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
-            Flotte &amp; couverture
-          </div>
-          <h2 className="mb-[22px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Paris et la petite couronne, en deux-roues.
-          </h2>
+          {!hideHeader && (
+            <>
+              <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
+                Flotte &amp; couverture
+              </div>
+              <h2 className="mb-[22px] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+                Paris et la petite couronne, en deux-roues.
+              </h2>
+            </>
+          )}
           <p className="mb-[34px] max-w-[50ch] text-pretty text-[16.5px] leading-[1.65] text-white/66">
             Scooters électriques et motos pour les distances longues. Le deux-roues
             reste le seul format qui ne subit ni les bouchons ni les zones à trafic

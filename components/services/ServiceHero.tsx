@@ -43,10 +43,10 @@ export default function ServiceHero({ service }: { service: Service }) {
 
         <div className="mb-14 flex flex-wrap gap-3">
           <a
-            href={`mailto:${EMAIL}?subject=${subject}`}
+            href="/#commander"
             className="rounded-[2px] bg-accent px-[26px] py-[15px] text-[15px] font-semibold text-white hover:bg-accent-dark"
           >
-            Demander un devis
+            Commander une course
           </a>
           <a
             href={`tel:${PHONE_TEL}`}

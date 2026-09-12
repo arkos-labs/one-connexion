@@ -9,6 +9,9 @@ import { transportMedical } from "./transport-medical";
 import { livraisonEcommerce } from "./livraison-e-commerce";
 import { compteEntreprise } from "./compte-entreprise";
 
+import { tourneesRegulieres } from "./tournees-regulieres";
+import { transportEvenementiel } from "./transport-evenementiel";
+
 export type {
   Service,
   ServiceStat,
@@ -21,6 +24,8 @@ export const SERVICES: Service[] = [
   plisConfidentiels,
   transportMedical,
   livraisonEcommerce,
+  tourneesRegulieres,
+  transportEvenementiel,
   compteEntreprise,
 ];
 

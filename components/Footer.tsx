@@ -9,8 +9,8 @@ import { EMAIL, FOUNDED_YEAR, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-conten
 
 // Ancres préfixées par "/" : nues, elles ne résolvent rien depuis une sous-page.
 const COMPANY_LINKS = [
-  { label: "Notre méthode", href: "/#methode" },
-  { label: "Flotte & couverture", href: "/#flotte" },
+  { label: "Notre méthode", href: "/methode" },
+  { label: "Flotte & couverture", href: "/flotte" },
   { label: "Devenir coursier partenaire", href: "/#contact" },
   { label: "Mentions légales", href: "/#contact" },
 ];

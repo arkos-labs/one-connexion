@@ -49,8 +49,9 @@ export default function ServicesIndexPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
 
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/services-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-ink/85"></div>
+        <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-16 pt-12">
           <nav
             aria-label="Fil d’Ariane"
             className="mb-9 font-mono text-[10px] tracking-[0.16em] text-white/40 uppercase"
@@ -68,7 +69,7 @@ export default function ServicesIndexPage() {
           </div>
 
           <h1 className="mb-6 max-w-[20ch] text-balance text-[clamp(32px,4.4vw,58px)] font-bold leading-[1.05] tracking-[-0.035em]">
-            Coursier B2B à Paris : quatre métiers, une même exigence.
+            Coursier B2B à Paris : des solutions expertes, une même exigence.
           </h1>
 
           <p className="max-w-[58ch] text-pretty text-[17px] leading-[1.6] text-white/66">
@@ -103,6 +104,32 @@ export default function ServicesIndexPage() {
           ))}
         </div>
       </div>
+
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-24">
+        <div className="border-t border-line pt-20">
+          <h2 className="mb-8 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
+            Une gamme de prestations calibrée pour les exigences franciliennes
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2 text-[15.5px] leading-[1.7] text-muted">
+            <div>
+              <p className="mb-4">
+                La complexité du tissu économique parisien nécessite une approche logistique segmentée et hautement spécialisée. L'offre de <strong>One Connexion</strong> ne se limite pas à un simple déplacement d'un point A à un point B. Nous déployons de véritables solutions de <strong>transport sur-mesure</strong> pour répondre aux cahiers des charges spécifiques de l'<strong>acheminement juridique</strong>, du <strong>transport d'échantillons médicaux</strong> ou de la <strong>livraison e-commerce premium</strong>.
+              </p>
+              <p>
+                Chaque <strong>prestation de coursier B2B</strong> que nous opérons en <strong>Île-de-France</strong> s'appuie sur des procédures opérationnelles strictes. Nos processus garantissent une chaîne de responsabilité ininterrompue, de la prise de commande centralisée jusqu'à la sécurisation de la preuve de livraison électronique, horodatée et géolocalisée.
+              </p>
+            </div>
+            <div>
+              <p className="mb-4">
+                L'externalisation de vos urgences logistiques auprès de notre <strong>société de coursiers spécialisée à Paris</strong> vous octroie une flexibilité absolue. Qu'il s'agisse d'une demande ponctuelle nécessitant un enlèvement immédiat, ou de l'intégration continue de vos flux réguliers (tournées programmées), nos dispatcheurs s'engagent sur la meilleure allocation de nos ressources motorisées.
+              </p>
+              <p>
+                Faites le choix d'une organisation robuste pour soutenir vos opérations. En confiant vos <strong>livraisons express parisiennes</strong> à One Connexion, vous sécurisez vos délais, valorisez votre image de marque auprès de vos destinataires finaux et optimisez la gestion logistique de votre cœur de métier.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <ServiceCta serviceTitle="toutes prestations" />
     </>

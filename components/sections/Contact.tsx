@@ -26,10 +26,10 @@ export default function Contact() {
             {PHONE_DISPLAY}
           </a>
           <a
-            href={`mailto:${EMAIL}`}
+            href="/#commander"
             className="rounded-[2px] border border-white/60 px-[26px] py-4 text-[15px] font-semibold text-white hover:border-white hover:bg-white hover:text-accent"
           >
-            Demander un devis
+            Commander une course
           </a>
         </div>
       </div>

@@ -25,16 +25,20 @@ const STEPS = [
   },
 ];
 
-export default function Methode() {
+export default function Methode({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (
     <section id="methode" className="border-y border-line bg-paper-card">
       <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-24">
-        <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-          Méthode
-        </div>
-        <h2 className="mb-14 max-w-[24ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-          De l&rsquo;appel à la preuve de livraison.
-        </h2>
+        {!hideHeader && (
+          <>
+            <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+              Méthode
+            </div>
+            <h2 className="mb-14 max-w-[24ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+              De l&rsquo;appel à la preuve de livraison.
+            </h2>
+          </>
+        )}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-10">
           {STEPS.map((item) => (
             <div key={item.step} className="border-t-2 border-ink pt-[22px]">

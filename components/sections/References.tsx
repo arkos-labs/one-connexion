@@ -17,17 +17,21 @@ const TESTIMONIALS = [
   "« [Deuxième témoignage à remplacer — idéalement un cabinet ou un laboratoire, avec un cas précis et un délai chiffré.] »",
 ];
 
-export default function References() {
+export default function References({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (
     <section id="references" className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-[104px]">
       <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] items-start gap-14">
         <div className="min-w-0">
-          <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
-            Références
-          </div>
-          <h2 className="mb-8 max-w-[22ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Des chiffres tenus sur la durée.
-          </h2>
+          {!hideHeader && (
+            <>
+              <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
+                Références
+              </div>
+              <h2 className="mb-8 max-w-[22ch] text-[clamp(28px,3vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+                Des chiffres tenus sur la durée.
+              </h2>
+            </>
+          )}
           <div className="grid gap-6">
             {STATS.map((stat, i) => (
               <div
