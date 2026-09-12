@@ -1,4 +1,4 @@
-﻿/**
+/**
  * lib/services/plis-confidentiels.ts
  * Prestation juridique & notariale. Requêtes visées : coursier juridique Paris,
  * transport de plis confidentiels, coursier huissier, remise contre signature.
@@ -132,5 +132,3 @@ export const plisConfidentiels: Service = {
     },
   ],
 };
-
-
