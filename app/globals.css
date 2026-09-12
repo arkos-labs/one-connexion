@@ -1,97 +1,47 @@
 /**
  * globals.css — Tailwind v4 CSS-first configuration
  * Tous les tokens design ONE CONNEXION sont définis ici via @theme.
- * La texture grain filmique à 4% d'opacité distingue une interface "flat digital"
- * d'une interface sensorielle. Aucune valeur par défaut Tailwind n'est utilisée
- * pour les couleurs de marque.
+ * Registre sobre : noir mat + blanc cassé, orange en accent seulement
+ * (pas de lueurs, pas de typo géante, pas de grain) — une identité
+ * qui doit se lire "établie depuis un moment", pas "startup flashy".
  */
-
-/* ── Imports Google Fonts / Fontshare — MUST be first ────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
 
 /* ── Tailwind v4 ─────────────────────────────────────────────────────── */
 @import "tailwindcss";
 
 /* ── Design Tokens via @theme (Tailwind v4) ─────────────────────────── */
 @theme {
-  /* ── Couleurs — palette sombre (bookends : hero, CTA final, footer) ──── */
-  --color-void: #050505;
-  --color-asphalt: #111113;
-  --color-concrete: #1C1C1F;
-  --color-fog: #8A8A8E;
-  --color-bone: #F5F4F0;
-  --color-signal: #FF4500;
-  --color-signal-dim: rgba(255, 69, 0, 0.13);
-  --color-volt: #CFFF04;
+  /* ── Couleurs — noir mat (header, hero, flotte, footer) ──────────────── */
+  --color-ink: #0E0F10;
 
-  /* ── Couleurs — palette claire (corps du site) ────────────────────────
-     Le noir et l'orange de la marque restent portés par void/signal sur les
-     sections bookend (hero, CTA final, footer) ; le corps du site (services,
-     preuve sociale, bandeau chiffres) passe en clair pour ne plus être
-     "tout noir". */
-  --color-surface: #F6F4EF;
-  --color-surface-alt: #FFFFFF;
-  --color-border-light: #E3E0D7;
-  --color-ink: #121212;
-  --color-ink-soft: #57534E;
+  /* ── Couleurs — blanc cassé (corps du site) ──────────────────────────── */
+  --color-paper: #F4F2EE;
+  --color-paper-card: #FBFAF8;
+  --color-line: #DFDCD6;
+  --color-muted: #4A4845;
+  --color-label: #8C8882;
+
+  /* ── Accent — orange, jamais décoratif ────────────────────────────────
+     accent = boutons pleins et bandeau CTA ; accent-dark = hover des
+     boutons pleins + liens texte (cf. `a { color: accent-dark }` dans la
+     maquette). */
+  --color-accent: #E85D1F;
+  --color-accent-dark: #C2410C;
 
   /* ── Border radius ─────────────────────────────────────────────────── */
   --radius-brand: 2px;
 
   /* ── Typographie ────────────────────────────────────────────────────── */
-  --font-family-display: 'Clash Display', system-ui, sans-serif;
-  --font-family-body: 'Inter', system-ui, sans-serif;
-  --font-family-mono: 'JetBrains Mono', monospace;
-
-  /* ── Keyframes ──────────────────────────────────────────────────────── */
-  --animate-marquee-left: marquee-left 28s linear infinite;
-  --animate-marquee-right: marquee-right 28s linear infinite;
-  --animate-spin-slow: spin-slow 3s linear infinite;
-  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
-  --animate-blink: blink 1.2s ease-in-out infinite;
-
-  @keyframes marquee-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  @keyframes marquee-right {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
-  }
-  @keyframes spin-slow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  @keyframes pulse-glow {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.8; }
-  }
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-}
-
-/* ── CSS Variables globales ──────────────────────────────────────────── */
-:root {
-  --font-display: 'Clash Display', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  /* Easings signature de marque */
-  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-hover: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-sharp-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --font-family-sans: var(--font-body), Helvetica, Arial, sans-serif;
+  --font-family-mono: var(--font-mono), monospace;
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────── */
 /* IMPORTANT : ce reset doit vivre dans @layer base. Tailwind v4 émet toutes
    ses utilities (dont mr-*, px-*, py-*, gap-*...) dans des cascade layers.
    Une règle hors-layer bat TOUJOURS une règle en layer, quelle que soit sa
-   spécificité ou son ordre — donc un reset non-layé ici écrase silencieusement
-   TOUTES les marges/paddings Tailwind du site (c'était le bug racine du
-   rendu "cassé" : mots collés, boutons sans padding, sections sans respiration). */
+   spécificité ou son ordre — donc un reset non-layé ici écraserait
+   silencieusement toutes les marges/paddings Tailwind du site. */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -108,72 +58,43 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Canvas clair par défaut (le corps du site) ; les sections bookend
-     (hero, CTA final, footer) restent sombres via leurs classes bg-void
-     explicites, qui — étant des utilities Tailwind — l'emportent bien sur
-     ce fond de base puisqu'il vit maintenant dans @layer base. */
   body {
-    background-color: #F6F4EF;
-    color: #121212;
-    font-family: var(--font-body);
+    background-color: #F4F2EE;
+    color: #0E0F10;
+    font-family: var(--font-family-sans);
     overflow-x: hidden;
     position: relative;
   }
 
+  a {
+    color: var(--color-accent-dark);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-ink);
+  }
+
   /* ── Label mono style ──────────────────────────────────────────────── */
   /* Pas de couleur figée ici : chaque usage pose déjà sa propre classe
-     (text-fog, text-ink-soft, text-signal...). Une couleur codée en dur
-     dans cette règle de base écraserait ces utilities si elle vivait hors
-     layer (voir le bug de reset plus haut) — currentColor + @layer base
-     laisse les utilities Tailwind décider, comme prévu. */
+     (text-label, text-muted, text-accent...). currentColor + @layer base
+     laisse les utilities Tailwind décider. */
   .label-mono {
-    font-family: var(--font-mono);
+    font-family: var(--font-family-mono);
     font-size: 0.6875rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: currentColor;
   }
 }
 
-/* ── Grain Noise Overlay ─────────────────────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  mix-blend-mode: overlay;
-  opacity: 0.04;
-}
-
-/* ── Scrollbar custom ────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #111113; }
-::-webkit-scrollbar-thumb { background: #FF4500; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #FF5A1F; }
-
 /* ── Selection ───────────────────────────────────────────────────────── */
-::selection { background-color: #FF4500; color: #050505; }
+::selection { background-color: #E85D1F; color: #fff; }
 
 /* ── Focus visible custom ────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #FF4500;
+  outline: 2px solid #E85D1F;
   outline-offset: 4px;
   border-radius: 2px;
-}
-
-/* ── Font helpers ─────────────────────────────────────────────────────── */
-.font-display { font-family: var(--font-display); }
-.font-mono-brand { font-family: var(--font-mono); }
-
-/* ── Glassmorphism ───────────────────────────────────────────────────── */
-.glass {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ── Prefers reduced motion ─────────────────────────────────────────── */

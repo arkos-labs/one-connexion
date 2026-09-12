@@ -1,37 +1,27 @@
 /**
  * app/page.tsx
- * Page principale — assemblage narratif des sections dans l'ordre émotionnel :
- * VITESSE + ACTION (Hero, qui porte désormais tout l'appel à l'action)
- * → FIABILITÉ (Services + Trust)
- * L'ancien bloc CTA de fin de page a été retiré : il faisait doublon, tout
- * en bas, loin du hero. L'appel à l'action vit maintenant uniquement dans
- * le hero, renforcé (voir HeroKinetic).
+ * Page principale — refonte complète dans un registre sérieux :
+ * Hero → Prestations → Méthode → Flotte & couverture → Références → Contact.
  */
-import HeroKinetic from "@/components/sections/HeroKinetic";
-import BentoServices from "@/components/sections/BentoServices";
-import MetricsMarquee from "@/components/sections/MetricsMarquee";
-import TrustSocialProof from "@/components/sections/TrustSocialProof";
 import Header from "@/components/Header";
+import Hero from "@/components/sections/Hero";
+import Services from "@/components/sections/Services";
+import Methode from "@/components/sections/Methode";
+import Flotte from "@/components/sections/Flotte";
+import References from "@/components/sections/References";
+import Contact from "@/components/sections/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <>
-      {/* Navigation fixe */}
       <Header />
-
-      {/* ── VITESSE + ACTION ────────────────────────────────────────── */}
-      <HeroKinetic />
-
-      {/* Bande marquee juste après le Hero — momentum continu */}
-      <MetricsMarquee />
-
-      {/* ── FIABILITÉ ───────────────────────────────────────────────── */}
-      <BentoServices />
-
-      <TrustSocialProof />
-
-      {/* Footer */}
+      <Hero />
+      <Services />
+      <Methode />
+      <Flotte />
+      <References />
+      <Contact />
       <Footer />
     </>
   );
