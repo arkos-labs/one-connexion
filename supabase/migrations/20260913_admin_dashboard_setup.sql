@@ -4,8 +4,13 @@
 alter table public.profiles
   add column if not exists role text not null default 'client';
 
-alter table public.profiles
-  add constraint profiles_role_check check (role in ('client', 'admin'));
+do $$
+begin
+  alter table public.profiles
+    add constraint profiles_role_check check (role in ('client', 'admin'));
+exception when duplicate_object then
+  null;
+end $$;
 
 -- Helper used by RLS policies below (security definer avoids recursive
 -- RLS evaluation on profiles when profiles' own policies check role).
@@ -36,6 +41,7 @@ create table if not exists public.drivers (
 
 alter table public.drivers enable row level security;
 
+drop policy if exists "Admins manage drivers" on public.drivers;
 create policy "Admins manage drivers" on public.drivers
   for all
   using (public.is_admin())
@@ -50,20 +56,24 @@ alter table public.navettes
 
 -- Admin RLS: admins can see/manage every row, in addition to existing
 -- owner-scoped policies.
+drop policy if exists "Admins manage all orders" on public.orders;
 create policy "Admins manage all orders" on public.orders
   for all
   using (public.is_admin())
   with check (public.is_admin());
 
+drop policy if exists "Admins manage all navettes" on public.navettes;
 create policy "Admins manage all navettes" on public.navettes
   for all
   using (public.is_admin())
   with check (public.is_admin());
 
+drop policy if exists "Admins view all profiles" on public.profiles;
 create policy "Admins view all profiles" on public.profiles
   for select
   using (public.is_admin());
 
+drop policy if exists "Admins update all profiles" on public.profiles;
 create policy "Admins update all profiles" on public.profiles
   for update
   using (public.is_admin())
