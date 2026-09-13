@@ -44,6 +44,25 @@ export default function AuthForm() {
     }
   };
 
+  const handleDevBypass = async () => {
+    if (process.env.NODE_ENV === "production") {
+      setError("Connexion admin dev impossible.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: process.env.NEXT_PUBLIC_DEV_ADMIN_EMAIL!,
+      password: process.env.NEXT_PUBLIC_DEV_ADMIN_PASSWORD!,
+    });
+    if (error) {
+      setError("Connexion admin dev impossible.");
+      setLoading(false);
+    } else {
+      router.push("/admin");
+    }
+  };
+
   return (
     <div className="min-h-[calc(100vh-80px)] bg-paper">
       <div className="mx-auto grid max-w-[1240px] min-h-[calc(100vh-80px)] grid-cols-1 lg:grid-cols-2">
@@ -128,6 +147,16 @@ export default function AuthForm() {
               {!loading && <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />}
             </button>
           </form>
+
+          {process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEV_ADMIN_BYPASS === "true" && (
+            <button
+              type="button"
+              onClick={handleDevBypass}
+              className="mt-4 w-full rounded-[6px] border border-dashed border-accent/40 bg-accent/5 py-3 text-[13px] font-bold text-accent transition-colors hover:bg-accent/10"
+            >
+              Accès admin (dev, sans identification)
+            </button>
+          )}
 
           <p className="mt-8 text-center text-[13px] text-muted">
             Pas encore de compte ?{" "}
