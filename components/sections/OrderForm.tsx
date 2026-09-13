@@ -88,7 +88,13 @@ export default function OrderForm() {
 
     setSubmitting(false);
 
-    if (!error && data) {
+    if (error) {
+      console.error("Supabase insert error:", error);
+      alert("Erreur lors de l'envoi : " + error.message);
+      return;
+    }
+
+    if (data) {
       setTrackingCode(data.tracking_code);
     }
     setSubmitted(true);

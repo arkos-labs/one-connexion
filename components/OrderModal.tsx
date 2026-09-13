@@ -5,7 +5,8 @@
  * accessible depuis les CTA publics (Header, Hero, etc.)
  */
 import { useState, useEffect, useCallback } from "react";
-import { X, MapPin, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard, Settings } from "lucide-react";
+import { X, Package, Mail, Truck, Zap, Clock, Calendar, User, Building2, ChevronRight, ChevronLeft, CheckCircle2, CreditCard } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface OrderModalProps {
   open: boolean;
@@ -17,11 +18,19 @@ interface OrderModalProps {
 export default function OrderModal({ open, onClose, initialPickup = "", initialDropoff = "" }: OrderModalProps) {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [clientType, setClientType] = useState<"entreprise" | "particulier">("entreprise");
   const [format, setFormat] = useState("doc");
   const [delai, setDelai] = useState("urgent");
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropoffAddress, setDropoffAddress] = useState(initialDropoff);
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [notes, setNotes] = useState("");
+
+  const supabase = createClient();
 
   // Reset quand la modal ouvre
   useEffect(() => {
@@ -51,10 +60,41 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step < 3) setStep(step + 1);
-    else setSubmitted(true);
+    if (step < 3) { setStep(step + 1); return; }
+
+    setSubmitting(true);
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user?.id ?? null,
+        pickup_address: pickupAddress,
+        dropoff_address: dropoffAddress,
+        stops: [],
+        format,
+        delai,
+        notes,
+        contact_name: contactName,
+        contact_email: contactEmail,
+        contact_phone: contactPhone,
+        status: "en_attente",
+      })
+      .select("tracking_code")
+      .single();
+
+    setSubmitting(false);
+
+    if (error) {
+      console.error("Supabase modal error:", error);
+      alert("Erreur : " + error.message);
+      return;
+    }
+
+    if (data) setTrackingCode(data.tracking_code);
+    setSubmitted(true);
   };
 
   return (
@@ -85,14 +125,16 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
               <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-emerald-500">
                 <CheckCircle2 size={32} />
               </div>
-              <h3 className="mb-2 text-2xl font-bold text-ink">
-                {clientType === "particulier" ? "Redirection vers le paiement…" : "Demande envoyée !"}
-              </h3>
-              <p className="mb-8 text-muted">
-                {clientType === "particulier"
-                  ? "Vous allez être redirigé vers notre plateforme sécurisée."
-                  : "Un dispatcheur vous contacte dans les 2 prochaines minutes."}
+              <h3 className="mb-2 text-2xl font-bold text-ink">Demande envoyée !</h3>
+              <p className="mb-4 text-muted">
+                Un dispatcheur vous contacte dans les 2 prochaines minutes.
               </p>
+              {trackingCode && (
+                <div className="mb-6 rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
+                  <p className="text-xl font-extrabold tracking-widest text-ink">{trackingCode}</p>
+                </div>
+              )}
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => { setSubmitted(false); setStep(1); }}
@@ -203,15 +245,15 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">
                           {clientType === "entreprise" ? "Nom de la société" : "Nom & Prénom"} <span className="text-accent">*</span>
                         </label>
-                        <input type="text" required placeholder={clientType === "entreprise" ? "Acme Corp" : "Jean Dupont"} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <input type="text" required value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder={clientType === "entreprise" ? "Acme Corp" : "Jean Dupont"} className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Téléphone <span className="text-accent">*</span></label>
-                        <input type="tel" required placeholder="01 23 45 67 89" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <input type="tel" required value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="01 23 45 67 89" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
                       <div>
                         <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-gray-600">Email <span className="text-accent">*</span></label>
-                        <input type="email" required placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
+                        <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@societe.fr" className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30" />
                       </div>
                     </div>
                   </div>
@@ -277,7 +319,7 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
 
                     <div>
                       <label className="mb-1.5 block text-sm font-bold text-ink">Consignes au coursier</label>
-                      <textarea rows={3} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
+                      <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Colis à l'accueil, demander M. Martin…" className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-accent focus:outline-none" />
                     </div>
                   </div>
                 )}
@@ -291,10 +333,11 @@ export default function OrderModal({ open, onClose, initialPickup = "", initialD
                   ) : <div />}
                   <button
                     type="submit"
-                    className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors"
+                    disabled={submitting}
+                    className="ml-auto flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-bold text-white hover:bg-accent-dark transition-colors disabled:opacity-60"
                   >
-                    {step < 3 ? "Étape suivante" : clientType === "particulier" ? "Payer en ligne" : "Commander"}
-                    {step < 3 ? <ChevronRight size={16} /> : clientType === "particulier" ? <CreditCard size={16} /> : <CheckCircle2 size={16} />}
+                    {submitting ? "Envoi…" : step < 3 ? "Étape suivante" : "Commander"}
+                    {!submitting && (step < 3 ? <ChevronRight size={16} /> : <CheckCircle2 size={16} />)}
                   </button>
                 </div>
               </form>
