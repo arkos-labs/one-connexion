@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { 
-  MapPin, 
-  Search, 
-  CheckCircle2, 
-  Package, 
-  Box, 
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  MapPin,
+  Search,
+  CheckCircle2,
+  Package,
+  Box,
   Archive,
   Clock,
   ArrowRight,
@@ -16,16 +17,30 @@ import {
   FileText
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { createClient } from "@/lib/supabase/client";
 
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState("pli");
   const [delai, setDelai] = useState("flash");
-  
+
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
   const [isPickupFavOpen, setIsPickupFavOpen] = useState(false);
   const [stops, setStops] = useState<{id: string, address: string}[]>([]);
+  const [notes, setNotes] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const [favoriteAddresses, setFavoriteAddresses] = useState<{id: string, label: string, address: string}[]>([]);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.from("addresses").select("id, label, address").then(({ data }) => {
+      if (data) setFavoriteAddresses(data);
+    });
+  }, []);
 
   const addStop = () => {
     setStops([...stops, { id: Math.random().toString(), address: "" }]);
@@ -42,6 +57,39 @@ export default function CommanderPage() {
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     setStep(step + 1);
+  };
+
+  const handleConfirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setSubmitError("Session expirée. Veuillez vous reconnecter."); setSubmitting(false); return; }
+
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user.id,
+        pickup_address: pickupAddress,
+        dropoff_address: dropoffAddress,
+        stops: stops.map(s => s.address),
+        format,
+        delai,
+        notes,
+        status: "en_attente",
+      })
+      .select("tracking_code")
+      .single();
+
+    if (error) {
+      setSubmitError("Une erreur est survenue. Veuillez réessayer.");
+      setSubmitting(false);
+    } else {
+      setTrackingCode(data.tracking_code);
+      setStep(5);
+      setSubmitting(false);
+    }
   };
   
   return (
@@ -125,30 +173,24 @@ export default function CommanderPage() {
                       
                       {isPickupFavOpen && (
                         <div className="absolute right-0 top-6 z-50 mt-1 w-64 overflow-hidden rounded-xl border border-line bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
-                          <button 
-                            type="button" 
-                            onClick={() => { setPickupAddress("75 Rue de Rivoli, 75001 Paris"); setIsPickupFavOpen(false); }} 
-                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 border-b border-line"
-                          >
-                            <div className="text-sm font-bold text-ink">Siège Social</div>
-                            <div className="text-xs font-medium text-muted truncate">75 Rue de Rivoli, Paris</div>
-                          </button>
-                          <button 
-                            type="button" 
-                            onClick={() => { setPickupAddress("14 Avenue Victor Hugo, 92100 Boulogne-Billancourt"); setIsPickupFavOpen(false); }} 
-                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 border-b border-line"
-                          >
-                            <div className="text-sm font-bold text-ink">Entrepôt Logistique</div>
-                            <div className="text-xs font-medium text-muted truncate">14 Av Victor Hugo, Boulogne</div>
-                          </button>
-                          <button 
-                            type="button" 
-                            onClick={() => { setPickupAddress("22 Rue de la Paix, 75002 Paris"); setIsPickupFavOpen(false); }} 
-                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50"
-                          >
-                            <div className="text-sm font-bold text-ink">Cabinet Partenaire</div>
-                            <div className="text-xs font-medium text-muted truncate">22 Rue de la Paix, Paris</div>
-                          </button>
+                          {favoriteAddresses.length === 0 ? (
+                            <div className="px-4 py-3 text-xs text-muted">
+                              Aucune adresse favorite.{" "}
+                              <Link href="/dashboard/adresses" className="font-bold text-accent hover:underline">En ajouter</Link>
+                            </div>
+                          ) : (
+                            favoriteAddresses.map((fav, i) => (
+                              <button
+                                key={fav.id}
+                                type="button"
+                                onClick={() => { setPickupAddress(fav.address); setIsPickupFavOpen(false); }}
+                                className={`w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 ${i < favoriteAddresses.length - 1 ? "border-b border-line" : ""}`}
+                              >
+                                <div className="text-sm font-bold text-ink">{fav.label}</div>
+                                <div className="text-xs font-medium text-muted truncate">{fav.address}</div>
+                              </button>
+                            ))
+                          )}
                         </div>
                       )}
                     </div>
@@ -429,7 +471,7 @@ export default function CommanderPage() {
         )}
 
         {step === 4 && (
-          <form onSubmit={handleNextStep} className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-500">
+          <form onSubmit={handleConfirm} className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-500">
             {/* Carte 4 : Récapitulatif */}
             <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
               <div className="flex items-center justify-between border-b border-line bg-[#FDFDFD] px-6 py-4">
@@ -528,14 +570,19 @@ export default function CommanderPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <button type="button" onClick={() => setStep(3)} className="flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-white text-ink transition-colors hover:bg-paper">
-                  <ChevronLeft size={18} strokeWidth={2.5} />
-                </button>
-                <button type="submit" className="flex items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-accent-dark">
-                  Confirmer la commande
-                  <CheckCircle2 size={18} strokeWidth={2.5} />
-                </button>
+              <div className="flex flex-col items-end gap-3">
+                {submitError && (
+                  <p className="text-[13px] font-medium text-red-600">{submitError}</p>
+                )}
+                <div className="flex items-center gap-3">
+                  <button type="button" onClick={() => setStep(3)} className="flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-white text-ink transition-colors hover:bg-paper">
+                    <ChevronLeft size={18} strokeWidth={2.5} />
+                  </button>
+                  <button type="submit" disabled={submitting} className="flex items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-accent-dark disabled:opacity-60">
+                    {submitting ? "Envoi en cours…" : "Confirmer la commande"}
+                    {!submitting && <CheckCircle2 size={18} strokeWidth={2.5} />}
+                  </button>
+                </div>
               </div>
             </div>
           </form>
@@ -547,18 +594,24 @@ export default function CommanderPage() {
               <CheckCircle2 size={40} strokeWidth={2.5} />
             </div>
             <h3 className="mb-3 text-2xl font-bold text-ink">Commande validée !</h3>
-            <p className="mb-8 max-w-md text-muted">
+            <p className="mb-4 max-w-md text-muted">
               Le dispatching a bien pris en compte votre course. Un coursier arrivera sur place sous peu.
             </p>
+            {trackingCode && (
+              <div className="mb-8 rounded-xl border border-line bg-paper px-6 py-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1">Code de suivi</p>
+                <p className="text-xl font-extrabold tracking-widest text-ink">{trackingCode}</p>
+              </div>
+            )}
             <div className="flex gap-4">
-              <button
-                onClick={() => setStep(1)}
+              <Link
+                href="/dashboard/suivi"
                 className="rounded-xl border border-line px-8 py-3 font-semibold text-ink transition-colors hover:bg-paper"
               >
-                Retour
-              </button>
+                Suivre la course
+              </Link>
               <button
-                onClick={() => setStep(1)}
+                onClick={() => { setStep(1); setPickupAddress(""); setDropoffAddress(""); setStops([]); setFormat("pli"); setDelai("flash"); setTrackingCode(null); }}
                 className="rounded-xl bg-accent px-8 py-3 font-semibold text-white transition-colors hover:bg-accent-dark shadow-sm"
               >
                 Nouvelle commande
