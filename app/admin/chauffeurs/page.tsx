@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Plus } from "lucide-react";
 
@@ -27,15 +27,14 @@ export default function AdminChauffeursPage() {
   const [vehicle, setVehicle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = async () => {
     const { data } = await supabase.from("drivers").select("*").order("name");
     setDrivers(data ?? []);
-  }, [supabase]);
+  };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
-  }, [load]);
+  }, []);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
