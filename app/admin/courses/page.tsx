@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 
 type Course = {
   key: string;
+  id: string;
   type: "commande" | "navette";
   label: string;
   route: string;
@@ -34,6 +35,7 @@ export default function AdminCoursesPage() {
 
     const orderCourses: Course[] = (orders ?? []).map((o) => ({
       key: `order-${o.id}`,
+      id: o.id,
       type: "commande",
       label: o.tracking_code ?? o.id,
       route: `${o.pickup_address} → ${o.dropoff_address}`,
@@ -47,6 +49,7 @@ export default function AdminCoursesPage() {
 
     const navetteCourses: Course[] = (navettes ?? []).map((n) => ({
       key: `navette-${n.id}`,
+      id: n.id,
       type: "navette",
       label: n.name,
       route: `${n.pickup_address} → ${n.dropoff_address}`,
@@ -109,7 +112,7 @@ export default function AdminCoursesPage() {
             </div>
             <div className="flex items-center gap-2">
               {c.type === "commande" && (
-                <select value={c.status} onChange={(e) => updateOrderStatus(c.key.replace("order-", ""), e.target.value)} className="rounded-lg border border-line px-3 py-2 text-sm">
+                <select value={c.status} onChange={(e) => updateOrderStatus(c.id, e.target.value)} className="rounded-lg border border-line px-3 py-2 text-sm">
                   {ORDER_STATUSES.map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
