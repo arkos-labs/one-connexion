@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  FileText
+  FileText,
+  User
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
@@ -29,6 +30,8 @@ export default function CommanderPage() {
   const [isPickupFavOpen, setIsPickupFavOpen] = useState(false);
   const [stops, setStops] = useState<{id: string, address: string}[]>([]);
   const [notes, setNotes] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
@@ -77,6 +80,8 @@ export default function CommanderPage() {
         format,
         delai,
         notes,
+        contact_name: contactName,
+        contact_phone: contactPhone,
         status: "en_attente",
       })
       .select("tracking_code")
@@ -207,19 +212,6 @@ export default function CommanderPage() {
                         />
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <input
-                        type="text"
-                        defaultValue="Cabinet Dupont - Alexandre (06 12 34 56 78)"
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                      />
-                      <input
-                        type="text"
-                        defaultValue="Bâtiment B, 3e étage, code 4589"
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                      />
-                    </div>
                   </div>
 
                   {/* Étapes intermédiaires */}
@@ -248,19 +240,6 @@ export default function CommanderPage() {
                           />
                         </div>
                       </div>
-                      
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        <input
-                          type="text"
-                          placeholder="Contact sur place (Nom & Tél)"
-                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Notes pour le coursier"
-                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                        />
-                      </div>
                     </div>
                   ))}
 
@@ -287,21 +266,41 @@ export default function CommanderPage() {
                         />
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      <input
-                        type="text"
-                        defaultValue="Me. Sophie Martin (06 98 76 54 32)"
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                      />
-                      <input
-                        type="text"
-                        defaultValue="Remise en main propre contre signature"
-                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
-                      />
-                    </div>
                   </div>
 
+                </div>
+              </div>
+            </div>
+
+            {/* Carte Contact */}
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+              <div className="flex items-center justify-between border-b border-line bg-[#FDFDFD] px-6 py-4">
+                <div className="flex items-center gap-2 text-sm font-bold tracking-wide text-ink uppercase">
+                  <User size={16} className="text-accent" />
+                  INFORMATIONS DE CONTACT
+                </div>
+              </div>
+
+              <div className="flex flex-col p-6 sm:p-8 gap-4">
+                <div>
+                  <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-muted">Nom de contact</label>
+                  <input
+                    type="text"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Ex: M. Dupont"
+                    className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-medium text-ink focus:border-accent focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-muted">Téléphone</label>
+                  <input
+                    type="tel"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    placeholder="06 12 34 56 78"
+                    className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-medium text-ink focus:border-accent focus:outline-none"
+                  />
                 </div>
               </div>
             </div>
@@ -432,6 +431,17 @@ export default function CommanderPage() {
                   </div>
                 </div>
               )}
+
+              <div className="mt-6 border-t border-line pt-6">
+                <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-muted">Consignes au coursier</label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Ex: Demander le digicode, placer le colis à l'accueil..."
+                  className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-medium text-ink focus:border-accent focus:outline-none resize-none"
+                  rows={3}
+                />
+              </div>
 
             </div>
 
@@ -611,7 +621,7 @@ export default function CommanderPage() {
                 Suivre la course
               </Link>
               <button
-                onClick={() => { setStep(1); setPickupAddress(""); setDropoffAddress(""); setStops([]); setFormat("pli"); setDelai("flash"); setTrackingCode(null); }}
+                onClick={() => { setStep(1); setPickupAddress(""); setDropoffAddress(""); setStops([]); setFormat("pli"); setDelai("flash"); setTrackingCode(null); setNotes(""); setContactName(""); setContactPhone(""); }}
                 className="rounded-xl bg-accent px-8 py-3 font-semibold text-white transition-colors hover:bg-accent-dark shadow-sm"
               >
                 Nouvelle commande

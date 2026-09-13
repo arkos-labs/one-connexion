@@ -18,21 +18,58 @@ export default function DashboardLayout({
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<{ full_name: string | null; company: string | null } | null>(null);
+  const [coursesThisMonth, setCoursesThisMonth] = useState<number | null>(null);
+
+  const loadProfile = async () => {
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    setUser(authUser);
+    if (!authUser) return;
+
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    supabase
+      .from("orders")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", authUser.id)
+      .gte("created_at", startOfMonth.toISOString())
+      .then(({ count }) => setCoursesThisMonth(count ?? 0));
+
+    supabase
+      .from("profiles")
+      .select("full_name, company")
+      .eq("id", authUser.id)
+      .single()
+      .then(({ data }) => setProfile(data));
+  };
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    loadProfile();
+
+    // Recharge le profil quand l'utilisateur revient sur le dashboard après
+    // l'avoir modifié dans Paramètres (le sidebar est monté une seule fois
+    // par layout, donc il ne voit pas les changements sans ça).
+    const handleFocus = () => loadProfile();
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
   }, []);
+
+  useEffect(() => {
+    loadProfile();
+  }, [pathname]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/");
   };
 
-  const initials = user?.user_metadata?.full_name
-    ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || "Mon compte";
+  const company = profile?.company || user?.user_metadata?.company || "";
+  const initials = displayName
+    ? displayName.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
     : "??";
-  const displayName = user?.user_metadata?.full_name ?? user?.email ?? "Mon compte";
-  const company = user?.user_metadata?.company ?? "";
 
   return (
     <div className="relative min-h-screen bg-[#FBFBFB]">
@@ -65,11 +102,13 @@ export default function DashboardLayout({
               <div className="flex items-center divide-x divide-line border-b border-line bg-paper/30 p-4">
                 <div className="flex flex-1 flex-col items-center justify-center">
                   <span className="text-[11px] font-medium text-label">Courses ce mois</span>
-                  <span className="mt-0.5 text-sm font-bold text-ink">18 courses</span>
+                  <span className="mt-0.5 text-sm font-bold text-ink">
+                    {coursesThisMonth === null ? "…" : `${coursesThisMonth} course${coursesThisMonth > 1 ? "s" : ""}`}
+                  </span>
                 </div>
                 <div className="flex flex-1 flex-col items-center justify-center">
                   <span className="text-[11px] font-medium text-label">Facturation</span>
-                  <span className="mt-0.5 text-sm font-bold text-accent">En compte 30j</span>
+                  <span className="mt-0.5 text-sm font-bold text-accent">Compte pro</span>
                 </div>
               </div>
 
@@ -114,11 +153,9 @@ export default function DashboardLayout({
                   Déconnexion
                 </button>
               </nav>
-            </div>
 
-            {/* Dispatch 24/7 EN LIGNE Card */}
-            <div className="flex flex-col overflow-hidden rounded-2xl bg-[#1A1C20] text-white shadow-lg">
-              <div className="p-6">
+              {/* Dispatch 24/7 EN LIGNE */}
+              <div className="flex flex-col bg-[#1A1C20] text-white p-6">
                 <div className="mb-2 flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
                   <h3 className="text-sm font-bold tracking-wide">DISPATCH 24/7 EN LIGNE</h3>

@@ -6,10 +6,10 @@ les courses (ponctuelles et navettes récurrentes), gérer les chauffeurs, voir
 les clients, et suivre le chiffre d'affaires.
 
 ## Accès & rôles
-- Nouvelle table `profiles` : `id` (= `auth.users.id`), `email`, `name`,
-  `role` (`client` | `admin`, défaut `client`), `created_at`.
-- Trigger Postgres `on_auth_user_created` crée automatiquement le profil
-  `client` à l'inscription.
+- La table `profiles` existe déjà (`id`, `full_name`, `company`, `phone`,
+  `siret`, `vat_number`, `billing_address`, `created_at`). On ajoute une
+  colonne `role TEXT NOT NULL DEFAULT 'client'` (contrainte CHECK
+  `role IN ('client','admin')`).
 - Middleware étendu : les routes `/admin/*` exigent `role = admin` (lecture du
   profil), sinon redirection vers `/dashboard`.
 - Promotion en admin : faite manuellement en SQL après coup (pas d'UI pour
@@ -25,10 +25,11 @@ les clients, et suivre le chiffre d'affaires.
 ## Nouvelles tables / colonnes
 - `drivers` : `id`, `name`, `phone`, `vehicle`, `status`
   (`disponible` | `en_course` | `hors_service`), `notes`, `created_at`.
-- `orders` : ajout de `price` (numeric, nullable), `driver_id`
-  (FK → drivers, nullable).
+- `orders` : ajout de `driver_id` (FK → drivers, nullable). Le prix existe
+  déjà (`price_estimate`, numeric nullable) — pas de nouvelle colonne.
 - `navettes` : ajout de `driver_id` (FK → drivers, nullable) — assignation par
-  défaut du modèle (voir "Dispatch" ci-dessous pour la vue unifiée).
+  défaut du modèle (voir "Dispatch" ci-dessous pour la vue unifiée). Le prix
+  existe déjà (`estimated_price`).
 
 ## RLS
 - Policies admin ajoutées sur `orders`, `navettes`, `drivers`, `profiles` :
@@ -45,8 +46,8 @@ les clients, et suivre le chiffre d'affaires.
   - type (ponctuelle / navette récurrente),
   - statut dispatché (oui si `driver_id` renseigné, sinon "à dispatcher"),
   - assignation/réassignation de chauffeur inline,
-  - changement de statut de la course (`en_attente`, `en_cours`, `livré`,
-    `annulé`),
+  - changement de statut de la course (`en_attente`, `confirmee`, `en_cours`,
+    `livree`, `annulee` — valeurs déjà contraintes en base pour `orders`),
   - filtres : statut, type, dispatché/non dispatché.
 - `/admin/navettes` — gestion des **modèles** de navettes récurrentes (créer,
   modifier, désactiver) ; pas de dispatch ici (renvoie vers `/admin/courses`).
@@ -55,8 +56,8 @@ les clients, et suivre le chiffre d'affaires.
 - `/admin/clients` — liste des clients (`profiles` + agrégats : nb commandes,
   CA généré).
 - `/admin/chiffre-affaires` — CA agrégé (jour/semaine/mois) à partir de
-  `orders.price` (hors `annulé`) + estimation navettes
-  (`navettes.estimated_price` × occurrences).
+  `orders.price_estimate` (hors statut `annulee`) + estimation navettes
+  (`navettes.estimated_price` × occurrences, navettes `active` uniquement).
 
 ## Navigation
 - Nouvelle entrée de nav admin (séparée de `DASHBOARD_NAV_ITEMS` client),

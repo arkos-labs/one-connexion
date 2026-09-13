@@ -1,33 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Calendar, MapPin, Clock, Truck, ShieldCheck, ChevronRight, Plus, ArrowRight, CheckCircle2, RefreshCw } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { createClient } from "@/lib/supabase/client";
 
 export default function NavettesPage() {
+  const supabase = createClient();
+
   const [isCreating, setIsCreating] = useState(false);
+  const [navetteNom, setNavetteNom] = useState("");
+
   const [pickupAddress, setPickupAddress] = useState("");
+  const [pickupContactName, setPickupContactName] = useState("");
+  const [pickupContactPhone, setPickupContactPhone] = useState("");
+  const [pickupNotes, setPickupNotes] = useState("");
+
   const [dropoffAddress, setDropoffAddress] = useState("");
+  const [dropoffContactName, setDropoffContactName] = useState("");
+  const [dropoffContactPhone, setDropoffContactPhone] = useState("");
+  const [dropoffNotes, setDropoffNotes] = useState("");
+
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [stops, setStops] = useState<{id: string, address: string}[]>([]);
-  
-  const [navettes, setNavettes] = useState([
-    { id: 1, name: "Tournée Agences Nord", from: "Siège Social (75001)", to: "Agence Saint-Denis (93200)", schedule: "Lun, Mer, Ven — Présentation à 08h30" },
-    { id: 2, name: "Réapprovisionnement Sud", from: "Entrepôt Logistique (94)", to: "3 Boutiques (Paris Sud)", schedule: "Mar, Jeu — Présentation à 10h00" }
-  ]);
+  const [stops, setStops] = useState<{id: string, address: string, contactName: string, contactPhone: string, notes: string}[]>([]);
+
+  const [navettes, setNavettes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const [startTime, setStartTime] = useState("08:30");
+  const [endTime, setEndTime] = useState("12:00");
 
   const addStop = () => {
-    setStops([...stops, { id: Math.random().toString(), address: "" }]);
+    setStops([...stops, { id: Math.random().toString(), address: "", contactName: "", contactPhone: "", notes: "" }]);
   };
 
   const removeStop = (id: string) => {
     setStops(stops.filter(s => s.id !== id));
   };
 
-  const updateStop = (id: string, address: string) => {
-    setStops(stops.map(s => s.id === id ? { ...s, address } : s));
+  const updateStop = (id: string, field: string, value: string) => {
+    setStops(stops.map(s =>
+      s.id === id ? { ...s, [field]: value } : s
+    ));
   };
-  
+
   const daysOfWeek = [
     { id: 'mon', label: 'L' },
     { id: 'tue', label: 'M' },
@@ -37,7 +56,7 @@ export default function NavettesPage() {
     { id: 'sat', label: 'S' },
     { id: 'sun', label: 'D' },
   ];
-  
+
   const [selectedDays, setSelectedDays] = useState<string[]>(['mon', 'tue', 'wed', 'thu', 'fri']);
 
   const toggleDay = (dayId: string) => {
@@ -48,23 +67,126 @@ export default function NavettesPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const daysStr = selectedDays.map(d => daysOfWeek.find(x => x.id === d)?.label).join(', ');
-    const newNavette = {
-      id: Date.now(),
-      name: `Nouvelle Navette`,
-      from: pickupAddress || "Départ",
-      to: dropoffAddress || "Arrivée",
-      schedule: `${daysStr} — Présentation à définir`
+  // Load navettes from Supabase
+  useEffect(() => {
+    const loadNavettes = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("navettes")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Erreur de chargement:", error);
+          setNavettes([]);
+        } else {
+          setNavettes(data || []);
+        }
+      } catch (err) {
+        console.error("Erreur:", err);
+        setNavettes([]);
+      } finally {
+        setLoading(false);
+      }
     };
-    setNavettes([newNavette, ...navettes]);
-    setIsSubmitted(true);
+
+    loadNavettes();
+  }, []);
+
+  const resetForm = () => {
+    setNavetteNom("");
+    setPickupAddress("");
+    setPickupContactName("");
+    setPickupContactPhone("");
+    setPickupNotes("");
+    setDropoffAddress("");
+    setDropoffContactName("");
+    setDropoffContactPhone("");
+    setDropoffNotes("");
+    setStops([]);
+    setSelectedDays(['mon', 'tue', 'wed', 'thu', 'fri']);
+    setStartTime("08:30");
+    setEndTime("12:00");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setSubmitError("Session expirée. Veuillez vous reconnecter.");
+        setSubmitting(false);
+        return;
+      }
+
+      const stopsData = stops.map(s => ({
+        address: s.address,
+        contactName: s.contactName,
+        contactPhone: s.contactPhone,
+        notes: s.notes
+      }));
+
+      const daysStr = selectedDays.map(d => daysOfWeek.find(x => x.id === d)?.label).join(', ');
+
+      const { error } = await supabase
+        .from("navettes")
+        .insert({
+          user_id: user.id,
+          name: navetteNom || `Navette ${new Date().toLocaleDateString('fr-FR')}`,
+          pickup_address: pickupAddress,
+          pickup_contact_name: pickupContactName,
+          pickup_contact_phone: pickupContactPhone,
+          pickup_notes: pickupNotes,
+          dropoff_address: dropoffAddress,
+          dropoff_contact_name: dropoffContactName,
+          dropoff_contact_phone: dropoffContactPhone,
+          dropoff_notes: dropoffNotes,
+          stops: stopsData,
+          days_of_week: selectedDays,
+          days_str: daysStr,
+          start_time: startTime,
+          end_time: endTime,
+          status: "active",
+          estimated_price: 185.00,
+        });
+
+      if (error) {
+        console.error("Erreur Supabase détaillée:", error);
+        console.error("Message:", error.message);
+        console.error("Code:", error.code);
+        setSubmitError(`Erreur: ${error.message || "Une erreur est survenue. Veuillez réessayer."}`);
+      } else {
+        setIsSubmitted(true);
+        resetForm();
+        // Reload navettes
+        const { data } = await supabase
+          .from("navettes")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
+        setNavettes(data || []);
+      }
+    } catch (err) {
+      setSubmitError("Une erreur inattendue est survenue.");
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="flex flex-col gap-8 pb-12">
-      
+
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex flex-col items-start gap-4">
@@ -85,9 +207,9 @@ export default function NavettesPage() {
             </p>
           </div>
         </div>
-        
+
         {!isCreating && (
-          <button 
+          <button
             onClick={() => { setIsCreating(true); setIsSubmitted(false); }}
             className="flex items-center gap-2 rounded-xl bg-ink px-6 py-3.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-ink/90 shrink-0"
           >
@@ -99,50 +221,93 @@ export default function NavettesPage() {
 
       <div className="flex flex-col gap-6">
         {!isCreating ? (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 animate-in fade-in duration-500">
-            {navettes.map((navette) => (
-              <div key={navette.id} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md">
-                <div className="flex items-center justify-between border-b border-line p-5">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#10B981]/10 text-[#10B981]">
-                      <RefreshCw size={16} strokeWidth={2.5} />
+          loading ? (
+            <div className="flex justify-center py-12">
+              <div className="text-muted">Chargement de vos navettes...</div>
+            </div>
+          ) : navettes.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 animate-in fade-in duration-500">
+              {navettes.map((navette) => (
+                <div key={navette.id} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md">
+                  <div className="flex items-center justify-between border-b border-line p-5">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#10B981]/10 text-[#10B981]">
+                        <RefreshCw size={16} strokeWidth={2.5} />
+                      </div>
+                      <h3 className="font-bold text-ink">{navette.name}</h3>
                     </div>
-                    <h3 className="font-bold text-ink">{navette.name}</h3>
+                    <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ring-1 ${
+                      navette.status === 'active'
+                        ? 'bg-green-50 text-green-600 ring-green-600/20'
+                        : 'bg-gray-50 text-gray-600 ring-gray-600/20'
+                    }`}>
+                      {navette.status === 'active' ? 'Active' : 'Inactive'}
+                    </span>
                   </div>
-                  <span className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold uppercase text-green-600 ring-1 ring-green-600/20">Active</span>
+                  <div className="flex flex-col gap-4 p-5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper">
+                        <MapPin size={12} className="text-muted" />
+                      </div>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="truncate text-sm font-semibold text-ink">{navette.pickup_address}</span>
+                        <span className="truncate text-xs text-muted">Vers : {navette.dropoff_address}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 rounded-lg bg-paper p-3 text-xs font-semibold text-ink">
+                      <Clock size={14} className="text-muted" />
+                      {navette.days_str || 'À définir'} — Présentation à {navette.start_time || '08h30'}
+                    </div>
+
+                    <Link href={`/dashboard/navettes/${navette.id}`} className="mt-2 inline-block text-xs font-bold text-[#10B981] hover:underline">
+                      Voir les détails de la navette &rarr;
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-4 p-5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper">
-                      <MapPin size={12} className="text-muted" />
-                    </div>
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="truncate text-sm font-semibold text-ink">{navette.from}</span>
-                      <span className="truncate text-xs text-muted">Vers : {navette.to}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 rounded-lg bg-paper p-3 text-xs font-semibold text-ink">
-                    <Clock size={14} className="text-muted" />
-                    {navette.schedule}
-                  </div>
-                  
-                  <button className="mt-2 text-left text-xs font-bold text-[#10B981] hover:underline">
-                    Voir les détails de la navette &rarr;
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-line bg-white/50 p-8 text-center">
+              <RefreshCw size={40} className="mb-4 text-muted opacity-50" />
+              <h3 className="mb-2 text-lg font-semibold text-ink">Aucune navette programmée</h3>
+              <p className="text-sm text-muted">Cliquez sur "Nouvelle navette" pour créer votre première tournée.</p>
+            </div>
+          )
         ) : !isSubmitted ? (
         <form className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500" onSubmit={handleSubmit}>
-          
+
           <div className="mb-2">
             <button type="button" onClick={() => setIsCreating(false)} className="text-sm font-bold text-muted hover:text-ink hover:underline">
               &larr; Retour aux navettes
             </button>
           </div>
-          
+
+          {submitError && (
+            <div className="flex items-center gap-3 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-600">
+              <div className="h-2 w-2 rounded-full bg-red-600"></div>
+              {submitError}
+            </div>
+          )}
+
+          {/* Section Nom de la Navette */}
+          <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+            <div className="flex items-center gap-2 border-b border-line bg-[#FDFDFD] px-6 py-4 text-sm font-bold tracking-wide text-ink uppercase">
+              <Truck size={16} className="text-[#10B981]" />
+              NOM DE LA NAVETTE
+            </div>
+            <div className="flex flex-col p-6 sm:p-8">
+              <input
+                type="text"
+                placeholder="Ex: Navette Agences Nord, Réapprovisionnement Boutiques, etc."
+                value={navetteNom}
+                onChange={(e) => setNavetteNom(e.target.value)}
+                className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 text-sm font-medium text-ink focus:border-[#10B981] focus:outline-none"
+                required
+              />
+            </div>
+          </div>
+
           {/* Section Trajet */}
           <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
             <div className="flex items-center gap-2 border-b border-line bg-[#FDFDFD] px-6 py-4 text-sm font-bold tracking-wide text-ink uppercase">
@@ -162,16 +327,29 @@ export default function NavettesPage() {
                   <div className="[&>div>input]:pl-4 [&>div>input]:py-3.5 [&>div>input]:shadow-sm">
                     <AddressAutocomplete value={pickupAddress} onChange={setPickupAddress} placeholder="Adresse du siège ou de l'entrepôt" required />
                   </div>
-                  
+
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <input
                       type="text"
-                      placeholder="Contact sur place (Nom & Tél)"
+                      placeholder="Nom contact"
+                      value={pickupContactName}
+                      onChange={(e) => setPickupContactName(e.target.value)}
                       className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                     />
                     <input
+                      type="tel"
+                      placeholder="Téléphone contact"
+                      value={pickupContactPhone}
+                      onChange={(e) => setPickupContactPhone(e.target.value)}
+                      className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <input
                       type="text"
                       placeholder="Service / Instructions pour le chauffeur"
+                      value={pickupNotes}
+                      onChange={(e) => setPickupNotes(e.target.value)}
                       className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                     />
                   </div>
@@ -193,24 +371,37 @@ export default function NavettesPage() {
                     
                     <div className="relative mb-3">
                       <div className="[&>div>input]:pl-4 [&>div>input]:py-3.5 [&>div>input]:shadow-sm">
-                        <AddressAutocomplete 
+                        <AddressAutocomplete
                           value={stop.address}
-                          onChange={(val) => updateStop(stop.id, val)}
+                          onChange={(val) => updateStop(stop.id, 'address', val)}
                           placeholder="Adresse de livraison intermédiaire"
                           required={true}
                         />
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <input
                         type="text"
                         placeholder="Contact sur place (Nom & Tél)"
+                        value={stop.contactName}
+                        onChange={(e) => updateStop(stop.id, 'contactName', e.target.value)}
                         className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                       />
                       <input
                         type="text"
+                        placeholder="Téléphone contact"
+                        value={stop.contactPhone}
+                        onChange={(e) => updateStop(stop.id, 'contactPhone', e.target.value)}
+                        className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-1">
+                      <input
+                        type="text"
                         placeholder="Notes pour le coursier"
+                        value={stop.notes}
+                        onChange={(e) => updateStop(stop.id, 'notes', e.target.value)}
                         className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                       />
                     </div>
@@ -229,16 +420,29 @@ export default function NavettesPage() {
                   <div className="[&>div>input]:pl-4 [&>div>input]:py-3.5 [&>div>input]:shadow-sm">
                     <AddressAutocomplete value={dropoffAddress} onChange={setDropoffAddress} placeholder="Adresse de destination finale" required />
                   </div>
-                  
+
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <input
                       type="text"
-                      placeholder="Contact sur place (Nom & Tél)"
+                      placeholder="Nom contact"
+                      value={dropoffContactName}
+                      onChange={(e) => setDropoffContactName(e.target.value)}
                       className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                     />
                     <input
+                      type="tel"
+                      placeholder="Téléphone contact"
+                      value={dropoffContactPhone}
+                      onChange={(e) => setDropoffContactPhone(e.target.value)}
+                      className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <input
                       type="text"
                       placeholder="Service / Instructions pour le chauffeur"
+                      value={dropoffNotes}
+                      onChange={(e) => setDropoffNotes(e.target.value)}
                       className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
                     />
                   </div>
@@ -280,11 +484,23 @@ export default function NavettesPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-ink">Heure de présentation (Départ)</label>
-                  <input type="time" defaultValue="08:30" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-bold text-ink focus:border-[#10B981] focus:outline-none" required />
+                  <input
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-bold text-ink focus:border-[#10B981] focus:outline-none"
+                    required
+                  />
                 </div>
                 <div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-ink">Heure limite de livraison</label>
-                  <input type="time" defaultValue="12:00" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-bold text-ink focus:border-[#10B981] focus:outline-none" required />
+                  <input
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-bold text-ink focus:border-[#10B981] focus:outline-none"
+                    required
+                  />
                 </div>
               </div>
             </div>
@@ -307,8 +523,12 @@ export default function NavettesPage() {
                 <ShieldCheck size={18} className="text-[#10B981]" />
                 Chauffeur attitré
               </div>
-              <button type="submit" className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-ink px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-ink/90">
-                Confirmer la navette
+              <button
+                type="submit"
+                disabled={submitting}
+                className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-ink px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-ink/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submitting ? 'Enregistrement...' : 'Confirmer la navette'}
                 <ChevronRight size={18} strokeWidth={2.5} />
               </button>
             </div>
