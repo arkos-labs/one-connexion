@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Phone } from "lucide-react";
 import { PHONE_TEL } from "@/lib/site-content";
 import { DASHBOARD_NAV_ITEMS } from "@/lib/dashboard-nav";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function DashboardLayout({
   children,
@@ -13,6 +15,24 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = createClient();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+  };
+
+  const initials = user?.user_metadata?.full_name
+    ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
+    : "??";
+  const displayName = user?.user_metadata?.full_name ?? user?.email ?? "Mon compte";
+  const company = user?.user_metadata?.company ?? "";
 
   return (
     <div className="relative min-h-screen bg-[#FBFBFB]">
@@ -30,14 +50,14 @@ export default function DashboardLayout({
               {/* En-tête profil */}
               <div className="flex items-center gap-4 border-b border-line p-5">
                 <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl bg-[#0E0F10] text-[15px] font-bold text-white shadow-sm">
-                  AD
+                  {initials}
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
-                    <span className="text-[15px] font-bold text-ink">Alexandre Dupont</span>
+                    <span className="text-[15px] font-bold text-ink">{displayName}</span>
                     <span className="rounded-full bg-green-50 px-1.5 py-0.5 text-[9px] font-bold uppercase text-green-600">Vérifié</span>
                   </div>
-                  <span className="text-xs font-medium text-muted">Cabinet Dupont & Associés</span>
+                  {company && <span className="text-xs font-medium text-muted">{company}</span>}
                 </div>
               </div>
 
@@ -86,13 +106,13 @@ export default function DashboardLayout({
 
                 <div className="my-2 border-t border-line" />
 
-                <Link
-                  href="/"
-                  className="flex items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-semibold text-red-500 transition-colors hover:bg-red-50 hover:text-red-600"
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-semibold text-red-500 transition-colors hover:bg-red-50 hover:text-red-600"
                 >
                   <LogOut size={18} strokeWidth={2} className="text-red-400" />
                   Déconnexion
-                </Link>
+                </button>
               </nav>
             </div>
 

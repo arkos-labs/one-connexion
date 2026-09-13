@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AtSign,
   Lock,
@@ -12,6 +13,7 @@ import {
   CheckCircle2,
   Star,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const PERKS = [
   { title: "Commander en quelques clics", sub: "Course flash prise en charge en moins de 45 min." },
@@ -22,6 +24,25 @@ const PERKS = [
 
 export default function AuthForm() {
   const [showPwd, setShowPwd] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError("Email ou mot de passe incorrect.");
+      setLoading(false);
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-80px)] bg-paper">
@@ -40,7 +61,7 @@ export default function AuthForm() {
             Gérez vos courses, suivez vos livraisons et accédez à vos factures.
           </p>
 
-          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-bold uppercase tracking-wider text-ink">
@@ -54,6 +75,8 @@ export default function AuthForm() {
                   type="email"
                   placeholder="contact@votre-entreprise.fr"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-4 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
                 />
               </div>
@@ -75,6 +98,8 @@ export default function AuthForm() {
                   type={showPwd ? "text" : "password"}
                   placeholder="••••••••••••"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
                 />
                 <button
@@ -88,24 +113,19 @@ export default function AuthForm() {
               </div>
             </div>
 
-            {/* Rester connecté */}
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="remember"
-                className="h-4 w-4 rounded border-line accent-accent"
-              />
-              <label htmlFor="remember" className="text-[13px] text-muted select-none">
-                Rester connecté sur cet appareil
-              </label>
-            </div>
+            {error && (
+              <p className="rounded-[6px] border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] font-medium text-red-600">
+                {error}
+              </p>
+            )}
 
             <button
               type="submit"
-              className="group mt-2 flex items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark"
+              disabled={loading}
+              className="group mt-2 flex items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
             >
-              Se connecter
-              <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+              {loading ? "Connexion en cours…" : "Se connecter"}
+              {!loading && <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />}
             </button>
           </form>
 

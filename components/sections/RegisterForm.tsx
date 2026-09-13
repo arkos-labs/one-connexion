@@ -2,19 +2,59 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  Clock, 
-  ShieldCheck, 
-  FileText, 
-  Building2, 
+import { useRouter } from "next/navigation";
+import {
+  Clock,
+  ShieldCheck,
+  FileText,
+  Building2,
   AtSign,
   ArrowRight,
   CheckCircle2,
   Star
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function RegisterForm() {
   const [accountType, setAccountType] = useState<"pro" | "particulier">("pro");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: `${firstName} ${lastName}`,
+          company: accountType === "pro" ? company : null,
+          phone,
+        },
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   return (
     <div className="relative mx-auto flex min-h-[calc(100vh-76px)] max-w-[1240px] items-center justify-center px-[clamp(20px,4vw,28px)] py-12">
@@ -140,14 +180,16 @@ export default function RegisterForm() {
               </div>
             </div>
 
-            <form className="flex w-full flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
-              
+            <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit}>
+
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-muted">Prénom <span className="text-accent">*</span></label>
                   <input
                     type="text"
                     placeholder="ex. Alexandre"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
@@ -157,6 +199,8 @@ export default function RegisterForm() {
                   <input
                     type="text"
                     placeholder="ex. Dupont"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
@@ -165,9 +209,7 @@ export default function RegisterForm() {
 
               {accountType === "pro" && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">
-                    Entreprise
-                  </label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Entreprise</label>
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
                       <Building2 size={18} strokeWidth={1.5} />
@@ -175,6 +217,8 @@ export default function RegisterForm() {
                     <input
                       type="text"
                       placeholder="ex. Studio Créatif SARL"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
                       className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     />
                   </div>
@@ -182,7 +226,7 @@ export default function RegisterForm() {
               )}
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse email professionnelle <span className="text-accent">*</span></label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse email <span className="text-accent">*</span></label>
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
                     <AtSign size={18} strokeWidth={1.5} />
@@ -190,6 +234,8 @@ export default function RegisterForm() {
                   <input
                     type="email"
                     placeholder="contact@votre-entreprise.fr"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
@@ -197,7 +243,7 @@ export default function RegisterForm() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-muted">Numéro de téléphone portable <span className="text-accent">*</span></label>
+                <label className="text-xs font-bold uppercase tracking-wider text-muted">Téléphone <span className="text-accent">*</span></label>
                 <div className="flex rounded-[4px] border border-line bg-transparent focus-within:border-accent focus-within:ring-1 focus-within:ring-accent">
                   <div className="flex items-center gap-2 border-r border-line bg-paper px-3 py-2.5">
                     <span className="text-base leading-none">🇫🇷</span>
@@ -206,11 +252,12 @@ export default function RegisterForm() {
                   <input
                     type="tel"
                     placeholder="06 12 34 56 78"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="w-full bg-transparent px-3 py-2.5 text-sm text-ink placeholder:text-line focus:outline-none"
                     required
                   />
                 </div>
-                <p className="text-[11px] text-label">Utilisé pour les notifications SMS du livreur et confirmations d'enlèvement.</p>
               </div>
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -219,28 +266,31 @@ export default function RegisterForm() {
                   <input
                     type="password"
                     placeholder="Min. 8 caractères"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength={8}
                     className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Confirmer le mot de passe <span className="text-accent">*</span></label>
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Confirmer <span className="text-accent">*</span></label>
                   <input
                     type="password"
                     placeholder="Répéter le mot de passe"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     required
                   />
                 </div>
               </div>
 
-              {/* Password Strength Indicator */}
-              <div className="mt-[-4px] flex items-center justify-between">
-                <div className="flex h-1 flex-1 overflow-hidden rounded-full bg-line">
-                  <div className="w-2/3 bg-green-500"></div>
-                </div>
-                <span className="ml-3 text-[11px] font-semibold text-green-600">Sécurité : Bonne</span>
-              </div>
+              {error && (
+                <p className="rounded-[4px] border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] font-medium text-red-600">
+                  {error}
+                </p>
+              )}
 
               {/* Checkbox Conditions */}
               <div className="mt-2 flex items-start gap-3">
@@ -259,10 +309,11 @@ export default function RegisterForm() {
               <div className="mt-2">
                 <button
                   type="submit"
-                  className="group flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-accent-dark hover:shadow-md"
+                  disabled={loading}
+                  className="group flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-accent-dark hover:shadow-md disabled:opacity-60"
                 >
-                  Créer mon compte {accountType === "pro" ? "professionnel" : "particulier"}
-                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+                  {loading ? "Création en cours…" : `Créer mon compte ${accountType === "pro" ? "professionnel" : "particulier"}`}
+                  {!loading && <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />}
                 </button>
               </div>
 

@@ -162,12 +162,6 @@ export default function Footer() {
           </span>
           <span
             className="font-mono text-[10px] tracking-[0.12em] uppercase"
-            style={{ color: "rgba(244,242,238,0.10)" }}
-          >
-            {LEGAL.adresse}
-          </span>
-          <span
-            className="font-mono text-[10px] tracking-[0.12em] uppercase"
             style={{ color: "rgba(244,242,238,0.16)" }}
           >
             SIREN {LEGAL.siren} · TVA {LEGAL.tva} · Assurance 3,5 M€ · RC Pro
