@@ -33,8 +33,9 @@ export default function AdminChauffeursPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- load() is also called from handleAdd/updateStatus below, so it can't be inlined into this effect
     load();
-  }, []);
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
