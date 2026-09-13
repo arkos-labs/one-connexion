@@ -80,8 +80,9 @@ export default function ReferencesPage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/references-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-ink/85"></div>
+        <div className="relative z-10 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
             Références &amp; Clients
           </div>
@@ -93,21 +94,43 @@ export default function ReferencesPage() {
           </p>
         </div>
 
-        {/* Chiffres */}
-        <div className="border-t border-white/10">
-          <div className="mx-auto grid max-w-[1240px] grid-cols-2 divide-x divide-white/10 px-[clamp(20px,4vw,28px)] md:grid-cols-4 md:divide-y-0">
-            {CHIFFRES.map((c) => (
-              <div key={c.label} className="flex flex-col items-center justify-center py-8 text-center">
-                <span className="text-[clamp(28px,3vw,36px)] font-bold text-white">{c.value}</span>
-                <span className="mt-1 text-[12px] font-medium text-white/50">{c.label}</span>
-              </div>
-            ))}
-          </div>
+      </section>
+
+      {/* ── Chiffres (Carousel) ── */}
+      <section className="bg-white border-b border-gray-100 py-10 overflow-hidden relative">
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 20s linear infinite;
+          }
+          @media (max-width: 768px) {
+            .animate-marquee {
+              animation-duration: 15s;
+            }
+          }
+        `}</style>
+        
+        {/* Dégradés pour l'effet de fondu sur les bords */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 md:w-32 bg-gradient-to-r from-white to-transparent"></div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 md:w-32 bg-gradient-to-l from-white to-transparent"></div>
+        
+        <div className="animate-marquee hover:[animation-play-state:paused]">
+          {[...CHIFFRES, ...CHIFFRES, ...CHIFFRES].map((c, i) => (
+            <div key={i} className="flex flex-col items-center justify-center px-10 md:px-20 text-center shrink-0">
+              <span className="text-[clamp(24px,3vw,36px)] font-bold text-ink">{c.value}</span>
+              <span className="mt-1 text-[11px] md:text-[12px] font-bold text-muted uppercase tracking-wider">{c.label}</span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── Secteurs ── */}
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
+      <section className="bg-paper mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pt-20 pb-12">
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
           Secteurs d'expertise
         </div>
@@ -206,35 +229,6 @@ export default function ReferencesPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Rejoignez nos clients.
-              </h2>
-              <p className="text-[15px] text-white/60">
-                Ouvrez un compte entreprise en 2 minutes, sans engagement.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/inscription"
-                className="flex items-center justify-center gap-2 rounded-[4px] bg-accent px-6 py-3.5 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark"
-              >
-                Ouvrir un compte <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/#commander"
-                className="rounded-[4px] border border-white/20 px-6 py-3.5 text-center text-[14px] font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Commander une course
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <Contact />
     </main>

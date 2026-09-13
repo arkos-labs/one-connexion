@@ -7,27 +7,27 @@ import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
 export default function Contact() {
   return (
-    <section id="contact" className="bg-accent text-white">
-      <div className="mx-auto grid max-w-[1240px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-10 px-[clamp(20px,4vw,28px)] py-20">
-        <div className="min-w-0">
-          <h2 className="mb-3.5 text-balance text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
-            Un pli à faire partir aujourd&rsquo;hui ?
+    <section id="contact" className="bg-accent text-white py-16">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div>
+          <h2 className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+            Rejoignez nos clients.
           </h2>
-          <p className="max-w-[46ch] text-[17px] leading-[1.6] text-white/88">
-            Appelez-nous pour une course immédiate, ou ouvrez un compte entreprise
-            pour des tarifs négociés et une facturation mensuelle.
+          <p className="text-[16px] text-white/90">
+            Ouvrez un compte entreprise en 2 minutes, sans engagement.
           </p>
         </div>
-        <div className="flex min-w-0 flex-wrap justify-end gap-3">
+        <div className="flex flex-wrap gap-4">
           <a
-            href={`tel:${PHONE_TEL}`}
-            className="rounded-[2px] bg-ink px-[26px] py-4 text-[15px] font-semibold text-white hover:bg-white hover:text-ink"
+            href="/inscription"
+            className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-white hover:text-ink transition-colors"
           >
-            {PHONE_DISPLAY}
+            Ouvrir un compte
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
           <a
             href="/#commander"
-            className="rounded-[2px] border border-white/60 px-[26px] py-4 text-[15px] font-semibold text-white hover:border-white hover:bg-white hover:text-accent"
+            className="rounded-[4px] border border-white/40 px-6 py-3.5 text-[14px] font-semibold text-white hover:bg-white/10 transition-colors"
           >
             Commander une course
           </a>

@@ -66,8 +66,9 @@ export default function FlottePage() {
     <main>
 
       {/* ── Hero ── */}
-      <section className="bg-ink text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
+      <section className="relative bg-ink text-white" style={{ backgroundImage: "url('/images/flotte-bg-new.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-ink/85"></div>
+        <div className="relative z-10 mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-20 pt-16">
           <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
             Flotte &amp; Couverture
           </div>
@@ -80,7 +81,7 @@ export default function FlottePage() {
         </div>
 
         {/* Bandeau stats */}
-        <div className="border-t border-white/10">
+        <div className="relative z-10 border-t border-white/10">
           <div className="mx-auto grid max-w-[1240px] grid-cols-2 divide-x divide-white/10 px-[clamp(20px,4vw,28px)] md:grid-cols-4 md:divide-y-0">
             {STATS.map((s) => (
               <div key={s.label} className="flex flex-col items-center justify-center py-8 text-center">
@@ -173,32 +174,30 @@ export default function FlottePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-accent text-white">
-        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-20">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="mb-3 text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] tracking-[-0.02em]">
-                Un pli à faire partir aujourd'hui ?
-              </h2>
-              <p className="max-w-[500px] text-[15px] text-white/90">
-                Appelez-nous pour une course immédiate, ou ouvrez un compte entreprise pour des tarifs négociés et une facturation mensuelle.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/#commander"
-                className="rounded-[4px] bg-ink px-6 py-3.5 text-center text-[14px] font-bold text-white transition-colors hover:bg-ink/80 shadow-md"
-              >
-                Commander une course
-              </Link>
-              <a
-                href={`tel:${PHONE_TEL}`}
-                className="flex items-center justify-center gap-2 rounded-[4px] border border-white/30 px-6 py-3.5 text-[14px] font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                <Phone size={16} className="text-white" />
-                {PHONE_DISPLAY}
-              </a>
-            </div>
+      <section className="bg-accent text-white py-16">
+        <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div>
+            <h2 className="mb-2 text-[clamp(28px,3.2vw,40px)] font-bold leading-[1.1] tracking-[-0.03em]">
+              Rejoignez nos clients.
+            </h2>
+            <p className="text-[16px] text-white/90">
+              Ouvrez un compte entreprise en 2 minutes, sans engagement.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="/inscription"
+              className="flex items-center gap-2 rounded-[4px] bg-ink px-6 py-3.5 text-[14px] font-bold text-white hover:bg-white hover:text-ink transition-colors"
+            >
+              Ouvrir un compte
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </Link>
+            <Link
+              href="/#commander"
+              className="rounded-[4px] border border-white/40 px-6 py-3.5 text-[14px] font-semibold text-white hover:bg-white/10 transition-colors"
+            >
+              Commander une course
+            </Link>
           </div>
         </div>
       </section>

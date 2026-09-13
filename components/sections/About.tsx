@@ -31,7 +31,7 @@ export default function About() {
         
         <div className="relative aspect-square md:aspect-[4/3] lg:aspect-square overflow-hidden bg-ink/5 rounded-[4px] shadow-sm">
           <Image
-            src="/images/about-img.jpg"
+            src="/images/about-coursier.jpg"
             alt="Coursier B2B professionnel à Paris"
             fill
             className="object-cover"
