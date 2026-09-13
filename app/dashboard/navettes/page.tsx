@@ -10,6 +10,11 @@ export default function NavettesPage() {
   const [dropoffAddress, setDropoffAddress] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [stops, setStops] = useState<{id: string, address: string}[]>([]);
+  
+  const [navettes, setNavettes] = useState([
+    { id: 1, name: "Tournée Agences Nord", from: "Siège Social (75001)", to: "Agence Saint-Denis (93200)", schedule: "Lun, Mer, Ven — Présentation à 08h30" },
+    { id: 2, name: "Réapprovisionnement Sud", from: "Entrepôt Logistique (94)", to: "3 Boutiques (Paris Sud)", schedule: "Mar, Jeu — Présentation à 10h00" }
+  ]);
 
   const addStop = () => {
     setStops([...stops, { id: Math.random().toString(), address: "" }]);
@@ -41,6 +46,20 @@ export default function NavettesPage() {
     } else {
       setSelectedDays([...selectedDays, dayId]);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const daysStr = selectedDays.map(d => daysOfWeek.find(x => x.id === d)?.label).join(', ');
+    const newNavette = {
+      id: Date.now(),
+      name: `Nouvelle Navette`,
+      from: pickupAddress || "Départ",
+      to: dropoffAddress || "Arrivée",
+      schedule: `${daysStr} — Présentation à définir`
+    };
+    setNavettes([newNavette, ...navettes]);
+    setIsSubmitted(true);
   };
 
   return (
@@ -81,74 +100,42 @@ export default function NavettesPage() {
       <div className="flex flex-col gap-6">
         {!isCreating ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 animate-in fade-in duration-500">
-            {/* Carte Navette Factice 1 */}
-            <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md">
-              <div className="flex items-center justify-between border-b border-line p-5">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#10B981]/10 text-[#10B981]">
-                    <RefreshCw size={16} strokeWidth={2.5} />
+            {navettes.map((navette) => (
+              <div key={navette.id} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md">
+                <div className="flex items-center justify-between border-b border-line p-5">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#10B981]/10 text-[#10B981]">
+                      <RefreshCw size={16} strokeWidth={2.5} />
+                    </div>
+                    <h3 className="font-bold text-ink">{navette.name}</h3>
                   </div>
-                  <h3 className="font-bold text-ink">Tournée Agences Nord</h3>
+                  <span className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold uppercase text-green-600 ring-1 ring-green-600/20">Active</span>
                 </div>
-                <span className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold uppercase text-green-600 ring-1 ring-green-600/20">Active</span>
+                <div className="flex flex-col gap-4 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper">
+                      <MapPin size={12} className="text-muted" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="truncate text-sm font-semibold text-ink">{navette.from}</span>
+                      <span className="truncate text-xs text-muted">Vers : {navette.to}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 rounded-lg bg-paper p-3 text-xs font-semibold text-ink">
+                    <Clock size={14} className="text-muted" />
+                    {navette.schedule}
+                  </div>
+                  
+                  <button className="mt-2 text-left text-xs font-bold text-[#10B981] hover:underline">
+                    Voir les détails de la navette &rarr;
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col gap-4 p-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper">
-                    <MapPin size={12} className="text-muted" />
-                  </div>
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="truncate text-sm font-semibold text-ink">Siège Social (75001)</span>
-                    <span className="truncate text-xs text-muted">Vers : Agence Saint-Denis (93200)</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2 rounded-lg bg-paper p-3 text-xs font-semibold text-ink">
-                  <Clock size={14} className="text-muted" />
-                  Lun, Mer, Ven — Présentation à 08h30
-                </div>
-                
-                <button className="mt-2 text-left text-xs font-bold text-[#10B981] hover:underline">
-                  Voir les détails de la navette &rarr;
-                </button>
-              </div>
-            </div>
-
-            {/* Carte Navette Factice 2 */}
-            <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-md">
-              <div className="flex items-center justify-between border-b border-line p-5">
-                <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#10B981]/10 text-[#10B981]">
-                    <RefreshCw size={16} strokeWidth={2.5} />
-                  </div>
-                  <h3 className="font-bold text-ink">Réapprovisionnement Sud</h3>
-                </div>
-                <span className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold uppercase text-green-600 ring-1 ring-green-600/20">Active</span>
-              </div>
-              <div className="flex flex-col gap-4 p-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-paper">
-                    <MapPin size={12} className="text-muted" />
-                  </div>
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="truncate text-sm font-semibold text-ink">Entrepôt Logistique (94)</span>
-                    <span className="truncate text-xs text-muted">Vers : 3 Boutiques (Paris Sud)</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2 rounded-lg bg-paper p-3 text-xs font-semibold text-ink">
-                  <Clock size={14} className="text-muted" />
-                  Mar, Jeu — Présentation à 10h00
-                </div>
-                
-                <button className="mt-2 text-left text-xs font-bold text-[#10B981] hover:underline">
-                  Voir les détails de la navette &rarr;
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         ) : !isSubmitted ? (
-        <form className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
+        <form className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500" onSubmit={handleSubmit}>
           
           <div className="mb-2">
             <button type="button" onClick={() => setIsCreating(false)} className="text-sm font-bold text-muted hover:text-ink hover:underline">
