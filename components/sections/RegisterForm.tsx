@@ -26,6 +26,7 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -37,7 +38,7 @@ export default function RegisterForm() {
     }
     setLoading(true);
     setError(null);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -51,10 +52,34 @@ export default function RegisterForm() {
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
+    } else if (data.session) {
+      // Confirmation email désactivée → session active directement
       router.push("/dashboard");
+    } else {
+      // Confirmation email activée → demander de vérifier
+      setCheckEmail(true);
+      setLoading(false);
     }
   };
+
+  if (checkEmail) {
+    return (
+      <div className="flex min-h-[calc(100vh-76px)] items-center justify-center px-4">
+        <div className="max-w-md text-center">
+          <div className="mb-6 flex h-20 w-20 mx-auto items-center justify-center rounded-full bg-accent/10">
+            <span className="text-4xl">📧</span>
+          </div>
+          <h2 className="mb-3 text-2xl font-bold text-ink">Vérifiez votre email</h2>
+          <p className="mb-6 text-muted">
+            Un lien de confirmation a été envoyé à <strong>{email}</strong>. Cliquez dessus pour activer votre compte.
+          </p>
+          <a href="/connexion" className="inline-flex items-center gap-2 rounded-[4px] bg-accent px-8 py-3 font-bold text-white hover:bg-accent-dark transition-colors">
+            Retour à la connexion
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative mx-auto flex min-h-[calc(100vh-76px)] max-w-[1240px] items-center justify-center px-[clamp(20px,4vw,28px)] py-12">
