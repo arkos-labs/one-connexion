@@ -45,6 +45,10 @@ export default function AuthForm() {
   };
 
   const handleDevBypass = async () => {
+    if (process.env.NODE_ENV === "production") {
+      setError("Connexion admin dev impossible.");
+      return;
+    }
     setLoading(true);
     setError(null);
     const { error } = await supabase.auth.signInWithPassword({
@@ -144,7 +148,7 @@ export default function AuthForm() {
             </button>
           </form>
 
-          {process.env.NEXT_PUBLIC_DEV_ADMIN_BYPASS === "true" && (
+          {process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_DEV_ADMIN_BYPASS === "true" && (
             <button
               type="button"
               onClick={handleDevBypass}

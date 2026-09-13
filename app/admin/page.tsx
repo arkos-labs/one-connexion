@@ -19,10 +19,11 @@ export default function AdminOverviewPage() {
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
-      const [ordersToday, ordersEnCours, ordersNonDispatchees, driversDispo] = await Promise.all([
+      const [ordersToday, ordersEnCours, ordersNonDispatchees, navettesNonDispatchees, driversDispo] = await Promise.all([
         supabase.from("orders").select("price_estimate").gte("created_at", startOfDay.toISOString()).neq("status", "annulee"),
         supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "en_cours"),
         supabase.from("orders").select("id", { count: "exact", head: true }).is("driver_id", null).in("status", ["en_attente", "confirmee"]),
+        supabase.from("navettes").select("id", { count: "exact", head: true }).eq("status", "active").is("driver_id", null),
         supabase.from("drivers").select("id", { count: "exact", head: true }).eq("status", "disponible"),
       ]);
 
@@ -32,7 +33,7 @@ export default function AdminOverviewPage() {
         caJour,
         coursesEnCours: ordersEnCours.count ?? 0,
         chauffeursDispo: driversDispo.count ?? 0,
-        nonDispatchees: ordersNonDispatchees.count ?? 0,
+        nonDispatchees: (ordersNonDispatchees.count ?? 0) + (navettesNonDispatchees.count ?? 0),
       });
     };
     load();
