@@ -22,8 +22,8 @@ const config: Config = {
         line: "#DFDCD6",
         muted: "#4A4845",
         label: "#8C8882",
-        accent: "#E85D1F",
-        "accent-dark": "#C2410C",
+        accent: "#ed5518",
+        "accent-dark": "#c94410",
       },
       borderRadius: {
         brand: "2px", // radius quasi nul = registre sérieux, pas "app mignonne"

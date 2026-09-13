@@ -105,7 +105,7 @@ export default function ServicesIndexPage() {
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-24">
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
         <div className="border-t border-line pt-20">
           <h2 className="mb-8 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
             Une gamme de prestations calibrée pour les exigences franciliennes

@@ -67,7 +67,7 @@ export default function OrderForm() {
 
   return (
     <section id="commander" className="border-y border-line bg-[#F8F9FA]">
-      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-24">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-14 text-center">
           <div className="mb-5 inline-flex bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-semibold items-center gap-1.5 border border-emerald-100">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
@@ -108,7 +108,7 @@ export default function OrderForm() {
               <div className="flex items-center justify-between mb-10 relative">
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 rounded-full z-0"></div>
                 <div 
-                  className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#F36B2B] rounded-full z-0 transition-all duration-500"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#ed5518] rounded-full z-0 transition-all duration-500"
                   style={{ width: `${((step - 1) / 2) * 100}%` }}
                 ></div>
                 
@@ -116,7 +116,7 @@ export default function OrderForm() {
                   <div 
                     key={s} 
                     className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
-                      step >= s ? 'bg-[#F36B2B] text-white shadow-md shadow-orange-500/20' : 'bg-gray-100 text-gray-400'
+                      step >= s ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-400'
                     }`}
                   >
                     {s}
@@ -155,10 +155,10 @@ export default function OrderForm() {
 
                     <div className="flex items-center justify-between mb-8">
                       <div className="flex items-center gap-3 text-gray-900 font-bold text-lg">
-                        <div className="p-2 bg-orange-50 rounded-lg"><MapPin className="w-5 h-5 text-[#F36B2B]" /></div>
+                        <div className="p-2 bg-orange-50 rounded-lg"><MapPin className="w-5 h-5 text-[#ed5518]" /></div>
                         Itinéraire de livraison
                       </div>
-                      <div className="hidden sm:block bg-orange-50 text-[#F36B2B] px-3 py-1.5 rounded-md text-xs font-semibold">
+                      <div className="hidden sm:block bg-orange-50 text-[#ed5518] px-3 py-1.5 rounded-md text-xs font-semibold">
                         Paris & Île-de-France
                       </div>
                     </div>
@@ -171,7 +171,7 @@ export default function OrderForm() {
                           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                         </div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          Adresse d'enlèvement <span className="text-[#F36B2B]">*</span>
+                          Adresse d'enlèvement <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
                           <input type="text" value={pickupAddress} onChange={(e) => setPickupAddress(e.target.value)} required placeholder="75008 Paris..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" />
@@ -184,14 +184,14 @@ export default function OrderForm() {
                       </div>
 
                       <div className="relative">
-                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-[#F36B2B] bg-white flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#F36B2B]"></div>
+                        <div className="absolute -left-[38px] top-1.5 w-6 h-6 rounded-full border-[3px] border-[#ed5518] bg-white flex items-center justify-center">
+                          <div className="w-2.5 h-2.5 rounded-full bg-[#ed5518]"></div>
                         </div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          Adresse de livraison <span className="text-[#F36B2B]">*</span>
+                          Adresse de livraison <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
-                          <input type="text" value={dropoffAddress} onChange={(e) => setDropoffAddress(e.target.value)} required placeholder="92100 Boulogne..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#F36B2B]/20 focus:border-[#F36B2B] transition-colors" />
+                          <input type="text" value={dropoffAddress} onChange={(e) => setDropoffAddress(e.target.value)} required placeholder="92100 Boulogne..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#ed5518]/20 focus:border-[#ed5518] transition-colors" />
                           <MapPin className="absolute right-4 top-4 w-5 h-5 text-gray-400" />
                         </div>
                         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
@@ -207,14 +207,14 @@ export default function OrderForm() {
                 {step === 2 && (
                   <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="flex items-center gap-3 text-gray-900 font-bold text-lg mb-6">
-                      <div className="p-2 bg-orange-50 rounded-lg"><User className="w-5 h-5 text-[#F36B2B]" /></div>
+                      <div className="p-2 bg-orange-50 rounded-lg"><User className="w-5 h-5 text-[#ed5518]" /></div>
                       Vos informations
                     </div>
 
                     <div className="space-y-6">
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          {clientType === 'entreprise' ? 'Nom de la société' : 'Nom et Prénom'} <span className="text-[#F36B2B]">*</span>
+                          {clientType === 'entreprise' ? 'Nom de la société' : 'Nom et Prénom'} <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -235,7 +235,7 @@ export default function OrderForm() {
 
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          Téléphone <span className="text-[#F36B2B]">*</span>
+                          Téléphone <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="flex">
                           <div className="bg-gray-100 border border-gray-200 border-r-0 rounded-l-xl px-4 py-3 flex items-center justify-center gap-2">
@@ -248,7 +248,7 @@ export default function OrderForm() {
                       
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">
-                          Email <span className="text-[#F36B2B]">*</span>
+                          Email <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -266,7 +266,7 @@ export default function OrderForm() {
                   <div className="flex-1 animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="flex items-center justify-between mb-8">
                       <div className="flex items-center gap-3 text-gray-900 font-bold text-lg">
-                        <div className="p-2 bg-orange-50 rounded-lg"><Package className="w-5 h-5 text-[#F36B2B]" /></div>
+                        <div className="p-2 bg-orange-50 rounded-lg"><Package className="w-5 h-5 text-[#ed5518]" /></div>
                         Détails du pli / colis
                       </div>
                       <span className="text-sm font-medium text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Max 15kg</span>
@@ -276,19 +276,19 @@ export default function OrderForm() {
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-3">Format du courrier</label>
                         <div className="grid grid-cols-3 gap-3">
-                          <button type="button" onClick={() => setFormat('doc')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'doc' ? 'border-[#F36B2B] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Mail className={`w-6 h-6 mb-2 ${format === 'doc' ? 'text-[#F36B2B]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'doc' ? 'text-[#F36B2B]' : 'text-gray-700'}`}>Pli / Doc</span>
+                          <button type="button" onClick={() => setFormat('doc')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'doc' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
+                            <Mail className={`w-6 h-6 mb-2 ${format === 'doc' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
+                            <span className={`text-sm font-bold ${format === 'doc' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Pli / Doc</span>
                             <span className={`text-xs mt-1 ${format === 'doc' ? 'text-orange-400/80' : 'text-gray-400'}`}>{'< 1 kg'}</span>
                           </button>
-                          <button type="button" onClick={() => setFormat('petit')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'petit' ? 'border-[#F36B2B] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Package className={`w-6 h-6 mb-2 ${format === 'petit' ? 'text-[#F36B2B]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'petit' ? 'text-[#F36B2B]' : 'text-gray-700'}`}>Petit colis</span>
+                          <button type="button" onClick={() => setFormat('petit')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'petit' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
+                            <Package className={`w-6 h-6 mb-2 ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
+                            <span className={`text-sm font-bold ${format === 'petit' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Petit colis</span>
                             <span className={`text-xs mt-1 ${format === 'petit' ? 'text-orange-400/80' : 'text-gray-400'}`}>1 à 5 kg</span>
                           </button>
-                          <button type="button" onClick={() => setFormat('volumineux')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'volumineux' ? 'border-[#F36B2B] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
-                            <Truck className={`w-6 h-6 mb-2 ${format === 'volumineux' ? 'text-[#F36B2B]' : 'text-gray-400'}`} />
-                            <span className={`text-sm font-bold ${format === 'volumineux' ? 'text-[#F36B2B]' : 'text-gray-700'}`}>Volumineux</span>
+                          <button type="button" onClick={() => setFormat('volumineux')} className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${format === 'volumineux' ? 'border-[#ed5518] bg-orange-50' : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'}`}>
+                            <Truck className={`w-6 h-6 mb-2 ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-400'}`} />
+                            <span className={`text-sm font-bold ${format === 'volumineux' ? 'text-[#ed5518]' : 'text-gray-700'}`}>Volumineux</span>
                             <span className={`text-xs mt-1 ${format === 'volumineux' ? 'text-orange-400/80' : 'text-gray-400'}`}>5 à 15 kg</span>
                           </button>
                         </div>
@@ -297,15 +297,15 @@ export default function OrderForm() {
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-3">Délai de prise en charge</label>
                         <div className="flex flex-wrap gap-3">
-                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#F36B2B] text-white shadow-md shadow-orange-500/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('urgent')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'urgent' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Zap className="w-5 h-5" />
                             <span className="font-semibold">Urgent ({'<'} 1h)</span>
                           </button>
-                          <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'standard' ? 'bg-[#F36B2B] text-white shadow-md shadow-orange-500/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('standard')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'standard' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Clock className="w-5 h-5" />
                             <span className="font-semibold">Standard (3h)</span>
                           </button>
-                          <button type="button" onClick={() => setDelai('direct')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'direct' ? 'bg-[#F36B2B] text-white shadow-md shadow-orange-500/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                          <button type="button" onClick={() => setDelai('direct')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'direct' ? 'bg-[#ed5518] text-white shadow-md shadow-accent/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                             <Calendar className="w-5 h-5" />
                             <span className="font-semibold">Programmé</span>
                           </button>
@@ -316,11 +316,11 @@ export default function OrderForm() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
                           <div>
                             <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Date d'enlèvement</label>
-                            <input type="date" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#F36B2B] transition-colors" required />
+                            <input type="date" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                           <div>
                             <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Heure</label>
-                            <input type="time" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#F36B2B] transition-colors" required />
+                            <input type="time" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#ed5518] transition-colors" required />
                           </div>
                         </div>
                       )}

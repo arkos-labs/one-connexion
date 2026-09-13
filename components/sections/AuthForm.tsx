@@ -1,236 +1,186 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  CheckCircle2, 
-  AtSign, 
-  Lock, 
+import {
+  AtSign,
+  Lock,
   ArrowRight,
+  Eye,
+  EyeOff,
   ShieldCheck,
+  CheckCircle2,
   Star,
-  Check
 } from "lucide-react";
 
+const PERKS = [
+  { title: "Commander en quelques clics", sub: "Course flash prise en charge en moins de 45 min." },
+  { title: "Suivi GPS en temps réel", sub: "Localisation live du coursier et preuve de signature." },
+  { title: "Factures & reporting centralisé", sub: "Relevés mensuels détaillés par centre de coût." },
+  { title: "Dispatch 7j/7 · 7h–23h", sub: "Un régulateur dédié, joignable en permanence." },
+];
+
 export default function AuthForm() {
+  const [showPwd, setShowPwd] = useState(false);
+
   return (
-    <div className="relative mx-auto flex min-h-[calc(100vh-76px)] max-w-[1240px] flex-col items-center justify-center px-[clamp(20px,4vw,28px)] py-16">
-      
-      {/* Top Header */}
-      <div className="mb-12 flex flex-col items-center text-center">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E85D1F]/20 bg-[#E85D1F]/10 px-3 py-1.5 text-xs font-bold tracking-wide text-accent">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>
-          ESPACE CLIENT SÉCURISÉ
-        </div>
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-ink md:text-5xl">
-          Accédez à votre espace <br className="hidden sm:block" />
-          <span className="text-accent">coursier</span>.
-        </h1>
-        <p className="max-w-2xl text-lg text-muted">
-          Gérez vos courses express, suivez vos livraisons en temps réel et accédez instantanément à vos factures.
-        </p>
-      </div>
+    <div className="min-h-[calc(100vh-80px)] bg-paper">
+      <div className="mx-auto grid max-w-[1240px] min-h-[calc(100vh-80px)] grid-cols-1 lg:grid-cols-2">
 
-      <div className="grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-        
-        {/* Colonne Gauche : Déjà Client */}
-        <div className="relative flex flex-col overflow-hidden rounded-[8px] border border-line bg-white shadow-xl shadow-ink/5">
-          {/* Ligne orange en haut */}
-          <div className="absolute inset-x-0 top-0 h-1.5 bg-accent"></div>
-          
-          <div className="flex flex-col p-8 md:p-10">
-            <div className="mb-8 flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-extrabold text-ink">Déjà client ?</h2>
-                <p className="mt-1 text-sm text-muted">Authentification sécurisée à votre compte entreprise</p>
-              </div>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-paper">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                  <polyline points="10 17 15 12 10 7"></polyline>
-                  <line x1="15" y1="12" x2="3" y2="12"></line>
-                </svg>
-              </div>
-            </div>
+        {/* ── Colonne gauche : Formulaire ── */}
+        <div className="flex flex-col justify-center px-[clamp(20px,5vw,72px)] py-8 lg:py-16">
 
-            <form className="flex w-full flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse email professionnelle <span className="text-accent">*</span></label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
-                    <AtSign size={18} strokeWidth={1.5} />
-                  </div>
-                  <input
-                    type="email"
-                    placeholder="contact@votre-entreprise.fr"
-                    className="w-full rounded-[4px] border border-line bg-transparent py-3 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                    required
-                  />
+          <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+            Espace client sécurisé
+          </div>
+          <h1 className="mb-3 text-[clamp(28px,3.5vw,40px)] font-bold leading-[1.15] tracking-[-0.03em] text-ink">
+            Connectez-vous à votre compte.
+          </h1>
+          <p className="mb-10 text-[15px] text-muted">
+            Gérez vos courses, suivez vos livraisons et accédez à vos factures.
+          </p>
+
+          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[12px] font-bold uppercase tracking-wider text-ink">
+                Email professionnel
+              </label>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-label">
+                  <AtSign size={16} strokeWidth={1.5} />
                 </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Mot de passe <span className="text-accent">*</span></label>
-                  <Link href="#" className="text-xs font-bold text-accent hover:text-accent-dark hover:underline">
-                    Mot de passe oublié ?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
-                    <Lock size={18} strokeWidth={1.5} />
-                  </div>
-                  <input
-                    type="password"
-                    placeholder="••••••••••••"
-                    className="w-full rounded-[4px] border border-line bg-transparent py-3 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
                 <input
-                  type="checkbox"
-                  id="remember"
-                  className="h-4 w-4 rounded border-line text-accent focus:ring-accent"
+                  type="email"
+                  placeholder="contact@votre-entreprise.fr"
+                  required
+                  className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-4 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
                 />
-                <label htmlFor="remember" className="text-sm text-muted">
-                  Rester connecté sur cet appareil
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                className="group mt-2 flex w-full items-center justify-center gap-2 rounded-[4px] bg-accent px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-accent-dark hover:shadow-md"
-              >
-                Se connecter
-                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
-              </button>
-            </form>
-          </div>
-
-          <div className="mt-auto flex items-center justify-between border-t border-line bg-[#F8F9FA] px-8 py-4">
-            <div className="flex items-center gap-2 text-xs font-medium text-muted">
-              <ShieldCheck size={16} className="text-green-600" strokeWidth={2.5} />
-              Portail sécurisé SSL 256 bits
-            </div>
-            <Link href="#" className="text-xs font-bold text-ink hover:text-accent">
-              Besoin d'aide ?
-            </Link>
-          </div>
-        </div>
-
-        {/* Colonne Droite : Nouveau Client */}
-        <div className="flex flex-col overflow-hidden rounded-[8px] border border-line bg-white shadow-sm">
-          <div className="flex flex-col p-8 md:p-10">
-            <div className="mb-8 flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-extrabold text-ink">Nouveau client ?</h2>
-                <p className="mt-1 text-sm text-muted">Créez votre compte professionnel sans engagement</p>
-              </div>
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#E85D1F]/10 text-xl font-bold text-accent">
-                +1
               </div>
             </div>
 
-            <p className="mb-6 font-bold text-ink">
-              Comptez sur votre compte <span className="text-accent">ONE CONNEXION</span> pour :
-            </p>
-            
-            <ul className="mb-8 flex flex-col gap-5">
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-full border border-[#E85D1F]/30 bg-[#E85D1F]/10 p-0.5 text-accent">
-                  <Check size={14} strokeWidth={3} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-ink">Commander vos livraisons en quelques clics</h4>
-                  <p className="mt-0.5 text-xs text-muted">Courses flash en 30 à 45 min garanties dans Paris & IDF.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-full border border-[#E85D1F]/30 bg-[#E85D1F]/10 p-0.5 text-accent">
-                  <Check size={14} strokeWidth={3} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-ink">Suivre vos livraisons en temps réel</h4>
-                  <p className="mt-0.5 text-xs text-muted">Localisation GPS live du coursier et preuve de signature électronique.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-full border border-[#E85D1F]/30 bg-[#E85D1F]/10 p-0.5 text-accent">
-                  <Check size={14} strokeWidth={3} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-ink">Accéder à vos factures & reporting centralisé</h4>
-                  <p className="mt-0.5 text-xs text-muted">Relevés mensuels détaillés et attribution par centre de coût.</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex shrink-0 items-center justify-center rounded-full border border-[#E85D1F]/30 bg-[#E85D1F]/10 p-0.5 text-accent">
-                  <Check size={14} strokeWidth={3} />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-ink">Flotte 100% décarbonée & certifiée</h4>
-                  <p className="mt-0.5 text-xs text-muted">Vélos bi-porteurs et véhicules utilitaires électriques.</p>
-                </div>
-              </li>
-            </ul>
-
-            <div className="mb-6 flex items-center gap-4 rounded-xl border border-line bg-paper px-4 py-3">
-              <div className="flex -space-x-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-ink text-[10px] font-bold text-white">LR</div>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-accent text-[10px] font-bold text-white">MD</div>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-yellow-500 text-[10px] font-bold text-white">KB</div>
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper bg-blue-600 text-[10px] font-bold text-white">+2k</div>
+            {/* Mot de passe */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[12px] font-bold uppercase tracking-wider text-ink">Mot de passe</label>
+                <Link href="#" className="text-[12px] font-semibold text-accent hover:text-accent-dark hover:underline">
+                  Mot de passe oublié ?
+                </Link>
               </div>
-              <div>
-                <div className="flex items-center gap-1 text-yellow-500">
-                  <Star size={12} fill="currentColor" strokeWidth={0} />
-                  <Star size={12} fill="currentColor" strokeWidth={0} />
-                  <Star size={12} fill="currentColor" strokeWidth={0} />
-                  <Star size={12} fill="currentColor" strokeWidth={0} />
-                  <Star size={12} fill="currentColor" strokeWidth={0} />
-                  <span className="ml-1 text-xs font-bold text-ink">4.9/5</span>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-label">
+                  <Lock size={16} strokeWidth={1.5} />
                 </div>
-                <p className="text-[10px] text-muted">+2 500 entreprises et cabinets d'avocats nous font confiance.</p>
+                <input
+                  type={showPwd ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  required
+                  className="w-full rounded-[6px] border border-line bg-white py-3.5 pl-11 pr-11 text-[14px] text-ink placeholder:text-label/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd((v) => !v)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-label hover:text-ink transition-colors"
+                  aria-label={showPwd ? "Masquer" : "Afficher"}
+                >
+                  {showPwd ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+                </button>
               </div>
             </div>
 
-            <Link
-              href="/inscription"
-              className="group flex w-full items-center justify-center gap-2 rounded-[4px] bg-ink px-8 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-ink/90 hover:shadow-md"
+            {/* Rester connecté */}
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="remember"
+                className="h-4 w-4 rounded border-line accent-accent"
+              />
+              <label htmlFor="remember" className="text-[13px] text-muted select-none">
+                Rester connecté sur cet appareil
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="group mt-2 flex items-center justify-center gap-2 rounded-[6px] bg-accent py-4 text-[14px] font-bold text-white transition-colors hover:bg-accent-dark"
             >
-              Créer un compte professionnel
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+              Se connecter
+              <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+            </button>
+          </form>
+
+          <p className="mt-8 text-center text-[13px] text-muted">
+            Pas encore de compte ?{" "}
+            <Link href="/inscription" className="font-bold text-accent hover:text-accent-dark hover:underline">
+              Créer un compte entreprise
             </Link>
+          </p>
+
+          {/* Badges sécurité */}
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-8">
+            <div className="flex items-center gap-2 text-[12px] text-muted">
+              <ShieldCheck size={14} className="text-green-600" strokeWidth={2.5} />
+              SSL 256-bit
+            </div>
+            <div className="flex items-center gap-2 text-[12px] text-muted">
+              <CheckCircle2 size={14} className="text-green-600" strokeWidth={2.5} />
+              Données hébergées en France
+            </div>
+            <div className="flex items-center gap-2 text-[12px] text-muted">
+              <CheckCircle2 size={14} className="text-green-600" strokeWidth={2.5} />
+              Conforme RGPD
+            </div>
+          </div>
+        </div>
+
+        {/* ── Colonne droite : bénéfices ── */}
+        <div className="hidden bg-ink text-white lg:flex lg:flex-col lg:justify-between px-[clamp(40px,6vw,80px)] py-16">
+          <div>
+            <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+              Pourquoi ONE CONNEXION
+            </div>
+            <h2 className="mb-10 text-[clamp(22px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
+              Votre logistique express, pilotée depuis un seul endroit.
+            </h2>
+
+            <div className="flex flex-col gap-6">
+              {PERKS.map((p, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent/20">
+                    <CheckCircle2 size={13} className="text-accent" strokeWidth={2.5} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white">{p.title}</p>
+                    <p className="mt-0.5 text-[13px] text-white/55">{p.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-auto border-t border-line bg-[#F8F9FA] px-8 py-4 text-center">
-            <p className="text-xs text-muted">
-              Inscription en 2 minutes • Sans frais fixes ni abonnement obligatoire
+          {/* Témoignage */}
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <div className="mb-3 flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} size={13} className="fill-amber-400 text-amber-400" strokeWidth={0} />
+              ))}
+            </div>
+            <p className="mb-4 text-[14px] leading-[1.7] text-white/75 italic">
+              "One Connexion est devenu notre prestataire exclusif pour tous les dépôts urgents en juridiction. Fiabilité et ponctualité irréprochables depuis 3 ans."
             </p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white">
+                CF
+              </div>
+              <div>
+                <p className="text-[13px] font-bold text-white">Maître Claire Fontaine</p>
+                <p className="text-[11px] text-white/50">Cabinet Fontaine &amp; Moreau — Paris 8e</p>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
-
-      {/* Bottom Features */}
-      <div className="mt-16 flex w-full max-w-5xl flex-wrap items-center justify-center gap-6 border-t border-line pt-8 sm:justify-between sm:gap-4 text-sm text-muted">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-green-600" strokeWidth={2.5} />
-          <span>Chiffrement bancaire SSL 256-bit</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-green-600" strokeWidth={2.5} />
-          <span>Activation & commande immédiate</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 size={16} className="text-green-600" strokeWidth={2.5} />
-          <span>Support dispatch dédié 7j/7</span>
-        </div>
-      </div>
-
     </div>
   );
 }

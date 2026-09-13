@@ -1,25 +1,29 @@
 /**
  * lib/site-content.ts
- * Valeurs de contenu centralisées pour la homepage.
- *
- * PLACEHOLDERS — à confirmer avant mise en ligne (cf. échanges de conception) :
- * téléphone, année de création, statistiques (courses, ponctualité,
- * satisfaction), assurance marchandises, SIREN, logos clients, photo flotte
- * et témoignages. Tout ce qui suit reste volontairement visible comme
- * placeholder tant que les vraies valeurs n'ont pas été fournies.
+ * Valeurs de contenu centralisées — données légales et de contact ONE CONNEXION.
  */
 
-export const PHONE_DISPLAY = "01 00 00 00 00";
-export const PHONE_TEL = "+33100000000";
+export const PHONE_DISPLAY = "01 00 00 00 00"; // À renseigner
+export const PHONE_TEL = "+33100000000";        // À renseigner
 export const EMAIL = "contact@oneconnexion.fr";
-export const FOUNDED_YEAR = "2019";
+export const FOUNDED_YEAR = "2026";
 
-/**
- * PLACEHOLDER — domaine de production à confirmer avant mise en ligne.
- * Consommé par metadataBase, les URLs canoniques et le sitemap : une valeur
- * erronée produit des canoniques pointant vers un domaine inexistant.
- */
 export const SITE_URL = "https://www.oneconnexion.fr";
 
-// Bascule pour afficher/masquer les témoignages en attendant les vrais retours clients.
+// Informations légales ONE CONNEXION — SAS immatriculée le 21/02/2026
+export const LEGAL = {
+  denomination: "ONE CONNEXION",
+  forme: "SAS, société par actions simplifiée",
+  siren: "101 517 100",
+  siret: "101 517 100 00018",
+  tva: "FR24 101 517 100",
+  naf: "49.41B",
+  activite: "Transports routiers de fret de proximité",
+  capital: "3 000,00 €",
+  adresse: "5 Square Nungesser, 94160 Saint-Mandé",
+  dateCreation: "21/02/2026",
+  clotureExercice: "30 septembre",
+};
+
+// Bascule pour afficher/masquer les témoignages.
 export const SHOW_TESTIMONIALS = true;

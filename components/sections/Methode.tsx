@@ -28,7 +28,7 @@ const STEPS = [
 export default function Methode({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   return (
     <section id="methode" className="border-y border-line bg-paper-card">
-      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-24">
+      <div className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         {!hideHeader && (
           <>
             <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">

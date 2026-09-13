@@ -5,6 +5,7 @@ import { ShieldCheck, Zap, PhoneCall, Smartphone } from "lucide-react";
 export const metadata = {
   title: "Notre méthode de livraison express par coursier — ONE CONNEXION",
   description: "Découvrez le fonctionnement de One Connexion pour vos livraisons express à Paris et en Île-de-France. Coursier moto, transport urgent et suivi en temps réel B2B.",
+  alternates: { canonical: "/methode" },
 };
 
 const ENGAGEMENTS = [
@@ -49,7 +50,7 @@ export default function MethodePage() {
       
       <Methode hideHeader={true} />
 
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-24">
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] py-10">
         <div className="mb-5 font-mono text-[11px] tracking-[0.16em] text-accent-dark uppercase">
           Nos engagements
         </div>
@@ -70,7 +71,7 @@ export default function MethodePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-24">
+      <section className="mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)] pb-10">
         <div className="border-t border-line pt-20">
           <h2 className="mb-8 text-[clamp(24px,2.5vw,32px)] font-bold leading-[1.2] tracking-[-0.02em]">
             L'excellence logistique au service des professionnels franciliens

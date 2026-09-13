@@ -3,11 +3,12 @@
  * Shell principal : Lenis smooth scroll, polices (Archivo + IBM Plex Mono), meta SEO.
  */
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import ClientShell from "@/components/ClientShell";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import OrderModalProvider from "@/components/OrderModalProvider";
 import { SITE_URL } from "@/lib/site-content";
 
 const archivo = Archivo({
@@ -15,6 +16,13 @@ const archivo = Archivo({
   variable: "--font-body",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  variable: "--font-condensed",
+  display: "swap",
+  weight: ["400", "600", "700"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -53,9 +61,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable}`}>
+    <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable} ${barlowCondensed.variable}`}>
       <body className="bg-paper text-ink antialiased">
         <Header />
+        <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
         <Footer />
       </body>

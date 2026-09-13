@@ -25,8 +25,8 @@
      accent = boutons pleins et bandeau CTA ; accent-dark = hover des
      boutons pleins + liens texte (cf. `a { color: accent-dark }` dans la
      maquette). */
-  --color-accent: #E85D1F;
-  --color-accent-dark: #C2410C;
+  --color-accent: #ed5518;
+  --color-accent-dark: #c94410;
 
   /* ── Border radius ─────────────────────────────────────────────────── */
   --radius-brand: 2px;
@@ -88,11 +88,11 @@
 }
 
 /* ── Selection ───────────────────────────────────────────────────────── */
-::selection { background-color: #E85D1F; color: #fff; }
+::selection { background-color: #ed5518; color: #fff; }
 
 /* ── Focus visible custom ────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #E85D1F;
+  outline: 2px solid #ed5518;
   outline-offset: 4px;
   border-radius: 2px;
 }

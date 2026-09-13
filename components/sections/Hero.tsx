@@ -29,7 +29,7 @@ export default function Hero() {
     <section id="top" className="relative border-b border-white/10 bg-ink text-white" style={{ backgroundImage: "url('/images/hero-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="absolute inset-0 bg-ink/80"></div>
       <div className="relative mx-auto max-w-[1240px] px-[clamp(20px,4vw,28px)]">
-        <div className="grid items-end gap-14 pt-24 sm:grid-cols-[1.15fr_0.85fr]">
+        <div className="grid items-end gap-14 pt-10 sm:grid-cols-[1.15fr_0.85fr]">
           <div className="min-w-0">
             <div className="mb-7 font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
               Transport urgent · Depuis {FOUNDED_YEAR}
@@ -108,26 +108,15 @@ export default function Hero() {
               className="w-full bg-white rounded-xl pl-12 pr-4 py-4 text-[15px] font-medium text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#E60000]" 
             />
           </div>
-          <a 
-            href={orderUrl}
-            onClick={(e) => {
-              e.preventDefault();
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('update-order-form', { detail: { pickup, dropoff } }));
-                setTimeout(() => {
-                  const submitBtn = document.getElementById('submit-btn');
-                  if (submitBtn) {
-                    submitBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  }
-                }, 300);
-                // Optionnel : mettre à jour l'URL sans recharger la page
-                window.history.pushState({}, '', orderUrl);
-              }
+          <button
+            type="button"
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("open-order-modal", { detail: { pickup, dropoff } }));
             }}
-            className="flex items-center justify-center bg-gradient-to-r from-[#E60000] to-[#FF0000] text-white rounded-xl px-10 py-4 text-[15px] font-bold hover:opacity-90 transition-opacity whitespace-nowrap shadow-lg shadow-red-500/20"
+            className="flex items-center justify-center bg-accent text-white rounded-xl px-10 py-4 text-[15px] font-bold hover:bg-accent-dark transition-colors whitespace-nowrap shadow-lg shadow-accent/20"
           >
             JE COMMANDE MA COURSE
-          </a>
+          </button>
         </div>
       </div>
 

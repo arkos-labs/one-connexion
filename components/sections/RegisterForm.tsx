@@ -31,7 +31,7 @@ export default function RegisterForm() {
       <div className="grid w-full max-w-[1100px] grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
         
         {/* Colonne Gauche : Argumentaire */}
-        <div className="flex flex-col justify-center">
+        <div className="hidden flex-col justify-center lg:flex">
           
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#E85D1F]/20 bg-[#E85D1F]/10 px-3 py-1.5 text-xs font-bold tracking-wide text-accent">
             <span className="h-1.5 w-1.5 rounded-full bg-accent"></span>

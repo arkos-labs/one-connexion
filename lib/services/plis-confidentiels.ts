@@ -118,7 +118,7 @@ export const plisConfidentiels: Service = {
     {
       question: "Combien de temps conservez-vous les justificatifs ?",
       answer:
-        "PLACEHOLDER — durée de conservation des justificatifs à confirmer avant mise en ligne.",
+        "Les justificatifs de remise (nom du signataire, horodatage, lieu) sont archivés et restituables sur simple demande. Contactez-nous pour connaître les conditions d'archivage applicables à votre type de mission.",
     },
     {
       question: "Intervenez-vous en dehors des heures de bureau ?",
