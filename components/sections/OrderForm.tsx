@@ -1,16 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  MapPin, 
-  Settings, 
-  Building2, 
-  Package, 
-  Mail, 
-  Truck, 
-  Zap, 
-  Clock, 
-  FastForward,
+import {
+  MapPin,
+  Settings,
+  Building2,
+  Package,
+  Mail,
+  Truck,
+  Zap,
+  Clock,
   Calendar,
   User,
   ChevronRight,
@@ -18,20 +17,28 @@ import {
   CheckCircle2,
   CreditCard
 } from 'lucide-react';
+import { createClient } from "@/lib/supabase/client";
 
 export default function OrderForm() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
-  
+  const [submitting, setSubmitting] = useState(false);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
+
   // Form state
   const [clientType, setClientType] = useState<'entreprise' | 'particulier'>('entreprise');
   const [format, setFormat] = useState('doc');
   const [delai, setDelai] = useState('urgent');
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [notes, setNotes] = useState("");
+
+  const supabase = createClient();
 
   useEffect(() => {
-    // Check URL params on mount
     const search = window.location.search;
     if (search) {
       const params = new URLSearchParams(search);
@@ -41,24 +48,50 @@ export default function OrderForm() {
       if (d) setDropoffAddress(d);
     }
 
-    // Listen for custom event from Hero
     const handleUpdate = (e: any) => {
       if (e.detail?.pickup) setPickupAddress(e.detail.pickup);
       if (e.detail?.dropoff) setDropoffAddress(e.detail.dropoff);
     };
-    
+
     window.addEventListener('update-order-form', handleUpdate);
     return () => window.removeEventListener('update-order-form', handleUpdate);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step < 3) {
       setStep(step + 1);
-    } else {
-      setSubmitted(true);
-      // API call would go here
+      return;
     }
+
+    setSubmitting(true);
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user?.id ?? null,
+        pickup_address: pickupAddress,
+        dropoff_address: dropoffAddress,
+        stops: [],
+        format,
+        delai,
+        notes,
+        contact_name: contactName,
+        contact_email: contactEmail,
+        contact_phone: contactPhone,
+        status: "en_attente",
+      })
+      .select("tracking_code")
+      .single();
+
+    setSubmitting(false);
+
+    if (!error && data) {
+      setTrackingCode(data.tracking_code);
+    }
+    setSubmitted(true);
   };
 
   const prevStep = () => {
@@ -88,19 +121,25 @@ export default function OrderForm() {
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <h3 className="mb-3 text-3xl font-bold text-gray-900">
-                {clientType === 'particulier' ? 'Redirection vers le paiement...' : 'Demande envoyée !'}
+                Demande envoyée !
               </h3>
-              <p className="text-gray-500 text-lg mb-10 max-w-md mx-auto">
-                {clientType === 'particulier' 
-                  ? "Vous allez être redirigé vers notre plateforme sécurisée pour procéder au paiement."
-                  : "Un dispatcheur va vous contacter dans les 2 prochaines minutes pour confirmer l'enlèvement."}
+              <p className="text-gray-500 text-lg mb-6 max-w-md mx-auto">
+                Un dispatcheur va vous contacter dans les 2 prochaines minutes pour confirmer l'enlèvement.
               </p>
-              <button
-                onClick={() => { setSubmitted(false); setStep(1); }}
-                className="bg-black text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-800 transition-colors"
-              >
-                Nouvelle commande
-              </button>
+              {trackingCode && (
+                <div className="mb-8 inline-block rounded-xl border border-gray-200 bg-gray-50 px-6 py-3">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-1">Code de suivi</p>
+                  <p className="text-xl font-extrabold tracking-widest text-gray-900">{trackingCode}</p>
+                </div>
+              )}
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={() => { setSubmitted(false); setStep(1); setPickupAddress(""); setDropoffAddress(""); setTrackingCode(null); }}
+                  className="bg-black text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                >
+                  Nouvelle commande
+                </button>
+              </div>
             </div>
           ) : (
             <>
@@ -224,11 +263,13 @@ export default function OrderForm() {
                               <User className="h-5 w-5 text-gray-400" />
                             )}
                           </div>
-                          <input 
-                            type="text" 
-                            required 
-                            placeholder={clientType === 'entreprise' ? "Ex: Acme Corp" : "Ex: Jean Dupont"} 
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" 
+                          <input
+                            type="text"
+                            required
+                            value={contactName}
+                            onChange={(e) => setContactName(e.target.value)}
+                            placeholder={clientType === 'entreprise' ? "Ex: Acme Corp" : "Ex: Jean Dupont"}
+                            className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors"
                           />
                         </div>
                       </div>
@@ -242,7 +283,7 @@ export default function OrderForm() {
                             <span className="text-lg">🇫🇷</span>
                             <span className="text-sm font-medium text-gray-600">+33</span>
                           </div>
-                          <input type="tel" required placeholder="01 23 45 67 89" className="w-full bg-gray-50 border border-gray-200 rounded-r-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <input type="tel" required value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="01 23 45 67 89" className="w-full bg-gray-50 border border-gray-200 rounded-r-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
                       
@@ -254,7 +295,7 @@ export default function OrderForm() {
                           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <Mail className="h-5 w-5 text-gray-400" />
                           </div>
-                          <input type="email" required placeholder="contact@masociete.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
+                          <input type="email" required value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@masociete.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 transition-colors" />
                         </div>
                       </div>
                     </div>
@@ -327,7 +368,7 @@ export default function OrderForm() {
 
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">Consignes au coursier</label>
-                        <textarea rows={3} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 resize-none transition-colors"></textarea>
+                        <textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ex: Le colis est à l'accueil, demander M. Martin..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400 resize-none transition-colors"></textarea>
                       </div>
                     </div>
                   </div>
@@ -345,20 +386,23 @@ export default function OrderForm() {
                     </button>
                   ) : <div></div>}
 
-                  <button 
+                  <button
                     id="submit-btn"
                     type="submit"
-                    className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto"
+                    disabled={submitting}
+                    className="flex items-center gap-2 bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ml-auto disabled:opacity-60"
                   >
-                    {step < 3 
-                      ? 'Étape suivante' 
-                      : (clientType === 'particulier' ? 'Payer en ligne' : 'Commander la course')
+                    {submitting
+                      ? 'Envoi en cours…'
+                      : step < 3
+                        ? 'Étape suivante'
+                        : 'Commander la course'
                     }
-                    {step < 3 ? (
+                    {!submitting && (step < 3 ? (
                       <ChevronRight className="w-5 h-5" />
                     ) : (
-                      clientType === 'particulier' ? <CreditCard className="w-5 h-5 ml-1" /> : <CheckCircle2 className="w-5 h-5 ml-1" />
-                    )}
+                      <CheckCircle2 className="w-5 h-5 ml-1" />
+                    ))}
                   </button>
                 </div>
               </form>
