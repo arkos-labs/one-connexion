@@ -12,14 +12,33 @@ import {
   ArrowRight,
   ShieldCheck,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  FileText
 } from "lucide-react";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState("pli");
   const [delai, setDelai] = useState("flash");
   
+  const [pickupAddress, setPickupAddress] = useState("");
+  const [dropoffAddress, setDropoffAddress] = useState("");
+  const [isPickupFavOpen, setIsPickupFavOpen] = useState(false);
+  const [stops, setStops] = useState<{id: string, address: string}[]>([]);
+
+  const addStop = () => {
+    setStops([...stops, { id: Math.random().toString(), address: "" }]);
+  };
+
+  const removeStop = (id: string) => {
+    setStops(stops.filter(s => s.id !== id));
+  };
+
+  const updateStop = (id: string, address: string) => {
+    setStops(stops.map(s => s.id === id ? { ...s, address } : s));
+  };
+
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     setStep(step + 1);
@@ -60,7 +79,11 @@ export default function CommanderPage() {
           </div>
           <ArrowRight size={14} className="text-line shrink-0 hidden sm:block" />
           <div className={`flex shrink-0 items-center justify-center rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold shadow-sm transition-colors ${step >= 4 ? 'bg-accent text-white' : 'border border-line bg-white text-label'}`}>
-            4. Confirmation
+            4. Récapitulatif
+          </div>
+          <ArrowRight size={14} className="text-line shrink-0 hidden sm:block" />
+          <div className={`flex shrink-0 items-center justify-center rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold shadow-sm transition-colors ${step >= 5 ? 'bg-[#10B981] text-white' : 'border border-line bg-white text-label'}`}>
+            5. Confirmation
           </div>
         </div>
       </div>
@@ -90,21 +113,57 @@ export default function CommanderPage() {
                       <div className="h-2 w-2 rounded-full bg-[#10B981]"></div>
                     </div>
                     
-                    <div className="mb-3 flex items-center justify-between">
+                    <div className="mb-3 flex items-center justify-between relative">
                       <label className="text-xs font-bold uppercase tracking-wider text-ink">Adresse d'enlèvement (Départ) <span className="text-accent">*</span></label>
-                      <button type="button" className="text-xs font-bold text-accent hover:underline">Mes favoris</button>
+                      <button 
+                        type="button" 
+                        onClick={() => setIsPickupFavOpen(!isPickupFavOpen)}
+                        className="text-xs font-bold text-accent hover:underline"
+                      >
+                        Mes favoris
+                      </button>
+                      
+                      {isPickupFavOpen && (
+                        <div className="absolute right-0 top-6 z-50 mt-1 w-64 overflow-hidden rounded-xl border border-line bg-white shadow-xl animate-in fade-in zoom-in-95 duration-200">
+                          <button 
+                            type="button" 
+                            onClick={() => { setPickupAddress("75 Rue de Rivoli, 75001 Paris"); setIsPickupFavOpen(false); }} 
+                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 border-b border-line"
+                          >
+                            <div className="text-sm font-bold text-ink">Siège Social</div>
+                            <div className="text-xs font-medium text-muted truncate">75 Rue de Rivoli, Paris</div>
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => { setPickupAddress("14 Avenue Victor Hugo, 92100 Boulogne-Billancourt"); setIsPickupFavOpen(false); }} 
+                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 border-b border-line"
+                          >
+                            <div className="text-sm font-bold text-ink">Entrepôt Logistique</div>
+                            <div className="text-xs font-medium text-muted truncate">14 Av Victor Hugo, Boulogne</div>
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => { setPickupAddress("22 Rue de la Paix, 75002 Paris"); setIsPickupFavOpen(false); }} 
+                            className="w-full px-4 py-3 text-left transition-colors hover:bg-gray-50"
+                          >
+                            <div className="text-sm font-bold text-ink">Cabinet Partenaire</div>
+                            <div className="text-xs font-medium text-muted truncate">22 Rue de la Paix, Paris</div>
+                          </button>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="relative mb-3">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-label">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-label z-10">
                         <Search size={18} strokeWidth={2} />
                       </div>
-                      <input
-                        type="text"
-                        defaultValue="75 Rue de Rivoli, 75001 Paris"
-                        required
-                        className="w-full rounded-xl border border-line bg-white py-3.5 pl-11 pr-4 text-sm font-semibold text-ink shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                      />
+                      <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
+                        <AddressAutocomplete 
+                          value={pickupAddress}
+                          onChange={setPickupAddress}
+                          required={true}
+                        />
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -121,6 +180,48 @@ export default function CommanderPage() {
                     </div>
                   </div>
 
+                  {/* Étapes intermédiaires */}
+                  {stops.map((stop, index) => (
+                    <div key={stop.id} className="relative">
+                      <div className="absolute -left-[40px] top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[3px] border-[#3B82F6] bg-white">
+                        <div className="h-2 w-2 rounded-full bg-[#3B82F6]"></div>
+                      </div>
+                      
+                      <div className="mb-3 flex items-center justify-between">
+                        <label className="text-xs font-bold uppercase tracking-wider text-ink">Étape {index + 1} <span className="text-accent">*</span></label>
+                        <button type="button" onClick={() => removeStop(stop.id)} className="text-xs font-bold text-red-500 hover:underline">
+                          - Supprimer
+                        </button>
+                      </div>
+                      
+                      <div className="relative mb-3">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-label z-10">
+                          <MapPin size={18} strokeWidth={2} />
+                        </div>
+                        <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
+                          <AddressAutocomplete 
+                            value={stop.address}
+                            onChange={(val) => updateStop(stop.id, val)}
+                            required={true}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <input
+                          type="text"
+                          placeholder="Contact sur place (Nom & Tél)"
+                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Notes pour le coursier"
+                          className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-xs font-medium text-ink focus:border-accent focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  ))}
+
                   {/* Arrivée */}
                   <div className="relative">
                     <div className="absolute -left-[40px] top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[3px] border-accent bg-white">
@@ -129,19 +230,20 @@ export default function CommanderPage() {
                     
                     <div className="mb-3 flex items-center justify-between">
                       <label className="text-xs font-bold uppercase tracking-wider text-ink">Adresse de livraison (Destination) <span className="text-accent">*</span></label>
-                      <button type="button" className="text-xs font-bold text-accent hover:underline">+ Ajouter une étape</button>
+                      <button type="button" onClick={addStop} className="text-xs font-bold text-accent hover:underline">+ Ajouter une étape</button>
                     </div>
                     
                     <div className="relative mb-3">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-label">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-label z-10">
                         <MapPin size={18} strokeWidth={2} />
                       </div>
-                      <input
-                        type="text"
-                        defaultValue="92100 Boulogne-Billancourt, 14 Avenue Victor Hugo"
-                        required
-                        className="w-full rounded-xl border border-line bg-white py-3.5 pl-11 pr-4 text-sm font-semibold text-ink shadow-sm focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                      />
+                      <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
+                        <AddressAutocomplete 
+                          value={dropoffAddress}
+                          onChange={setDropoffAddress}
+                          required={true}
+                        />
+                      </div>
                     </div>
                     
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -275,6 +377,20 @@ export default function CommanderPage() {
                 </label>
 
               </div>
+              
+              {delai === 'programme' && (
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 animate-in fade-in slide-in-from-top-2 duration-300 border-t border-line pt-6">
+                  <div>
+                    <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-muted">Date de présentation au départ</label>
+                    <input type="date" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-medium text-ink focus:border-accent focus:outline-none" required />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-[11px] font-bold uppercase tracking-wider text-muted">Heure d'enlèvement</label>
+                    <input type="time" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3.5 font-medium text-ink focus:border-accent focus:outline-none" required />
+                  </div>
+                </div>
+              )}
+
             </div>
 
             {/* Pied de formulaire - Résumé Tarif */}
@@ -301,9 +417,9 @@ export default function CommanderPage() {
                   <button type="button" onClick={() => setStep(2)} className="flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-white text-ink transition-colors hover:bg-paper">
                     <ChevronLeft size={18} strokeWidth={2.5} />
                   </button>
-                  <button type="submit" className="flex items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-accent-dark">
-                    Commander la course
-                    <ArrowRight size={18} strokeWidth={2.5} />
+                  <button type="submit" className="flex items-center justify-center gap-2 rounded-xl bg-ink px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-ink/90">
+                    Voir le récapitulatif
+                    <ChevronRight size={18} strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
@@ -313,6 +429,119 @@ export default function CommanderPage() {
         )}
 
         {step === 4 && (
+          <form onSubmit={handleNextStep} className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Carte 4 : Récapitulatif */}
+            <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+              <div className="flex items-center justify-between border-b border-line bg-[#FDFDFD] px-6 py-4">
+                <div className="flex items-center gap-2 text-sm font-bold tracking-wide text-ink uppercase">
+                  <CheckCircle2 size={16} className="text-accent" />
+                  RÉCAPITULATIF DE LA COMMANDE
+                </div>
+              </div>
+              
+              <div className="flex flex-col p-6 sm:p-8 gap-8">
+                
+                {/* Trajet */}
+                <div>
+                  <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-muted">Détails du Trajet</h3>
+                  <div className="flex flex-col gap-4 rounded-xl border border-line p-4 bg-[#FAFAFA]">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#10B981] bg-white">
+                        <div className="h-1.5 w-1.5 rounded-full bg-[#10B981]"></div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-bold text-muted uppercase">Départ</div>
+                        <div className="text-sm font-semibold text-ink">{pickupAddress || "Adresse non renseignée"}</div>
+                      </div>
+                    </div>
+                    
+                    {stops.map((stop, i) => (
+                      <div key={stop.id} className="flex items-start gap-3">
+                        <div className="mt-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#3B82F6] bg-white">
+                          <div className="h-1.5 w-1.5 rounded-full bg-[#3B82F6]"></div>
+                        </div>
+                        <div>
+                          <div className="text-[11px] font-bold text-muted uppercase">Étape {i + 1}</div>
+                          <div className="text-sm font-semibold text-ink">{stop.address || "Adresse non renseignée"}</div>
+                        </div>
+                      </div>
+                    ))}
+
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-accent bg-white">
+                        <div className="h-1.5 w-1.5 rounded-full bg-accent"></div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-bold text-muted uppercase">Arrivée</div>
+                        <div className="text-sm font-semibold text-ink">{dropoffAddress || "Adresse non renseignée"}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Options */}
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-muted">Format</h3>
+                    <div className="rounded-xl border border-line p-4 bg-[#FAFAFA]">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm text-ink">
+                          {format === 'pli' ? <FileText size={18} /> : format === 'petit' ? <Box size={18} /> : <Archive size={18} />}
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-ink capitalize">{format === 'volumineux' ? 'Volumineux' : format}</div>
+                          <div className="text-xs font-medium text-muted">
+                            {format === 'pli' ? 'Documents (< 2 kg)' : format === 'petit' ? 'Petit colis (< 8 kg)' : 'Gros volume (> 30 kg)'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-muted">Délai</h3>
+                    <div className="rounded-xl border border-line p-4 bg-[#FAFAFA]">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm text-ink">
+                          <Clock size={18} />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-ink capitalize">{delai === 'flash' ? 'Flash immédiat' : delai === 'standard' ? 'Standard 2h' : 'Programmé'}</div>
+                          <div className="text-xs font-medium text-muted">
+                            {delai === 'flash' ? '30 à 45 min' : delai === 'standard' ? 'Avant 13h' : 'Sur mesure'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+            {/* Pied de formulaire - Confirmer */}
+            <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm sm:flex-row sm:p-8">
+              <div className="flex flex-col items-start gap-1">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Montant Final</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-extrabold text-ink">24,50 €</span>
+                  <span className="text-sm font-semibold text-muted">HT (29,40 € TTC)</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button type="button" onClick={() => setStep(3)} className="flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-white text-ink transition-colors hover:bg-paper">
+                  <ChevronLeft size={18} strokeWidth={2.5} />
+                </button>
+                <button type="submit" className="flex items-center justify-center gap-2 rounded-xl bg-accent px-8 py-4 text-[15px] font-bold text-white shadow-sm transition-colors hover:bg-accent-dark">
+                  Confirmer la commande
+                  <CheckCircle2 size={18} strokeWidth={2.5} />
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {step === 5 && (
           <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-line bg-white p-8 text-center shadow-sm animate-in fade-in slide-in-from-right-4 duration-500">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50 text-green-500 shadow-inner">
               <CheckCircle2 size={40} strokeWidth={2.5} />

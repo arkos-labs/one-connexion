@@ -11,6 +11,7 @@ import {
   Zap, 
   Clock, 
   FastForward,
+  Calendar,
   User,
   ChevronRight,
   ChevronLeft,
@@ -305,11 +306,24 @@ export default function OrderForm() {
                             <span className="font-semibold">Standard (3h)</span>
                           </button>
                           <button type="button" onClick={() => setDelai('direct')} className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${delai === 'direct' ? 'bg-[#F36B2B] text-white shadow-md shadow-orange-500/20' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                            <FastForward className="w-5 h-5" />
-                            <span className="font-semibold">Direct sans arrêt</span>
+                            <Calendar className="w-5 h-5" />
+                            <span className="font-semibold">Programmé</span>
                           </button>
                         </div>
                       </div>
+                      
+                      {delai === 'direct' && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Date d'enlèvement</label>
+                            <input type="date" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#F36B2B] transition-colors" required />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wide">Heure</label>
+                            <input type="time" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-[#F36B2B] transition-colors" required />
+                          </div>
+                        </div>
+                      )}
 
                       <div>
                         <label className="block text-sm font-bold text-gray-800 mb-2">Consignes au coursier</label>

@@ -44,27 +44,31 @@ export default function Header() {
         </Link>
 
         {/* Navigation centrée de manière fluide */}
-        <nav className="mx-4 hidden flex-1 items-center justify-center gap-4 whitespace-nowrap lg:flex xl:gap-8">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="text-[14px] font-medium text-white/78 transition-colors hover:text-white"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        {!isDashboard && (
+          <nav className="mx-4 hidden flex-1 items-center justify-center gap-4 whitespace-nowrap lg:flex xl:gap-8">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="text-[14px] font-medium text-white/78 transition-colors hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         {/* Actions à droite */}
         <div className="hidden shrink-0 items-center gap-3 whitespace-nowrap md:flex">
           
-          <Link
-            href="/#commander"
-            className="rounded-[4px] bg-accent px-[18px] py-[11px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-accent-dark"
-          >
-            Commander une course
-          </Link>
+          {!isDashboard && (
+            <Link
+              href="/#commander"
+              className="rounded-[4px] bg-accent px-[18px] py-[11px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-accent-dark"
+            >
+              Commander une course
+            </Link>
+          )}
           
           <div className="ml-1 flex items-center border-l border-white/20 pl-4">
             
@@ -129,18 +133,20 @@ export default function Header() {
 
       {menuOpen && (
         <div className="border-t border-white/10 bg-ink px-[clamp(20px,4vw,28px)] py-5 md:hidden">
-          <nav className="flex flex-col gap-4">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                className="text-sm font-medium text-white/78 hover:text-white"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          {!isDashboard && (
+            <nav className="flex flex-col gap-4">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm font-medium text-white/78 hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          )}
           <div className="mt-5 flex flex-col gap-3">
             <a href={`tel:${PHONE_TEL}`} className="font-mono text-[12.5px] text-white/72 hover:text-white">
               {PHONE_DISPLAY}

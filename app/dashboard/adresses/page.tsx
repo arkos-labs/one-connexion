@@ -2,9 +2,11 @@
 
 import React, { useState } from "react";
 import { MapPin, Plus, MoreVertical, Edit2, Trash2, X } from "lucide-react";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 export default function AdressesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [address, setAddress] = useState("");
 
   const addresses = [
     {
@@ -141,7 +143,7 @@ export default function AdressesPage() {
       {/* Modal Ajout Adresse */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="mt-20 w-full max-w-lg overflow-visible rounded-2xl bg-white shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-line p-5">
               <h2 className="text-xl font-extrabold text-ink">Nouvelle adresse</h2>
               <button onClick={() => setIsModalOpen(false)} className="rounded-full p-2 text-label transition-colors hover:bg-paper hover:text-ink">
@@ -151,13 +153,17 @@ export default function AdressesPage() {
             
             <form className="flex flex-col gap-5 p-6" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }}>
               <div className="flex flex-col gap-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-ink">Nom de l'adresse</label>
+                <label className="text-[11px] font-bold uppercase tracking-wider text-ink">Nom de l&apos;adresse</label>
                 <input type="text" placeholder="Ex: Entrepôt Nord" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent" required />
               </div>
               
               <div className="flex flex-col gap-2">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-ink">Adresse complète</label>
-                <input type="text" placeholder="Numéro et nom de rue" className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent" required />
+                <AddressAutocomplete 
+                  value={address} 
+                  onChange={setAddress} 
+                  required={true} 
+                />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -186,7 +192,7 @@ export default function AdressesPage() {
                   Annuler
                 </button>
                 <button type="submit" className="rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-accent-dark">
-                  Ajouter l'adresse
+                  Ajouter l&apos;adresse
                 </button>
               </div>
             </form>

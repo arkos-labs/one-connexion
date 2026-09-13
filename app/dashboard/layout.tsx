@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PackagePlus, Truck, FileText, MapPin, Settings, LogOut, Phone } from "lucide-react";
+import { PackagePlus, Truck, FileText, MapPin, Settings, LogOut, Phone, Calendar } from "lucide-react";
 import { PHONE_TEL } from "@/lib/site-content";
 
 export default function DashboardLayout({
@@ -15,6 +15,7 @@ export default function DashboardLayout({
 
   const navItems = [
     { name: "Commander une course", href: "/dashboard/commander", icon: PackagePlus, hasDot: true },
+    { name: "Navettes récurrentes", href: "/dashboard/navettes", icon: Calendar, badge: "Nouveau" },
     { name: "Suivi des livraisons", href: "/dashboard/suivi", icon: Truck, badge: "1 active" },
     { name: "Factures & Relevés", href: "/dashboard/factures", icon: FileText },
     { name: "Adresses favorites", href: "/dashboard/adresses", icon: MapPin },
@@ -22,15 +23,8 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#FDFDFD]">
-      {/* Motif Dotted Background */}
-      <div 
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.25]" 
-        style={{
-          backgroundImage: 'radial-gradient(#8C8882 1px, transparent 1px)',
-          backgroundSize: '24px 24px'
-        }}
-      />
+    <div className="relative min-h-screen bg-[#FBFBFB]">
+
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-start gap-8 px-[clamp(20px,4vw,32px)] py-10 lg:flex-row">
         
