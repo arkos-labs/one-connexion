@@ -7,6 +7,8 @@
  */
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Phone, Menu, X } from "lucide-react";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 
@@ -22,15 +24,23 @@ const NAV_ITEMS = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isDashboard = pathname.startsWith("/dashboard");
 
   return (
     <header className="sticky top-0 z-50 bg-ink border-b border-white/10">
-      <div className="mx-auto flex h-[76px] max-w-[1240px] items-center justify-between px-[clamp(20px,4vw,28px)]">
+      <div className="mx-auto flex h-[96px] max-w-[1240px] items-center justify-between px-[clamp(20px,4vw,28px)]">
         
         {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-baseline gap-2.5 text-white">
-          <span className="text-[19px] font-extrabold tracking-[-0.02em]">ONE</span>
-          <span className="text-[19px] font-extrabold tracking-[-0.02em] text-accent">CONNEXION</span>
+        <Link href="/" className="flex shrink-0 items-center overflow-visible">
+          <Image 
+            src="/logo-white.png" 
+            alt="One Connexion Logo" 
+            width={400} 
+            height={150} 
+            className="w-[130px] sm:w-[150px] md:w-[180px] h-auto origin-left object-contain"
+            priority
+          />
         </Link>
 
         {/* Navigation centrée de manière fluide */}
@@ -56,28 +66,46 @@ export default function Header() {
             Commander une course
           </Link>
           
-          <div className="ml-1 flex items-center gap-3 border-l border-white/20 pl-4">
-            {/* Bouton Dev pour le Dashboard */}
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-1.5 rounded-[4px] bg-purple-600/20 px-3 py-[9px] text-[12px] font-bold text-purple-300 transition-colors hover:bg-purple-600/40"
-              title="Accès Développeur"
-            >
-              ⚙️ Dashboard
-            </Link>
+          <div className="ml-1 flex items-center border-l border-white/20 pl-4">
+            
+            {isDashboard ? (
+              <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 pr-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white">
+                  AD
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-white">Alexandre Dupont</span>
+                  <div className="flex items-center gap-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+                    <span className="text-[10px] font-medium text-white/60">Pro actif</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                {/* Bouton Dev pour le Dashboard */}
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-1.5 rounded-[4px] bg-purple-600/20 px-3 py-[9px] text-[12px] font-bold text-purple-300 transition-colors hover:bg-purple-600/40"
+                  title="Accès Développeur"
+                >
+                  ⚙️ Dashboard
+                </Link>
 
-            <Link
-              href="/connexion"
-              className="text-[13px] font-medium text-white/78 transition-colors hover:text-white"
-            >
-              Se connecter
-            </Link>
-            <Link
-              href="/inscription"
-              className="rounded-[4px] border border-white/20 px-4 py-[9px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-white/10"
-            >
-              S'inscrire
-            </Link>
+                <Link
+                  href="/connexion"
+                  className="text-[13px] font-medium text-white/78 transition-colors hover:text-white"
+                >
+                  Se connecter
+                </Link>
+                <Link
+                  href="/inscription"
+                  className="rounded-[4px] border border-white/20 px-4 py-[9px] text-[13px] font-semibold tracking-[0.01em] text-white transition-colors hover:bg-white/10"
+                >
+                  S'inscrire
+                </Link>
+              </div>
+            )}
           </div>
 
           <a
@@ -120,25 +148,39 @@ export default function Header() {
             <Link
               href="/#commander"
               onClick={() => setMenuOpen(false)}
-              className="rounded-[2px] bg-accent px-[18px] py-[11px] text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-accent-dark"
+              className="rounded-[4px] bg-accent px-[18px] py-[11px] text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-accent-dark"
             >
               Commander une course
             </Link>
             <div className="flex flex-col gap-3 border-t border-white/10 pt-3">
-              <Link
-                href="/connexion"
-                onClick={() => setMenuOpen(false)}
-                className="text-[14px] font-medium text-white/78 hover:text-white"
-              >
-                Se connecter
-              </Link>
-              <Link
-                href="/inscription"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-[2px] border border-white/20 px-4 py-2 text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-white/10"
-              >
-                S'inscrire
-              </Link>
+              {isDashboard ? (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-[11px] font-bold text-white">
+                    AD
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-white">Alexandre Dupont</span>
+                    <span className="text-[11px] font-medium text-green-400">Pro actif</span>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    href="/connexion"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-[14px] font-medium text-white/78 hover:text-white"
+                  >
+                    Se connecter
+                  </Link>
+                  <Link
+                    href="/inscription"
+                    onClick={() => setMenuOpen(false)}
+                    className="rounded-[4px] border border-white/20 px-4 py-2 text-center text-[13px] font-semibold tracking-[0.01em] text-white hover:bg-white/10"
+                  >
+                    S'inscrire
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Truck, Search, MapPin, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 
 export default function SuiviPage() {
+  const router = useRouter();
+  
   const deliveries = [
     {
       id: "C-9428",
@@ -103,7 +107,11 @@ export default function SuiviPage() {
             </thead>
             <tbody className="divide-y divide-line">
               {deliveries.map((delivery) => (
-                <tr key={delivery.id} className="transition-colors hover:bg-gray-50/50">
+                <tr 
+                  key={delivery.id} 
+                  onClick={() => router.push(`/dashboard/suivi/${delivery.id}`)}
+                  className="cursor-pointer transition-colors hover:bg-gray-50/50"
+                >
                   <td className="whitespace-nowrap px-6 py-4 font-bold">{delivery.id}</td>
                   <td className="whitespace-nowrap px-6 py-4 text-muted">{delivery.date}</td>
                   <td className="px-6 py-4">
@@ -124,9 +132,9 @@ export default function SuiviPage() {
                     {getStatusBadge(delivery.status)}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4 text-right">
-                    <button className="text-sm font-semibold text-accent hover:text-accent-dark hover:underline">
+                    <span className="text-sm font-semibold text-accent hover:text-accent-dark hover:underline">
                       Détails
-                    </button>
+                    </span>
                   </td>
                 </tr>
               ))}
