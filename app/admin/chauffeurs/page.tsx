@@ -27,15 +27,15 @@ export default function AdminChauffeursPage() {
   const [vehicle, setVehicle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const loadDrivers = useCallback(async () => {
+  const load = useCallback(async () => {
     const { data } = await supabase.from("drivers").select("*").order("name");
     setDrivers(data ?? []);
   }, [supabase]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadDrivers();
-  }, [loadDrivers]);
+    load();
+  }, [load]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,12 +49,12 @@ export default function AdminChauffeursPage() {
     setName("");
     setPhone("");
     setVehicle("");
-    loadDrivers();
+    load();
   };
 
   const updateStatus = async (id: string, status: Driver["status"]) => {
     await supabase.from("drivers").update({ status }).eq("id", id);
-    loadDrivers();
+    load();
   };
 
   return (
