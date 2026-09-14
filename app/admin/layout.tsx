@@ -32,7 +32,8 @@ export default function AdminLayout({
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/");
+    router.refresh();
+    router.push("/connexion");
   };
 
   return (

@@ -62,7 +62,8 @@ export default function DashboardLayout({
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/");
+    router.refresh();
+    router.push("/connexion");
   };
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || "Mon compte";
