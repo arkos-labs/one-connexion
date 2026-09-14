@@ -129,6 +129,7 @@ export default function AdminOverviewPage() {
 
     const pendingNavettes: PendingItem[] = (navettesPending.data ?? []).map((n) => ({
       key: `navette-${n.id}`,
+      id: n.id,
       type: "navette",
       label: n.name,
       clientName: "Navette récurrente",
