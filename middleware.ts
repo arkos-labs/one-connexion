@@ -49,10 +49,16 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Rediriger vers dashboard si déjà connecté
+  // Rediriger vers dashboard ou admin si déjà connecté
   if (user && (request.nextUrl.pathname === "/connexion" || request.nextUrl.pathname === "/inscription")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+      
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = profile?.role === "admin" ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 

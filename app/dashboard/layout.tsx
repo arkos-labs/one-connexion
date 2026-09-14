@@ -18,7 +18,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<{ full_name: string | null; company: string | null } | null>(null);
+  const [profile, setProfile] = useState<{ full_name: string | null; company: string | null; role: string | null } | null>(null);
   const [coursesThisMonth, setCoursesThisMonth] = useState<number | null>(null);
 
   const loadProfile = async () => {
@@ -39,7 +39,7 @@ export default function DashboardLayout({
 
     supabase
       .from("profiles")
-      .select("full_name, company")
+      .select("full_name, company, role")
       .eq("id", authUser.id)
       .single()
       .then(({ data }) => setProfile(data));
@@ -143,6 +143,21 @@ export default function DashboardLayout({
                     </Link>
                   );
                 })}
+
+                {profile?.role === "admin" && (
+                  <>
+                    <div className="my-2 border-t border-line" />
+                    <Link
+                      href="/admin"
+                      className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-[14px] font-bold text-accent transition-colors hover:bg-accent/10"
+                    >
+                      <span className="flex items-center justify-center w-[18px] h-[18px] rounded-md bg-accent text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      </span>
+                      Accéder à l'Espace Admin
+                    </Link>
+                  </>
+                )}
 
                 <div className="my-2 border-t border-line" />
 

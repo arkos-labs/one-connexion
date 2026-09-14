@@ -36,7 +36,7 @@ export default function Header() {
   const supabase = createClient();
 
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<{ full_name: string | null; company: string | null } | null>(null);
+  const [profile, setProfile] = useState<{ full_name: string | null; company: string | null; role: string | null } | null>(null);
   const [coursesThisMonth, setCoursesThisMonth] = useState<number | null>(null);
 
   // Bloque le scroll du body quand le tiroir est ouvert
@@ -74,7 +74,7 @@ export default function Header() {
 
         supabase
           .from("profiles")
-          .select("full_name, company")
+          .select("full_name, company, role")
           .eq("id", data.user.id)
           .single()
           .then(({ data: p }) => setProfile(p));
@@ -285,6 +285,17 @@ export default function Header() {
                     </Link>
                   );
                 })}
+
+                {!isAdmin && profile?.role === "admin" && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="mt-2 relative flex items-center gap-3 rounded-xl bg-accent/20 px-3 py-3 text-sm font-bold text-accent transition-colors hover:bg-accent/30"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Espace Admin
+                  </Link>
+                )}
               </nav>
 
               <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
