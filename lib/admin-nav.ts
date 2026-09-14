@@ -8,6 +8,8 @@ export type AdminNavItem = {
   name: string;
   href: string;
   icon: LucideIcon;
+  hasDot?: boolean;
+  badge?: string;
 };
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [

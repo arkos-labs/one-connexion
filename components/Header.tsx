@@ -14,6 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Phone, Menu, X, LogOut } from "lucide-react";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/site-content";
 import { DASHBOARD_NAV_ITEMS } from "@/lib/dashboard-nav";
+import { ADMIN_NAV_ITEMS } from "@/lib/admin-nav";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
@@ -30,7 +31,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const isDashboard = pathname.startsWith("/dashboard");
+  const isAdmin = pathname.startsWith("/admin");
+  const isDashboard = pathname.startsWith("/dashboard") || isAdmin;
   const supabase = createClient();
 
   const [user, setUser] = useState<User | null>(null);
@@ -54,7 +56,7 @@ export default function Header() {
 
   // Charge l'utilisateur connecté, son profil et ses courses du mois pour le dashboard
   useEffect(() => {
-    if (!isDashboard) return;
+    if (!isDashboard || isAdmin) return;
 
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
@@ -78,7 +80,7 @@ export default function Header() {
           .then(({ data: p }) => setProfile(p));
       }
     });
-  }, [isDashboard, pathname]);
+  }, [isDashboard, isAdmin, pathname]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -222,34 +224,40 @@ export default function Header() {
         <div className="h-[calc(100dvh-80px)] overflow-y-auto px-5 py-6">
           {isDashboard ? (
             <div className="flex flex-col gap-5">
-              {/* Profil */}
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[12px] font-bold text-white">
-                  {initials}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-white">{displayName}</span>
-                  {company && <span className="text-[11px] font-medium text-white/60">{company}</span>}
-                </div>
-              </div>
+              {!isAdmin && (
+                <>
+                  {/* Profil */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-[12px] font-bold text-white">
+                      {initials}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-white">{displayName}</span>
+                      {company && <span className="text-[11px] font-medium text-white/60">{company}</span>}
+                    </div>
+                  </div>
 
-              {/* Statistiques */}
-              <div className="flex items-center divide-x divide-white/10 rounded-xl bg-white/5 p-3">
-                <div className="flex flex-1 flex-col items-center justify-center">
-                  <span className="text-[10px] font-medium text-white/50">Courses ce mois</span>
-                  <span className="mt-0.5 text-sm font-bold text-white">
-                    {coursesThisMonth === null ? "…" : `${coursesThisMonth} course${coursesThisMonth > 1 ? "s" : ""}`}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col items-center justify-center">
-                  <span className="text-[10px] font-medium text-white/50">Facturation</span>
-                  <span className="mt-0.5 text-sm font-bold text-accent">Compte pro</span>
-                </div>
-              </div>
+                  {/* Statistiques */}
+                  <div className="flex items-center divide-x divide-white/10 rounded-xl bg-white/5 p-3">
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                      <span className="text-[10px] font-medium text-white/50">Courses ce mois</span>
+                      <span className="mt-0.5 text-sm font-bold text-white">
+                        {coursesThisMonth === null ? "…" : `${coursesThisMonth} course${coursesThisMonth > 1 ? "s" : ""}`}
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col items-center justify-center">
+                      <span className="text-[10px] font-medium text-white/50">Facturation</span>
+                      <span className="mt-0.5 text-sm font-bold text-accent">Compte pro</span>
+                    </div>
+                  </div>
+                </>
+              )}
 
-              {/* Navigation du dashboard */}
+              {isAdmin && <span className="text-sm font-bold text-white">Espace Admin</span>}
+
+              {/* Navigation */}
               <nav className="flex flex-col gap-1">
-                {DASHBOARD_NAV_ITEMS.map((item) => {
+                {(isAdmin ? ADMIN_NAV_ITEMS : DASHBOARD_NAV_ITEMS).map((item) => {
                   const isActive = pathname.startsWith(item.href);
                   const Icon = item.icon;
                   return (
