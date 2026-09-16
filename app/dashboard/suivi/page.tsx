@@ -19,7 +19,6 @@ export default function SuiviPage() {
     const loadOrders = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("User ID:", user?.id);
         if (!user) {
           setLoading(false);
           return;
@@ -31,7 +30,6 @@ export default function SuiviPage() {
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
-        console.log("Orders loaded:", data?.length || 0, "Error:", error);
         if (error) {
           console.error("Erreur de chargement des courses:", error);
           setDeliveries([]);
