@@ -20,6 +20,9 @@ export default function RegisterForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [company, setCompany] = useState("");
+  const [siret, setSiret] = useState("");
+  const [vatNumber, setVatNumber] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +49,9 @@ export default function RegisterForm() {
           full_name: `${firstName} ${lastName}`,
           company: accountType === "pro" ? company : null,
           phone,
+          siret: accountType === "pro" ? siret : null,
+          vat_number: accountType === "pro" ? vatNumber : null,
+          billing_address: accountType === "pro" ? billingAddress : null,
         },
       },
     });
@@ -233,21 +239,56 @@ export default function RegisterForm() {
               </div>
 
               {accountType === "pro" && (
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">Entreprise</label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
-                      <Building2 size={18} strokeWidth={1.5} />
+                <>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Entreprise</label>
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-label">
+                        <Building2 size={18} strokeWidth={1.5} />
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="ex. Studio Créatif SARL"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                        className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
                     </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">N° SIRET</label>
+                      <input
+                        type="text"
+                        placeholder="123 456 789 00012"
+                        value={siret}
+                        onChange={(e) => setSiret(e.target.value)}
+                        maxLength={17}
+                        className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">N° TVA intracommunautaire</label>
+                      <input
+                        type="text"
+                        placeholder="FR 12 345678901"
+                        value={vatNumber}
+                        onChange={(e) => setVatNumber(e.target.value)}
+                        className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Adresse de facturation</label>
                     <input
                       type="text"
-                      placeholder="ex. Studio Créatif SARL"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      className="w-full rounded-[4px] border border-line bg-transparent py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                      placeholder="15 Rue du Commerce, 75015 Paris"
+                      value={billingAddress}
+                      onChange={(e) => setBillingAddress(e.target.value)}
+                      className="w-full rounded-[4px] border border-line bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-line focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                     />
                   </div>
-                </div>
+                </>
               )}
 
               <div className="flex flex-col gap-1.5">

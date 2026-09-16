@@ -20,6 +20,17 @@ import {
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
 
+const PRICE_GRID: Record<string, Record<string, number>> = {
+  pli:        { flash: 12.50, standard: 8.90, programme: 7.50 },
+  petit:      { flash: 18.00, standard: 14.50, programme: 12.00 },
+  volumineux: { flash: 35.00, standard: 28.00, programme: 24.00 },
+};
+
+function estimatePrice(format: string, delai: string, stopsCount: number) {
+  const base = PRICE_GRID[format]?.[delai] ?? 12.50;
+  return base + stopsCount * 3.50;
+}
+
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState("pli");
@@ -28,7 +39,7 @@ export default function CommanderPage() {
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
   const [isPickupFavOpen, setIsPickupFavOpen] = useState(false);
-  const [stops, setStops] = useState<{id: string, address: string}[]>([]);
+  const [stops, setStops] = useState<{id: string, address: string, contact_name: string, contact_phone: string, notes: string}[]>([]);
   const [notes, setNotes] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
@@ -46,15 +57,15 @@ export default function CommanderPage() {
   }, []);
 
   const addStop = () => {
-    setStops([...stops, { id: Math.random().toString(), address: "" }]);
+    setStops([...stops, { id: Math.random().toString(), address: "", contact_name: "", contact_phone: "", notes: "" }]);
   };
 
   const removeStop = (id: string) => {
     setStops(stops.filter(s => s.id !== id));
   };
 
-  const updateStop = (id: string, address: string) => {
-    setStops(stops.map(s => s.id === id ? { ...s, address } : s));
+  const updateStop = (id: string, field: string, value: string) => {
+    setStops(stops.map(s => s.id === id ? { ...s, [field]: value } : s));
   };
 
   const handleNextStep = (e: React.FormEvent) => {
@@ -76,13 +87,14 @@ export default function CommanderPage() {
         user_id: user.id,
         pickup_address: pickupAddress,
         dropoff_address: dropoffAddress,
-        stops: stops.map(s => s.address),
+        stops: stops.map(s => ({ address: s.address, contact_name: s.contact_name, contact_phone: s.contact_phone, notes: s.notes })),
         format,
         delai,
         notes,
         contact_name: contactName,
         contact_phone: contactPhone,
         status: "en_attente",
+        price_estimate: estimatePrice(format, delai, stops.length),
       })
       .select("tracking_code")
       .single();
@@ -220,26 +232,49 @@ export default function CommanderPage() {
                       <div className="absolute -left-[40px] top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[3px] border-[#3B82F6] bg-white">
                         <div className="h-2 w-2 rounded-full bg-[#3B82F6]"></div>
                       </div>
-                      
+
                       <div className="mb-3 flex items-center justify-between">
                         <label className="text-xs font-bold uppercase tracking-wider text-ink">Étape {index + 1} <span className="text-accent">*</span></label>
                         <button type="button" onClick={() => removeStop(stop.id)} className="text-xs font-bold text-red-500 hover:underline">
                           - Supprimer
                         </button>
                       </div>
-                      
+
                       <div className="relative mb-3">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-label z-10">
                           <MapPin size={18} strokeWidth={2} />
                         </div>
                         <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
-                          <AddressAutocomplete 
+                          <AddressAutocomplete
                             value={stop.address}
-                            onChange={(val) => updateStop(stop.id, val)}
+                            onChange={(val) => updateStop(stop.id, "address", val)}
                             required={true}
                           />
                         </div>
                       </div>
+                      <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <input
+                          type="text"
+                          value={stop.contact_name}
+                          onChange={(e) => updateStop(stop.id, "contact_name", e.target.value)}
+                          placeholder="Nom du contact"
+                          className="rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-medium text-ink placeholder:text-label focus:border-accent focus:outline-none"
+                        />
+                        <input
+                          type="tel"
+                          value={stop.contact_phone}
+                          onChange={(e) => updateStop(stop.id, "contact_phone", e.target.value)}
+                          placeholder="Téléphone du contact"
+                          className="rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-medium text-ink placeholder:text-label focus:border-accent focus:outline-none"
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        value={stop.notes}
+                        onChange={(e) => updateStop(stop.id, "notes", e.target.value)}
+                        placeholder="Instructions pour cette étape (digicode, étage…)"
+                        className="mb-3 w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-medium text-ink placeholder:text-label focus:border-accent focus:outline-none"
+                      />
                     </div>
                   ))}
 
@@ -450,10 +485,12 @@ export default function CommanderPage() {
               
               <div className="flex flex-col items-start gap-1">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Tarif estimé</span>
+                {(() => { const ht = estimatePrice(format, delai, stops.length); const ttc = ht * 1.2; return (
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-ink">24,50 €</span>
-                  <span className="text-sm font-semibold text-muted">HT (29,40 € TTC)</span>
+                  <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
+                  <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
                 </div>
+                ); })()}
               </div>
 
               <div className="flex items-center gap-6">
@@ -515,6 +552,10 @@ export default function CommanderPage() {
                         <div>
                           <div className="text-[11px] font-bold text-muted uppercase">Étape {i + 1}</div>
                           <div className="text-sm font-semibold text-ink">{stop.address || "Adresse non renseignée"}</div>
+                          {(stop.contact_name || stop.contact_phone) && (
+                            <div className="text-xs text-muted">{[stop.contact_name, stop.contact_phone].filter(Boolean).join(" — ")}</div>
+                          )}
+                          {stop.notes && <div className="text-xs text-label italic">{stop.notes}</div>}
                         </div>
                       </div>
                     ))}
@@ -574,10 +615,12 @@ export default function CommanderPage() {
             <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm sm:flex-row sm:p-8">
               <div className="flex flex-col items-start gap-1">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Montant Final</span>
+                {(() => { const ht = estimatePrice(format, delai, stops.length); const ttc = ht * 1.2; return (
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-ink">24,50 €</span>
-                  <span className="text-sm font-semibold text-muted">HT (29,40 € TTC)</span>
+                  <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
+                  <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
                 </div>
+                ); })()}
               </div>
 
               <div className="flex flex-col items-end gap-3">

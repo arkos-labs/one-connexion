@@ -4,7 +4,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useState } from "reac
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useQueryParam } from "@/lib/use-query-state";
-import { Calendar, Clock, Euro, Search, ToggleLeft, ToggleRight } from "lucide-react";
+import { Calendar, ChevronDown, ChevronUp, Clock, Euro, MapPin, Search, ToggleLeft, ToggleRight } from "lucide-react";
 
 type Navette = {
   id: string;
@@ -17,6 +17,7 @@ type Navette = {
   end_time: string | null;
   status: string;
   estimated_price: number | null;
+  stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
 };
 
 function initialsOf(name: string) {
@@ -38,12 +39,13 @@ function AdminNavettesPageInner() {
   const [filter, setFilter] = useQueryParam("filter", "all");
   const [search, setSearch] = useQueryParam("q", "");
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const [{ data }, { data: profiles }] = await Promise.all([
       supabase
         .from("navettes")
-        .select("id, user_id, name, pickup_address, dropoff_address, days_str, start_time, end_time, status, estimated_price")
+        .select("id, user_id, name, pickup_address, dropoff_address, days_str, start_time, end_time, status, estimated_price, stops")
         .order("created_at", { ascending: false }),
       supabase.from("profiles").select("id, full_name, company"),
     ]);
@@ -150,49 +152,108 @@ function AdminNavettesPageInner() {
         {visible.map((n) => {
           const client = n.user_id ? clients[n.user_id] : null;
           const clientName = client?.company || client?.full_name || "Client particulier";
+          const stops = Array.isArray(n.stops) ? n.stops : [];
+          const totalPoints = 2 + stops.length;
+          const isOpen = expanded === n.id;
           return (
             <div
               key={n.id}
-              className={`relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-line bg-white p-4 pl-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 sm:flex-row sm:items-center sm:justify-between ${
+              className={`relative overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.02)] before:absolute before:inset-y-0 before:left-0 before:w-1.5 ${
                 n.status === "active" ? "before:bg-green-500" : "before:bg-line"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
-                  {initialsOf(clientName)}
+              <div className="flex flex-col gap-3 p-4 pl-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] font-bold text-white">
+                    {initialsOf(clientName)}
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-ink">{n.name}</span>
+                      {n.user_id ? (
+                        <Link href={`/admin/clients/${n.user_id}`} className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-bold text-accent hover:bg-accent/20">
+                          {clientName}
+                        </Link>
+                      ) : (
+                        <span className="rounded-full bg-paper px-2 py-0.5 text-[10px] font-bold text-muted">Client inconnu</span>
+                      )}
+                      <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
+                        {totalPoints} points
+                      </span>
+                    </div>
+                    <div className="mt-1 text-[12.5px] text-muted">{n.pickup_address} → {n.dropoff_address}</div>
+                    <div className="mt-0.5 text-[12.5px] text-muted">
+                      {n.days_str || "Jours non définis"}
+                      {n.start_time && ` · ${n.start_time.slice(0, 5)}${n.end_time ? `–${n.end_time.slice(0, 5)}` : ""}`}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-ink">{n.name}</span>
-                    {n.user_id ? (
-                      <Link href={`/admin/clients/${n.user_id}`} className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-bold text-accent hover:bg-accent/20">
-                        {clientName}
-                      </Link>
-                    ) : (
-                      <span className="rounded-full bg-paper px-2 py-0.5 text-[10px] font-bold text-muted">Client inconnu</span>
-                    )}
+                <div className="flex items-center gap-4 pl-14 sm:pl-0">
+                  <div className="text-right">
+                    <div className="text-[11px] font-bold uppercase tracking-wide text-label">Estimé</div>
+                    <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} €</div>
                   </div>
-                  <div className="mt-1 text-[12.5px] text-muted">{n.pickup_address} → {n.dropoff_address}</div>
-                  <div className="mt-0.5 text-[12.5px] text-muted">
-                    {n.days_str || "Jours non définis"}
-                    {n.start_time && ` · ${n.start_time.slice(0, 5)}${n.end_time ? `–${n.end_time.slice(0, 5)}` : ""}`}
-                  </div>
+                  <button
+                    onClick={() => toggleStatus(n.id, n.status)}
+                    className={`rounded-full px-4 py-1.5 text-[12.5px] font-bold transition-colors ${
+                      n.status === "active" ? "bg-green-50 text-green-700 hover:bg-green-100" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                    }`}
+                  >
+                    {n.status === "active" ? "Active" : "Inactive"}
+                  </button>
+                  {totalPoints > 2 && (
+                    <button
+                      onClick={() => setExpanded(isOpen ? null : n.id)}
+                      className="flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-[12px] font-semibold text-muted transition-colors hover:border-ink/20 hover:text-ink"
+                    >
+                      <MapPin size={13} />
+                      Points
+                      {isOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-4 pl-14 sm:pl-0">
-                <div className="text-right">
-                  <div className="text-[11px] font-bold uppercase tracking-wide text-label">Estimé</div>
-                  <div className="text-[14px] font-bold text-ink">{(n.estimated_price ?? 0).toFixed(2)} €</div>
+              {isOpen && stops.length > 0 && (
+                <div className="border-t border-line bg-slate-50/60 px-6 py-4">
+                  <div className="text-[11px] font-bold uppercase tracking-wide text-label mb-3">Itinéraire ({totalPoints} points)</div>
+                  <div className="relative pl-5">
+                    <div className="absolute left-[7px] top-1 bottom-1 w-px bg-line" />
+                    <div className="flex items-start gap-3 mb-2.5">
+                      <div className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-500 -ml-[3px]">
+                        <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                      </div>
+                      <div>
+                        <div className="text-[12px] font-bold text-ink">{n.pickup_address}</div>
+                        <div className="text-[11px] text-muted">Départ</div>
+                      </div>
+                    </div>
+                    {stops.map((stop, i) => (
+                      <div key={i} className="flex items-start gap-3 mb-2.5">
+                        <div className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500 -ml-[3px]">
+                          <span className="text-[8px] font-bold text-white">{i + 1}</span>
+                        </div>
+                        <div>
+                          <div className="text-[12px] font-semibold text-ink">{stop.address}</div>
+                          {stop.contact_name && (
+                            <div className="text-[11px] text-muted">
+                              {stop.contact_name}{stop.contact_phone ? ` · ${stop.contact_phone}` : ""}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex items-start gap-3">
+                      <div className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-red-500 -ml-[3px]">
+                        <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                      </div>
+                      <div>
+                        <div className="text-[12px] font-bold text-ink">{n.dropoff_address}</div>
+                        <div className="text-[11px] text-muted">Arrivée</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button
-                  onClick={() => toggleStatus(n.id, n.status)}
-                  className={`rounded-full px-4 py-1.5 text-[12.5px] font-bold transition-colors ${
-                    n.status === "active" ? "bg-green-50 text-green-700 hover:bg-green-100" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                  }`}
-                >
-                  {n.status === "active" ? "Active" : "Inactive"}
-                </button>
-              </div>
+              )}
             </div>
           );
         })}

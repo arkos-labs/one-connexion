@@ -19,6 +19,7 @@ export default function SuiviPage() {
     const loadOrders = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        console.log("User ID:", user?.id);
         if (!user) {
           setLoading(false);
           return;
@@ -30,6 +31,7 @@ export default function SuiviPage() {
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
+        console.log("Orders loaded:", data?.length || 0, "Error:", error);
         if (error) {
           console.error("Erreur de chargement des courses:", error);
           setDeliveries([]);
@@ -76,18 +78,30 @@ export default function SuiviPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "en_cours":
+      // New statuses
+      case "assigned":
+      case "driver_accepted":
         return (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">
+            <Truck size={12} /> Assignée
+          </span>
+        );
+      case "in_progress":
+      case "picked_up":
+      case "en_cours":
+        return (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">
             <Truck size={12} /> En cours
           </span>
         );
+      case "delivered":
       case "livree":
         return (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-xs font-bold text-green-700">
             <CheckCircle2 size={12} /> Livré
           </span>
         );
+      case "cancelled":
       case "annulee":
         return (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-700">

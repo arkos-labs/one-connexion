@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useQueryParam } from "@/lib/use-query-state";
-import { AlertTriangle, ArrowRight, Clock, Search, Send, Truck, Users, X, Zap } from "lucide-react";
+import { AlertTriangle, ArrowRight, ChevronDown, ChevronUp, Clock, MapPin, Search, Send, Truck, Users, X, Zap } from "lucide-react";
 
 type Course = {
   key: string;
@@ -20,6 +20,7 @@ type Course = {
   price: number | null;
   createdAt: string;
   driverId: string | null;
+  stops: { address: string; contact_name?: string; contact_phone?: string }[] | null;
   updateDriver: (driverId: string | null) => Promise<void>;
   updateStatus?: (status: string) => Promise<void>;
 };
@@ -30,9 +31,30 @@ type Driver = {
   phone: string | null;
   vehicle: string | null;
   status: "disponible" | "en_course" | "hors_service";
+  auth_id: string | null;
 };
 
-const ORDER_STATUSES = ["en_attente", "confirmee", "en_cours", "livree", "annulee"];
+const ORDER_STATUSES = [
+  "en_attente", "assigned", "driver_accepted", "confirmee",
+  "in_progress", "en_cours", "picked_up", "delivered", "livree",
+  "cancelled", "annulee",
+];
+
+const STATUS_DISPLAY: Record<string, string> = {
+  en_attente: "En attente",
+  assigned: "Assignée",
+  driver_accepted: "Acceptée chauffeur",
+  confirmee: "Confirmée",
+  in_progress: "En cours",
+  en_cours: "En cours",
+  picked_up: "Enlevée",
+  delivered: "Livrée",
+  livree: "Livrée",
+  cancelled: "Annulée",
+  annulee: "Annulée",
+  pending: "En attente",
+  active: "Active",
+};
 
 // Correspond aux ids stockés dans navettes.days_of_week (cf. app/dashboard/navettes/page.tsx).
 const WEEKDAY_IDS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -69,10 +91,11 @@ function AdminCoursesPageInner() {
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [selection, setSelection] = useState<Record<string, string>>({});
   const [sending, setSending] = useState<string | null>(null);
+  const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const [{ data: driversData }, { data: orders }, { data: navettes }] = await Promise.all([
-      supabase.from("drivers").select("id, name, phone, vehicle, status").order("name"),
+      supabase.from("drivers").select("id, name, phone, vehicle, status, auth_id").order("name"),
       supabase
         .from("orders")
         .select("id, pickup_address, dropoff_address, status, driver_id, tracking_code, price_estimate, created_at, user_id")
@@ -80,7 +103,7 @@ function AdminCoursesPageInner() {
         .order("created_at", { ascending: false }),
       supabase
         .from("navettes")
-        .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id")
+        .select("id, name, pickup_address, dropoff_address, status, driver_id, last_dispatch_date, days_of_week, created_at, user_id, stops")
         .eq("status", "active")
         .contains("days_of_week", [todayId()]),
     ]);
@@ -93,6 +116,9 @@ function AdminCoursesPageInner() {
       ? await supabase.from("profiles").select("id, full_name, company").in("id", userIds)
       : { data: [] as { id: string; full_name: string | null; company: string | null }[] };
     const profileById = new Map((profiles ?? []).map((p) => [p.id, p]));
+
+    const driverById = new Map((driversData ?? []).map((d: Driver) => [d.id, d]));
+    const driverByAuthId = new Map((driversData ?? []).filter((d: Driver) => d.auth_id).map((d: Driver) => [d.auth_id!, d]));
 
     const orderCourses: Course[] = orderRows.map((o) => ({
       key: `order-${o.id}`,
@@ -107,8 +133,21 @@ function AdminCoursesPageInner() {
       price: o.price_estimate,
       createdAt: o.created_at,
       driverId: o.driver_id,
+      stops: null,
       updateDriver: async (driverId) => {
-        await supabase.from("orders").update({ driver_id: driverId }).eq("id", o.id);
+        const driver = driverId ? driverById.get(driverId) : null;
+        const authId = driver?.auth_id ?? driverId;
+        await supabase.from("orders").update({ driver_id: authId, status: driverId ? "assigned" : "en_attente" }).eq("id", o.id);
+        if (driver) {
+          await supabase.from("drivers").update({ status: "en_course" }).eq("id", driver.id);
+        }
+        if (!driverId && o.driver_id) {
+          const prev = driverById.get(o.driver_id) ?? [...driverById.values()].find((d: Driver) => d.auth_id === o.driver_id);
+          if (prev) {
+            const { count } = await supabase.from("orders").select("id", { count: "exact", head: true }).eq("driver_id", prev.auth_id || prev.id).in("status", ["assigned", "driver_accepted", "in_progress", "picked_up", "en_cours"]).neq("id", o.id);
+            if (!count) await supabase.from("drivers").update({ status: "disponible" }).eq("id", prev.id);
+          }
+        }
         load();
       },
       updateStatus: async (status) => {
@@ -137,8 +176,14 @@ function AdminCoursesPageInner() {
         price: null,
         createdAt: n.created_at,
         driverId: confirmedToday ? n.driver_id : null,
+        stops: Array.isArray(n.stops) ? n.stops : null,
         updateDriver: async (driverId) => {
-          await supabase.from("navettes").update({ driver_id: driverId, last_dispatch_date: driverId ? today : null }).eq("id", n.id);
+          const driver = driverId ? driverById.get(driverId) : null;
+          const authId = driver?.auth_id ?? driverId;
+          await supabase.from("navettes").update({ driver_id: authId, last_dispatch_date: driverId ? today : null }).eq("id", n.id);
+          if (driver) {
+            await supabase.from("drivers").update({ status: "en_course" }).eq("id", driver.id);
+          }
           load();
         },
       };
@@ -152,7 +197,14 @@ function AdminCoursesPageInner() {
     load();
   }, [load]);
 
-  const pendingCount = courses.filter((c) => !c.driverId).length;
+  const TERMINAL_STATUSES = ["delivered", "livree", "cancelled", "annulee"];
+  const ACTIVE_STATUSES = ["assigned", "driver_accepted", "in_progress", "picked_up", "en_cours"];
+
+  const aAccepterCount = courses.filter((c) => c.status === "en_attente").length;
+  const aDispatcherCount = courses.filter((c) => c.status === "confirmee" && !c.driverId).length;
+  const enCoursCount = courses.filter((c) => ACTIVE_STATUSES.includes(c.status)).length;
+  const termineesCount = courses.filter((c) => TERMINAL_STATUSES.includes(c.status)).length;
+  const pendingCount = aAccepterCount + aDispatcherCount;
   const dispatchedCount = courses.filter((c) => c.driverId).length;
   const dispatchRate = courses.length ? Math.round((dispatchedCount / courses.length) * 100) : 0;
   const driversDispo = drivers.filter((d) => d.status === "disponible");
@@ -162,8 +214,10 @@ function AdminCoursesPageInner() {
     const q = search.trim().toLowerCase();
     return courses.filter((c) => {
       if (clientFilter && c.clientId !== clientFilter) return false;
-      if (filter === "dispatched" && !c.driverId) return false;
-      if (filter === "pending" && c.driverId) return false;
+      if (filter === "a_accepter" && c.status !== "en_attente") return false;
+      if (filter === "a_dispatcher" && !(c.status === "confirmee" && !c.driverId)) return false;
+      if (filter === "en_cours" && !ACTIVE_STATUSES.includes(c.status)) return false;
+      if (filter === "terminees" && !TERMINAL_STATUSES.includes(c.status)) return false;
       if (!q) return true;
       return (
         c.label.toLowerCase().includes(q) ||
@@ -259,8 +313,10 @@ function AdminCoursesPageInner() {
         <div className="flex flex-wrap gap-2">
           {([
             ["all", "Toutes", courses.length],
-            ["pending", "À dispatcher", pendingCount],
-            ["dispatched", "Dispatchées", dispatchedCount],
+            ["a_accepter", "À accepter", aAccepterCount],
+            ["a_dispatcher", "À dispatcher", aDispatcherCount],
+            ["en_cours", "En cours", enCoursCount],
+            ["terminees", "Terminées", termineesCount],
           ] as const).map(([key, label, count]) => (
             <button
               key={key}
@@ -313,6 +369,23 @@ function AdminCoursesPageInner() {
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
                     {c.pickup}
                   </div>
+                  {c.stops && c.stops.length > 0 && (
+                    <button
+                      onClick={() => setExpandedCourse(expandedCourse === c.key ? null : c.key)}
+                      className="flex items-center gap-1.5 ml-3.5 text-[12px] font-semibold text-blue-600 hover:text-blue-800"
+                    >
+                      <MapPin size={12} />
+                      {c.stops.length} étape{c.stops.length > 1 ? "s" : ""} intermédiaire{c.stops.length > 1 ? "s" : ""}
+                      {expandedCourse === c.key ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    </button>
+                  )}
+                  {expandedCourse === c.key && c.stops && c.stops.map((stop, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[12.5px] text-muted ml-3.5">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-500 text-[8px] font-bold text-white">{i + 1}</span>
+                      <span>{stop.address}</span>
+                      {stop.contact_name && <span className="text-[11px] text-label">({stop.contact_name})</span>}
+                    </div>
+                  ))}
                   <div className="flex items-center gap-2 text-[13px] text-muted">
                     <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
                     {c.dropoff}
@@ -320,6 +393,9 @@ function AdminCoursesPageInner() {
                 </div>
                 <div className="rounded-xl bg-paper px-4 py-2.5 text-[12.5px] font-semibold text-ink sm:text-right">
                   {c.clientName}
+                  {c.stops && c.stops.length > 0 && (
+                    <div className="mt-1 text-[10px] font-bold text-blue-600">{2 + c.stops.length} points</div>
+                  )}
                 </div>
               </div>
 
@@ -331,23 +407,25 @@ function AdminCoursesPageInner() {
                     className="rounded-lg border border-line px-3 py-2 text-[13px] font-medium text-ink"
                   >
                     {ORDER_STATUSES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
+                      <option key={s} value={s}>{STATUS_DISPLAY[s] ?? s}</option>
                     ))}
                   </select>
                 )}
                 {c.driverId ? (
                   <div className="flex flex-1 flex-wrap items-center gap-2">
                     <span className="flex items-center gap-1.5 rounded-lg bg-green-50 px-3 py-2 text-[13px] font-bold text-green-700">
-                      Assignée à {drivers.find((d) => d.id === c.driverId)?.name ?? "chauffeur"}
+                      Assignée à {(drivers.find((d) => d.id === c.driverId) ?? drivers.find((d) => d.auth_id === c.driverId))?.name ?? "chauffeur"}
                     </span>
-                    <button
-                      onClick={() => removeFromDriver(c)}
-                      disabled={sending === c.key}
-                      className="flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-[13px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
-                    >
-                      <X size={14} />
-                      Retirer la course
-                    </button>
+                    {!TERMINAL_STATUSES.includes(c.status) && (
+                      <button
+                        onClick={() => removeFromDriver(c)}
+                        disabled={sending === c.key}
+                        className="flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-[13px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+                      >
+                        <X size={14} />
+                        Retirer la course
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="flex flex-1 flex-wrap items-center gap-2">
@@ -417,9 +495,9 @@ function AdminCoursesPageInner() {
                         </span>
                       </div>
                       <div className="truncate text-[12px] text-muted">{d.vehicle || "Véhicule non renseigné"}</div>
-                      {courses.filter((c) => c.driverId === d.id).length > 0 && (
+                      {courses.filter((c) => c.driverId === d.id || c.driverId === d.auth_id).length > 0 && (
                         <div className="truncate text-[11.5px] font-semibold text-blue-700">
-                          {courses.filter((c) => c.driverId === d.id).length} course{courses.filter((c) => c.driverId === d.id).length > 1 ? "s" : ""} sur son app
+                          {courses.filter((c) => c.driverId === d.id || c.driverId === d.auth_id).length} course{courses.filter((c) => c.driverId === d.id || c.driverId === d.auth_id).length > 1 ? "s" : ""} sur son app
                         </div>
                       )}
                     </div>

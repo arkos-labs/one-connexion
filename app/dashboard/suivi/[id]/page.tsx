@@ -19,9 +19,16 @@ import { createClient } from "@/lib/supabase/client";
 
 const STATUS_LABELS: Record<string, string> = {
   en_attente: "En attente",
+  pending: "En attente",
   confirmee: "Confirmée",
+  assigned: "Chauffeur assigné",
+  driver_accepted: "Chauffeur en route",
+  in_progress: "En cours de livraison",
+  picked_up: "Colis enlevé",
   en_cours: "En cours de livraison",
+  delivered: "Livrée",
   livree: "Livrée",
+  cancelled: "Annulée",
   annulee: "Annulée",
 };
 
@@ -31,11 +38,13 @@ const FORMAT_LABELS: Record<string, string> = {
   palette: "Palette",
 };
 
+const STATUS_ORDER = ["en_attente", "confirmee", "assigned", "driver_accepted", "in_progress", "picked_up", "en_cours", "delivered", "livree"];
+
 const STEPS = [
-  { key: "en_attente", label: "Commande reçue", icon: FileText },
-  { key: "confirmee", label: "Confirmée", icon: CheckCircle2 },
-  { key: "en_cours", label: "En livraison", icon: Truck },
-  { key: "livree", label: "Livrée", icon: PackageCheck },
+  { key: "en_attente", label: "Commande reçue", icon: FileText, matches: ["en_attente", "pending"] },
+  { key: "confirmee", label: "Confirmée", icon: CheckCircle2, matches: ["confirmee", "assigned", "driver_accepted"] },
+  { key: "en_cours", label: "En livraison", icon: Truck, matches: ["in_progress", "picked_up", "en_cours"] },
+  { key: "livree", label: "Livrée", icon: PackageCheck, matches: ["delivered", "livree"] },
 ];
 
 export default function DeliveryDetailsPage() {
@@ -50,6 +59,8 @@ export default function DeliveryDetailsPage() {
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     const loadOrder = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -71,6 +82,18 @@ export default function DeliveryDetailsPage() {
         } else {
           setOrder(data);
         }
+
+        channel = supabase
+          .channel(`order-tracking-${id}`)
+          .on("postgres_changes", {
+            event: "UPDATE",
+            schema: "public",
+            table: "orders",
+            filter: `id=eq.${id}`,
+          }, (payload) => {
+            setOrder((prev: any) => prev ? { ...prev, ...payload.new } : prev);
+          })
+          .subscribe();
       } catch (err) {
         setError("Erreur de chargement");
       } finally {
@@ -83,6 +106,10 @@ export default function DeliveryDetailsPage() {
     } else {
       setLoading(false);
     }
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
   }, [id]);
 
   const handleCancel = async () => {
@@ -133,9 +160,9 @@ export default function DeliveryDetailsPage() {
   const priceHT = order.price_estimate ? Number(order.price_estimate) : null;
   const tva = priceHT !== null ? priceHT * 0.2 : null;
   const totalTTC = priceHT !== null ? priceHT + (tva || 0) : null;
-  const canCancel = order.status !== "livree" && order.status !== "annulee";
-  const isCancelled = order.status === "annulee";
-  const currentStepIndex = STEPS.findIndex((s) => s.key === order.status);
+  const canCancel = !["livree", "delivered", "annulee", "cancelled"].includes(order.status);
+  const isCancelled = order.status === "annulee" || order.status === "cancelled";
+  const currentStepIndex = STEPS.findIndex((s) => s.matches?.includes(order.status) ?? s.key === order.status);
 
   return (
     <div className="flex flex-col gap-6 pb-12">
@@ -262,20 +289,32 @@ export default function DeliveryDetailsPage() {
               </div>
 
               {/* Étapes intermédiaires */}
-              {order.stops && order.stops.length > 0 && order.stops.map((stop: any, index: number) => (
-                <div key={index} className="flex gap-4 p-5 pt-0">
-                  <div className="flex flex-col items-center gap-2 pt-1">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
-                      <span className="text-[10px] font-bold">{index + 1}</span>
+              {order.stops && order.stops.length > 0 && order.stops.map((stop: any, index: number) => {
+                const addr = typeof stop === "string" ? stop : stop.address;
+                const contactName = typeof stop === "string" ? null : (stop.contact_name || stop.contactName);
+                const contactPhone = typeof stop === "string" ? null : (stop.contact_phone || stop.contactPhone);
+                const stopNotes = typeof stop === "string" ? null : stop.notes;
+                return (
+                  <div key={index} className="flex gap-4 p-5 pt-0">
+                    <div className="flex flex-col items-center gap-2 pt-1">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
+                        <span className="text-[10px] font-bold">{index + 1}</span>
+                      </div>
+                      <div className="w-0.5 flex-1 bg-line"></div>
                     </div>
-                    <div className="w-0.5 flex-1 bg-line"></div>
+                    <div className="pb-2">
+                      <h3 className="text-[11px] font-bold uppercase tracking-wider text-label">Étape intermédiaire</h3>
+                      <p className="text-sm font-medium text-ink mt-1">{addr}</p>
+                      {(contactName || contactPhone) && (
+                        <p className="text-xs text-muted mt-0.5">{[contactName, contactPhone].filter(Boolean).join(" — ")}</p>
+                      )}
+                      {stopNotes && (
+                        <p className="text-xs text-label italic mt-0.5">{stopNotes}</p>
+                      )}
+                    </div>
                   </div>
-                  <div className="pb-2">
-                    <h3 className="text-[11px] font-bold uppercase tracking-wider text-label">Étape intermédiaire</h3>
-                    <p className="text-sm font-medium text-ink mt-1">{typeof stop === "string" ? stop : stop.address}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Arrivée */}
               <div className="flex gap-4 p-5 pt-0">

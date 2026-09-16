@@ -73,7 +73,7 @@ function AdminChauffeursPageInner() {
         .from("orders")
         .select("id, tracking_code, pickup_address, dropoff_address, driver_id")
         .not("driver_id", "is", null)
-        .in("status", ["en_attente", "confirmee", "en_cours"]),
+        .in("status", ["en_attente", "confirmee", "en_cours", "assigned", "driver_accepted", "in_progress", "picked_up"]),
       supabase
         .from("navettes")
         .select("id, name, pickup_address, dropoff_address, driver_id, last_dispatch_date")
@@ -82,12 +82,20 @@ function AdminChauffeursPageInner() {
         .eq("last_dispatch_date", todayDateStr()),
     ]);
 
-    setDrivers((data ?? []) as Driver[]);
+    const driverRows = (data ?? []) as (Driver & { auth_id?: string | null })[];
+    setDrivers(driverRows);
+
+    const authIdToDriverId = new Map(
+      driverRows.filter((d) => d.auth_id).map((d) => [d.auth_id!, d.id])
+    );
+
+    const resolveDriverId = (rawId: string) => authIdToDriverId.get(rawId) ?? rawId;
 
     const byDriver: Record<string, AssignedCourse[]> = {};
     (orders ?? []).forEach((o) => {
       if (!o.driver_id) return;
-      (byDriver[o.driver_id] ??= []).push({
+      const dId = resolveDriverId(o.driver_id);
+      (byDriver[dId] ??= []).push({
         key: `order-${o.id}`,
         type: "commande",
         label: o.tracking_code ?? o.id.slice(0, 8),
@@ -96,7 +104,8 @@ function AdminChauffeursPageInner() {
     });
     (navettes ?? []).forEach((n) => {
       if (!n.driver_id) return;
-      (byDriver[n.driver_id] ??= []).push({
+      const dId = resolveDriverId(n.driver_id);
+      (byDriver[dId] ??= []).push({
         key: `navette-${n.id}`,
         type: "navette",
         label: n.name,
