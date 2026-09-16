@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Calendar, MapPin, Clock, Truck, ShieldCheck, ChevronRight, Plus, ArrowRight, CheckCircle2, RefreshCw } from "lucide-react";
-import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { AddressAutocomplete, type AddressMeta } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
+import { detectZone, farthestZone, estimatePrice, getZoneLabel, loadPricingGrid, type Zone, type PricingRow } from "@/lib/pricing";
 
 export default function NavettesPage() {
   const supabase = createClient();
@@ -29,6 +30,9 @@ export default function NavettesPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [pickupMeta, setPickupMeta] = useState<AddressMeta | null>(null);
+  const [dropoffMeta, setDropoffMeta] = useState<AddressMeta | null>(null);
+  const [pricingGrid, setPricingGrid] = useState<PricingRow[] | undefined>();
 
   const [startTime, setStartTime] = useState("08:30");
   const [endTime, setEndTime] = useState("12:00");
@@ -98,6 +102,7 @@ export default function NavettesPage() {
     };
 
     loadNavettes();
+    loadPricingGrid().then(setPricingGrid);
   }, []);
 
   const resetForm = () => {
@@ -114,6 +119,8 @@ export default function NavettesPage() {
     setSelectedDays(['mon', 'tue', 'wed', 'thu', 'fri']);
     setStartTime("08:30");
     setEndTime("12:00");
+    setPickupMeta(null);
+    setDropoffMeta(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -157,7 +164,11 @@ export default function NavettesPage() {
           start_time: startTime,
           end_time: endTime,
           status: "active",
-          estimated_price: 185.00,
+          estimated_price: (() => {
+            const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
+            const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
+            return estimatePrice(farthestZone(pZone, dZone), "standard", stops.length, true, pricingGrid);
+          })(),
         });
 
       if (error) {
@@ -325,7 +336,7 @@ export default function NavettesPage() {
                   </div>
                   <label className="mb-3 block text-xs font-bold uppercase tracking-wider text-ink">Point de départ <span className="text-accent">*</span></label>
                   <div className="[&>div>input]:pl-4 [&>div>input]:py-3.5 [&>div>input]:shadow-sm">
-                    <AddressAutocomplete value={pickupAddress} onChange={setPickupAddress} placeholder="Adresse du siège ou de l'entrepôt" required />
+                    <AddressAutocomplete value={pickupAddress} onChange={setPickupAddress} onSelect={setPickupMeta} placeholder="Adresse du siège ou de l'entrepôt" required />
                   </div>
 
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -418,7 +429,7 @@ export default function NavettesPage() {
                     <button type="button" onClick={addStop} className="text-xs font-bold text-[#10B981] hover:underline">+ Ajouter une étape</button>
                   </div>
                   <div className="[&>div>input]:pl-4 [&>div>input]:py-3.5 [&>div>input]:shadow-sm">
-                    <AddressAutocomplete value={dropoffAddress} onChange={setDropoffAddress} placeholder="Adresse de destination finale" required />
+                    <AddressAutocomplete value={dropoffAddress} onChange={setDropoffAddress} onSelect={setDropoffMeta} placeholder="Adresse de destination finale" required />
                   </div>
 
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -512,10 +523,22 @@ export default function NavettesPage() {
           <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm sm:flex-row sm:p-8">
             <div className="flex flex-col items-start gap-1">
               <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Tarif estimé / passage</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold text-ink">185,00 €</span>
-                <span className="text-sm font-semibold text-muted">HT</span>
-              </div>
+              {(() => {
+                const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
+                const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
+                const zone = farthestZone(pZone, dZone);
+                const ht = estimatePrice(zone, "standard", stops.length, true, pricingGrid);
+                const ttc = ht * 1.2;
+                return (<>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
+                    <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
+                  </div>
+                  {(pickupMeta || dropoffMeta) && (
+                    <span className="text-[10px] text-muted mt-1">{getZoneLabel(zone, pricingGrid)} — Bon à 5,00 €</span>
+                  )}
+                </>);
+              })()}
             </div>
 
             <div className="flex items-center gap-3">

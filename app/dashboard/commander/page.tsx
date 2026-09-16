@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { AddressAutocomplete, type AddressMeta } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
-import { detectZone, farthestZone, estimatePrice, ZONE_LABELS, type Zone, type Delai } from "@/lib/pricing";
+import { detectZone, farthestZone, estimatePrice, getZoneLabel, loadPricingGrid, type Zone, type Delai, type PricingRow } from "@/lib/pricing";
 
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
@@ -40,12 +40,14 @@ export default function CommanderPage() {
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [favoriteAddresses, setFavoriteAddresses] = useState<{id: string, label: string, address: string}[]>([]);
 
+  const [pricingGrid, setPricingGrid] = useState<PricingRow[] | undefined>();
   const supabase = createClient();
 
   useEffect(() => {
     supabase.from("addresses").select("id, label, address").then(({ data }) => {
       if (data) setFavoriteAddresses(data);
     });
+    loadPricingGrid().then(setPricingGrid);
   }, []);
 
   const addStop = () => {
@@ -487,7 +489,7 @@ export default function CommanderPage() {
                   const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
                   const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
                   const zone = farthestZone(pZone, dZone);
-                  const ht = estimatePrice(zone, delai, stops.length);
+                  const ht = estimatePrice(zone, delai, stops.length, false, pricingGrid);
                   const ttc = ht * 1.2;
                   return (<>
                     <div className="flex items-baseline gap-2">
@@ -495,7 +497,7 @@ export default function CommanderPage() {
                       <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
                     </div>
                     {(pickupMeta || dropoffMeta) && (
-                      <span className="text-[10px] text-muted mt-1">{ZONE_LABELS[zone]}</span>
+                      <span className="text-[10px] text-muted mt-1">{getZoneLabel(zone, pricingGrid)}</span>
                     )}
                   </>);
                 })()}
@@ -627,7 +629,7 @@ export default function CommanderPage() {
                   const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
                   const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
                   const zone = farthestZone(pZone, dZone);
-                  const ht = estimatePrice(zone, delai, stops.length);
+                  const ht = estimatePrice(zone, delai, stops.length, false, pricingGrid);
                   const ttc = ht * 1.2;
                   return (<>
                     <div className="flex items-baseline gap-2">
@@ -635,7 +637,7 @@ export default function CommanderPage() {
                       <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
                     </div>
                     {(pickupMeta || dropoffMeta) && (
-                      <span className="text-[10px] text-muted mt-1">{ZONE_LABELS[zone]}</span>
+                      <span className="text-[10px] text-muted mt-1">{getZoneLabel(zone, pricingGrid)}</span>
                     )}
                   </>);
                 })()}
