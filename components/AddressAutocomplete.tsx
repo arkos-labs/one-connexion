@@ -3,9 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MapPin } from "lucide-react";
 
+export interface AddressMeta {
+  postcode: string;
+  city: string;
+  lat: number;
+  lon: number;
+}
+
 interface AddressAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
+  onSelect?: (meta: AddressMeta) => void;
   placeholder?: string;
   required?: boolean;
 }
@@ -13,6 +21,7 @@ interface AddressAutocompleteProps {
 export function AddressAutocomplete({
   value,
   onChange,
+  onSelect,
   placeholder = "Numéro et nom de rue",
   required = false
 }: AddressAutocompleteProps) {
@@ -93,6 +102,12 @@ export function AddressAutocomplete({
     const addressName = feature.properties.label;
     setQuery(addressName);
     onChange(addressName);
+    onSelect?.({
+      postcode: feature.properties.postcode || "",
+      city: feature.properties.city || "",
+      lat: feature.geometry?.coordinates?.[1] ?? 0,
+      lon: feature.geometry?.coordinates?.[0] ?? 0,
+    });
     setIsOpen(false);
     setSuggestions([]);
     

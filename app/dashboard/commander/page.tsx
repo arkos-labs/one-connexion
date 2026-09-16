@@ -17,27 +17,19 @@ import {
   FileText,
   User
 } from "lucide-react";
-import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { AddressAutocomplete, type AddressMeta } from "@/components/AddressAutocomplete";
 import { createClient } from "@/lib/supabase/client";
-
-const PRICE_GRID: Record<string, Record<string, number>> = {
-  pli:        { flash: 12.50, standard: 8.90, programme: 7.50 },
-  petit:      { flash: 18.00, standard: 14.50, programme: 12.00 },
-  volumineux: { flash: 35.00, standard: 28.00, programme: 24.00 },
-};
-
-function estimatePrice(format: string, delai: string, stopsCount: number) {
-  const base = PRICE_GRID[format]?.[delai] ?? 12.50;
-  return base + stopsCount * 3.50;
-}
+import { detectZone, farthestZone, estimatePrice, ZONE_LABELS, type Zone, type Delai } from "@/lib/pricing";
 
 export default function CommanderPage() {
   const [step, setStep] = useState(1);
   const [format, setFormat] = useState("pli");
-  const [delai, setDelai] = useState("flash");
+  const [delai, setDelai] = useState<Delai>("flash");
 
   const [pickupAddress, setPickupAddress] = useState("");
   const [dropoffAddress, setDropoffAddress] = useState("");
+  const [pickupMeta, setPickupMeta] = useState<AddressMeta | null>(null);
+  const [dropoffMeta, setDropoffMeta] = useState<AddressMeta | null>(null);
   const [isPickupFavOpen, setIsPickupFavOpen] = useState(false);
   const [stops, setStops] = useState<{id: string, address: string, contact_name: string, contact_phone: string, notes: string}[]>([]);
   const [notes, setNotes] = useState("");
@@ -94,7 +86,11 @@ export default function CommanderPage() {
         contact_name: contactName,
         contact_phone: contactPhone,
         status: "en_attente",
-        price_estimate: estimatePrice(format, delai, stops.length),
+        price_estimate: (() => {
+          const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
+          const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
+          return estimatePrice(farthestZone(pZone, dZone), delai, stops.length);
+        })(),
       })
       .select("tracking_code")
       .single();
@@ -217,9 +213,10 @@ export default function CommanderPage() {
                         <Search size={18} strokeWidth={2} />
                       </div>
                       <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
-                        <AddressAutocomplete 
+                        <AddressAutocomplete
                           value={pickupAddress}
                           onChange={setPickupAddress}
+                          onSelect={setPickupMeta}
                           required={true}
                         />
                       </div>
@@ -294,9 +291,10 @@ export default function CommanderPage() {
                         <MapPin size={18} strokeWidth={2} />
                       </div>
                       <div className="[&>div>input]:pl-11 [&>div>input]:py-3.5 [&>div>input]:shadow-sm [&>div>input]:bg-white">
-                        <AddressAutocomplete 
+                        <AddressAutocomplete
                           value={dropoffAddress}
                           onChange={setDropoffAddress}
+                          onSelect={setDropoffMeta}
                           required={true}
                         />
                       </div>
@@ -485,12 +483,22 @@ export default function CommanderPage() {
               
               <div className="flex flex-col items-start gap-1">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Tarif estimé</span>
-                {(() => { const ht = estimatePrice(format, delai, stops.length); const ttc = ht * 1.2; return (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
-                  <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
-                </div>
-                ); })()}
+                {(() => {
+                  const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
+                  const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
+                  const zone = farthestZone(pZone, dZone);
+                  const ht = estimatePrice(zone, delai, stops.length);
+                  const ttc = ht * 1.2;
+                  return (<>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
+                      <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
+                    </div>
+                    {(pickupMeta || dropoffMeta) && (
+                      <span className="text-[10px] text-muted mt-1">{ZONE_LABELS[zone]}</span>
+                    )}
+                  </>);
+                })()}
               </div>
 
               <div className="flex items-center gap-6">
@@ -615,12 +623,22 @@ export default function CommanderPage() {
             <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm sm:flex-row sm:p-8">
               <div className="flex flex-col items-start gap-1">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Montant Final</span>
-                {(() => { const ht = estimatePrice(format, delai, stops.length); const ttc = ht * 1.2; return (
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
-                  <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
-                </div>
-                ); })()}
+                {(() => {
+                  const pZone = pickupMeta ? detectZone(pickupMeta.postcode, pickupMeta.lat, pickupMeta.lon) : "intramuros" as Zone;
+                  const dZone = dropoffMeta ? detectZone(dropoffMeta.postcode, dropoffMeta.lat, dropoffMeta.lon) : "intramuros" as Zone;
+                  const zone = farthestZone(pZone, dZone);
+                  const ht = estimatePrice(zone, delai, stops.length);
+                  const ttc = ht * 1.2;
+                  return (<>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-extrabold text-ink">{ht.toFixed(2).replace('.', ',')} €</span>
+                      <span className="text-sm font-semibold text-muted">HT ({ttc.toFixed(2).replace('.', ',')} € TTC)</span>
+                    </div>
+                    {(pickupMeta || dropoffMeta) && (
+                      <span className="text-[10px] text-muted mt-1">{ZONE_LABELS[zone]}</span>
+                    )}
+                  </>);
+                })()}
               </div>
 
               <div className="flex flex-col items-end gap-3">
