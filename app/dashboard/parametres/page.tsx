@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { User, Building2, CreditCard, Lock, Save, ShieldCheck, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageHeader } from "@/components/dashboard/PageHeader";
-import AddressAutocomplete from "@/components/AddressAutocomplete";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 export default function ParametresPage() {
   const supabase = createClient();

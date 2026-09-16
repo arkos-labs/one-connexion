@@ -18,6 +18,7 @@ import {
   CreditCard
 } from 'lucide-react';
 import { createClient } from "@/lib/supabase/client";
+import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 
 export default function OrderForm() {
   const [step, setStep] = useState(1);
@@ -219,8 +220,7 @@ export default function OrderForm() {
                           Adresse d'enlèvement <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
-                          <input type="text" value={pickupAddress} onChange={(e) => setPickupAddress(e.target.value)} required placeholder="75008 Paris..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" />
-                          <Settings className="absolute right-4 top-4 w-5 h-5 text-gray-400" />
+                          <AddressAutocomplete value={pickupAddress} onChange={setPickupAddress} required placeholder="75008 Paris..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors" />
                         </div>
                         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
                           <Building2 className="w-4 h-4 text-gray-400 shrink-0" />
@@ -236,8 +236,7 @@ export default function OrderForm() {
                           Adresse de livraison <span className="text-[#ed5518]">*</span>
                         </label>
                         <div className="relative mb-3">
-                          <input type="text" value={dropoffAddress} onChange={(e) => setDropoffAddress(e.target.value)} required placeholder="92100 Boulogne..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#ed5518]/20 focus:border-[#ed5518] transition-colors" />
-                          <MapPin className="absolute right-4 top-4 w-5 h-5 text-gray-400" />
+                          <AddressAutocomplete value={dropoffAddress} onChange={setDropoffAddress} required placeholder="92100 Boulogne..." className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#ed5518]/20 focus:border-[#ed5518] transition-colors" />
                         </div>
                         <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-1 focus-within:border-gray-400 focus-within:ring-2 focus-within:ring-gray-100 transition-colors">
                           <User className="w-4 h-4 text-gray-400 shrink-0" />
