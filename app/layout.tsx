@@ -9,6 +9,8 @@ import ClientShell from "@/components/ClientShell";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import OrderModalProvider from "@/components/OrderModalProvider";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 import { SITE_URL } from "@/lib/site-content";
 
 const archivo = Archivo({
@@ -56,6 +58,9 @@ export const metadata: Metadata = {
     icon: "/logo.png",
     apple: "/logo.png",
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+  },
   robots: { index: true, follow: true },
 };
 
@@ -67,10 +72,12 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${archivo.variable} ${ibmPlexMono.variable} ${barlowCondensed.variable}`}>
       <body className="bg-paper text-ink antialiased">
+        <GoogleAnalytics />
         <Header />
         <OrderModalProvider />
         <ClientShell>{children}</ClientShell>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   );
