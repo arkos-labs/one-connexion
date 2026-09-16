@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { User, Building2, CreditCard, Lock, Save, ShieldCheck, Settings } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { PageHeader } from "@/components/dashboard/PageHeader";
+import AddressAutocomplete from "@/components/AddressAutocomplete";
 
 export default function ParametresPage() {
   const supabase = createClient();
@@ -292,12 +293,10 @@ export default function ParametresPage() {
                 </div>
                 <div className="flex flex-col gap-2 sm:col-span-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-ink">Adresse de facturation</label>
-                  <input
-                    type="text"
+                  <AddressAutocomplete
                     value={billingAddress}
-                    onChange={(e) => setBillingAddress(e.target.value)}
+                    onChange={setBillingAddress}
                     placeholder="Adresse complète"
-                    className="w-full rounded-xl border border-line bg-[#FAFAFA] px-4 py-3 text-sm font-semibold text-ink focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                   />
                 </div>
               </div>
