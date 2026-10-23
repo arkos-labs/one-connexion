@@ -23,7 +23,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~30 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Versailles — Cour d'appel, Château, 78000 | ONE CONNEXION",
-    seoDesc: "Coursier express à Versailles (78). Cour d'appel, Tribunal, château. Sur devis Yvelines.",
+    seoDesc: "Coursier moto express à Versailles (78). Cour d'appel, Tribunal, château. Sur devis Yvelines.",
     seoKeywords: ["coursier Versailles", "livraison express 78000", "coursier Cour d'appel Versailles", "coursier 78 Versailles"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~35 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Saint-Germain-en-Laye — Château, Prestige 78100 | ONE CONNEXION",
-    seoDesc: "Coursier express à Saint-Germain-en-Laye (78). Château, cliniques prestige, professions libérales. Sur devis.",
+    seoDesc: "Coursier moto express à Saint-Germain-en-Laye (78). Château, cliniques prestige, professions libérales. Sur devis.",
     seoKeywords: ["coursier Saint-Germain-en-Laye", "livraison express 78100", "coursier 78 Saint-Germain"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~60 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Mantes-la-Jolie — CH, Zone industrielle 78200 | ONE CONNEXION",
-    seoDesc: "Coursier express à Mantes-la-Jolie (78). Hôpital, industriels, PME. Sur devis Yvelines.",
+    seoDesc: "Coursier moto express à Mantes-la-Jolie (78). Hôpital, industriels, PME. Sur devis Yvelines.",
     seoKeywords: ["coursier Mantes-la-Jolie", "livraison express 78200", "coursier 78 Mantes"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~35 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Poissy — Stellantis, Automobile 78300 | ONE CONNEXION",
-    seoDesc: "Coursier express à Poissy (78). Stellantis, industrie automobile. Sur devis Yvelines.",
+    seoDesc: "Coursier moto express à Poissy (78). Stellantis, industrie automobile. Sur devis Yvelines.",
     seoKeywords: ["coursier Poissy", "livraison express 78300", "coursier Stellantis Poissy", "coursier 78 Poissy"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Sartrouville — Livraison express 78500 | ONE CONNEXION",
-    seoDesc: "Coursier express à Sartrouville (78). Industries, PME. Sur devis Yvelines.",
+    seoDesc: "Coursier moto express à Sartrouville (78). Industries, PME. Sur devis Yvelines.",
     seoKeywords: ["coursier Sartrouville", "livraison express 78500", "coursier 78 Sartrouville"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~30 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Guyancourt — Renault Technocentre, SQY 78280 | ONE CONNEXION",
-    seoDesc: "Coursier express à Guyancourt (78). Renault Technocentre, Saint-Quentin-en-Yvelines. Sur devis.",
+    seoDesc: "Coursier moto express à Guyancourt (78). Renault Technocentre, Saint-Quentin-en-Yvelines. Sur devis.",
     seoKeywords: ["coursier Guyancourt", "livraison express 78280", "coursier Renault Technocentre Guyancourt", "coursier SQY"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de Paris 15e",
     pricingZone: "devis",
     seoTitle: "Coursier Vélizy-Villacoublay — Dassault, Thales, Boeing 78140 | ONE CONNEXION",
-    seoDesc: "Coursier express à Vélizy-Villacoublay (78). Dassault, Thales, Boeing, aéronautique. Sur devis.",
+    seoDesc: "Coursier moto express à Vélizy-Villacoublay (78). Dassault, Thales, Boeing, aéronautique. Sur devis.",
     seoKeywords: ["coursier Vélizy-Villacoublay", "livraison express 78140", "coursier Dassault Vélizy", "coursier aéronautique Vélizy"],
   }),
   makeZone({
@@ -191,7 +191,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~25 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Chatou — Île de Chatou, 78400 | ONE CONNEXION",
-    seoDesc: "Coursier express à Chatou (78). PME, professions libérales, événementiel. Sur devis.",
+    seoDesc: "Coursier moto express à Chatou (78). PME, professions libérales, événementiel. Sur devis.",
     seoKeywords: ["coursier Chatou", "livraison express 78400", "coursier 78 Chatou"],
   }),
   makeZone({
@@ -215,7 +215,7 @@ export const ZONES_78: Zone[] = [
     distanceParis: "~20 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Houilles — Livraison express 78800 | ONE CONNEXION",
-    seoDesc: "Coursier express à Houilles (78). PME, professions libérales. Sur devis Yvelines.",
+    seoDesc: "Coursier moto express à Houilles (78). PME, professions libérales. Sur devis Yvelines.",
     seoKeywords: ["coursier Houilles", "livraison express 78800", "coursier 78 Houilles"],
   }),
 ];

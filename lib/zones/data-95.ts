@@ -23,7 +23,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~40 min de Paris",
     pricingZone: "devis",
     seoTitle: "Coursier Cergy — Préfecture 95, Tribunal Pontoise | ONE CONNEXION",
-    seoDesc: "Coursier express à Cergy (95). Préfecture, tribunal, entreprises. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Cergy (95). Préfecture, tribunal, entreprises. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Cergy", "livraison express 95000", "coursier 95 Cergy", "coursier Val-d'Oise"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~20 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Argenteuil — Livraison express 95100 | ONE CONNEXION",
-    seoDesc: "Coursier express à Argenteuil (95). Industries, PME, Seine. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Argenteuil (95). Industries, PME, Seine. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Argenteuil", "livraison express 95100", "coursier 95 Argenteuil"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~25 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Sarcelles — Livraison express 95200 | ONE CONNEXION",
-    seoDesc: "Coursier express à Sarcelles (95). PME, commerces. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Sarcelles (95). PME, commerces. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Sarcelles", "livraison express 95200", "coursier 95 Sarcelles"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Gonesse — Roissy CDG, Zone aéroportuaire 95500 | ONE CONNEXION",
-    seoDesc: "Coursier express à Gonesse (95). Roissy CDG, zone aéroportuaire. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Gonesse (95). Roissy CDG, zone aéroportuaire. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Gonesse", "livraison express 95500", "coursier Roissy Gonesse", "coursier 95 Gonesse"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~20 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Enghien-les-Bains — Casino, Lac, Luxe 95880 | ONE CONNEXION",
-    seoDesc: "Coursier express à Enghien-les-Bains (95). Casino, hôtels luxe, cliniques thermales. Sur devis.",
+    seoDesc: "Coursier moto express à Enghien-les-Bains (95). Casino, hôtels luxe, cliniques thermales. Sur devis.",
     seoKeywords: ["coursier Enghien-les-Bains", "livraison express 95880", "coursier casino Enghien", "coursier 95 Enghien"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~25 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Franconville — Livraison express 95130 | ONE CONNEXION",
-    seoDesc: "Coursier express à Franconville (95). PME, professions libérales. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Franconville (95). PME, professions libérales. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Franconville", "livraison express 95130", "coursier 95 Franconville"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 18e",
     pricingZone: "devis",
     seoTitle: "Coursier Ermont — Livraison express 95120 | ONE CONNEXION",
-    seoDesc: "Coursier express à Ermont (95). PME, professions libérales. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Ermont (95). PME, professions libérales. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Ermont", "livraison express 95120", "coursier 95 Ermont"],
   }),
   makeZone({
@@ -191,7 +191,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Herblay-sur-Seine — Livraison express 95220 | ONE CONNEXION",
-    seoDesc: "Coursier express à Herblay-sur-Seine (95). PME, bords de Seine. Sur devis Val-d'Oise.",
+    seoDesc: "Coursier moto express à Herblay-sur-Seine (95). PME, bords de Seine. Sur devis Val-d'Oise.",
     seoKeywords: ["coursier Herblay-sur-Seine", "livraison express 95220", "coursier 95 Herblay"],
   }),
   makeZone({
@@ -215,7 +215,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~30 min de La Défense",
     pricingZone: "devis",
     seoTitle: "Coursier Maisons-Laffitte — Hippodrome, Château 78600 | ONE CONNEXION",
-    seoDesc: "Coursier express à Maisons-Laffitte (78). Hippodrome, prestige, professions libérales. Sur devis.",
+    seoDesc: "Coursier moto express à Maisons-Laffitte (78). Hippodrome, prestige, professions libérales. Sur devis.",
     seoKeywords: ["coursier Maisons-Laffitte", "livraison express 78600", "coursier hippodrome Maisons-Laffitte"],
   }),
   makeZone({
@@ -239,7 +239,7 @@ export const ZONES_95: Zone[] = [
     distanceParis: "~35 min de Paris 17e",
     pricingZone: "devis",
     seoTitle: "Coursier Conflans-Sainte-Honorine — Port fluvial 78700 | ONE CONNEXION",
-    seoDesc: "Coursier express à Conflans-Sainte-Honorine (78). Port fluvial, PME. Sur devis.",
+    seoDesc: "Coursier moto express à Conflans-Sainte-Honorine (78). Port fluvial, PME. Sur devis.",
     seoKeywords: ["coursier Conflans-Sainte-Honorine", "livraison express 78700", "coursier 78 Conflans"],
   }),
 ];

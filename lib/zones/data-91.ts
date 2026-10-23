@@ -23,7 +23,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~30 min de Paris 13e",
     pricingZone: "devis",
     seoTitle: "Coursier Évry-Courcouronnes — Tribunal, Préfecture 91 | ONE CONNEXION",
-    seoDesc: "Coursier express à Évry-Courcouronnes (91). Tribunal, Préfecture, CHSF. Sur devis pour l'Essonne.",
+    seoDesc: "Coursier moto express à Évry-Courcouronnes (91). Tribunal, Préfecture, CHSF. Sur devis pour l'Essonne.",
     seoKeywords: ["coursier Évry", "livraison express 91000", "coursier tribunal Évry", "coursier 91 Évry"],
   }),
   makeZone({
@@ -47,7 +47,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "devis",
     seoTitle: "Coursier Massy — Thales, CEA Saclay, 91300 | ONE CONNEXION",
-    seoDesc: "Coursier express à Massy (91). Thales, CEA Saclay, plateau scientifique. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Massy (91). Thales, CEA Saclay, plateau scientifique. Sur devis Essonne.",
     seoKeywords: ["coursier Massy", "livraison express 91300", "coursier Thales Massy", "coursier CEA Saclay"],
   }),
   makeZone({
@@ -71,7 +71,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~35 min de Paris 14e",
     pricingZone: "devis",
     seoTitle: "Coursier Palaiseau — École Polytechnique, CEA Saclay 91120 | ONE CONNEXION",
-    seoDesc: "Coursier express à Palaiseau (91). École Polytechnique, CEA, Saclay. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Palaiseau (91). École Polytechnique, CEA, Saclay. Sur devis Essonne.",
     seoKeywords: ["coursier Palaiseau", "livraison express 91120", "coursier Polytechnique Palaiseau", "coursier plateau Saclay"],
   }),
   makeZone({
@@ -95,7 +95,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~40 min de Paris 14e",
     pricingZone: "devis",
     seoTitle: "Coursier Les Ulis — Zone Courtabœuf, High-tech 91940 | ONE CONNEXION",
-    seoDesc: "Coursier express aux Ulis (91). Zone Courtabœuf, biotech, high-tech. Sur devis Essonne.",
+    seoDesc: "Coursier moto express aux Ulis (91). Zone Courtabœuf, biotech, high-tech. Sur devis Essonne.",
     seoKeywords: ["coursier Les Ulis", "livraison express 91940", "coursier Courtabœuf Les Ulis", "coursier 91 Ulis"],
   }),
   makeZone({
@@ -119,7 +119,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~35 min de Paris 14e",
     pricingZone: "devis",
     seoTitle: "Coursier Longjumeau — Zone Silic, 91160 | ONE CONNEXION",
-    seoDesc: "Coursier express à Longjumeau (91). Zone Silic, tech, PME. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Longjumeau (91). Zone Silic, tech, PME. Sur devis Essonne.",
     seoKeywords: ["coursier Longjumeau", "livraison express 91160", "coursier 91 Longjumeau"],
   }),
   makeZone({
@@ -143,7 +143,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~40 min de Paris 13e",
     pricingZone: "devis",
     seoTitle: "Coursier Corbeil-Essonnes — Sanofi, CHSF 91100 | ONE CONNEXION",
-    seoDesc: "Coursier express à Corbeil-Essonnes (91). Sanofi, CHSF, pharma. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Corbeil-Essonnes (91). Sanofi, CHSF, pharma. Sur devis Essonne.",
     seoKeywords: ["coursier Corbeil-Essonnes", "livraison express 91100", "coursier Sanofi Corbeil", "coursier 91 Corbeil"],
   }),
   makeZone({
@@ -167,7 +167,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~40 min de Paris 14e",
     pricingZone: "devis",
     seoTitle: "Coursier Sainte-Geneviève-des-Bois — 91700 | ONE CONNEXION",
-    seoDesc: "Coursier express à Sainte-Geneviève-des-Bois (91). PME, zones d'activités. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Sainte-Geneviève-des-Bois (91). PME, zones d'activités. Sur devis Essonne.",
     seoKeywords: ["coursier Sainte-Geneviève-des-Bois", "livraison express 91700", "coursier 91 Ste-Geneviève"],
   }),
   makeZone({
@@ -191,7 +191,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~35 min de Paris 13e",
     pricingZone: "devis",
     seoTitle: "Coursier Viry-Châtillon — Livraison express 91170 | ONE CONNEXION",
-    seoDesc: "Coursier express à Viry-Châtillon (91). PME, professions libérales. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Viry-Châtillon (91). PME, professions libérales. Sur devis Essonne.",
     seoKeywords: ["coursier Viry-Châtillon", "livraison express 91170", "coursier 91 Viry"],
   }),
   makeZone({
@@ -215,7 +215,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~30 min de Paris 13e",
     pricingZone: "devis",
     seoTitle: "Coursier Juvisy-sur-Orge — Nœud RER, 91260 | ONE CONNEXION",
-    seoDesc: "Coursier express à Juvisy-sur-Orge (91). Gare RER, PME, services. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Juvisy-sur-Orge (91). Gare RER, PME, services. Sur devis Essonne.",
     seoKeywords: ["coursier Juvisy-sur-Orge", "livraison express 91260", "coursier 91 Juvisy"],
   }),
   makeZone({
@@ -239,7 +239,7 @@ export const ZONES_91: Zone[] = [
     distanceParis: "~25 min de Paris 13e",
     pricingZone: "devis",
     seoTitle: "Coursier Athis-Mons — Orly, Aéronautique 91200 | ONE CONNEXION",
-    seoDesc: "Coursier express à Athis-Mons (91). Aéroport Orly, aéronautique. Sur devis Essonne.",
+    seoDesc: "Coursier moto express à Athis-Mons (91). Aéroport Orly, aéronautique. Sur devis Essonne.",
     seoKeywords: ["coursier Athis-Mons", "livraison express 91200", "coursier Orly Athis-Mons", "coursier 91 Athis"],
   }),
 ];

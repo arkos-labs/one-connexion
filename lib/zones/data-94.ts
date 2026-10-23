@@ -22,7 +22,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~10 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Vitry-sur-Seine — MAC VAL, Zone industrielle 94400 | ONE CONNEXION",
-    seoDesc: "Coursier express à Vitry-sur-Seine (94). Zone industrielle, MAC VAL, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Vitry-sur-Seine (94). Zone industrielle, MAC VAL, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Vitry-sur-Seine", "livraison express 94400", "coursier 94 Vitry"],
   }),
   makeZone({
@@ -45,7 +45,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Alfortville — Livraison express 94140 | ONE CONNEXION",
-    seoDesc: "Coursier express à Alfortville (94). PME, commerces, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Alfortville (94). PME, commerces, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Alfortville", "livraison express 94140", "coursier 94 Alfortville"],
   }),
   makeZone({
@@ -68,7 +68,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Maisons-Alfort — ENVA, 94700 | ONE CONNEXION",
-    seoDesc: "Coursier express à Maisons-Alfort (94). ENVA, médical, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Maisons-Alfort (94). ENVA, médical, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Maisons-Alfort", "livraison express 94700", "coursier ENVA Maisons-Alfort"],
   }),
   makeZone({
@@ -91,7 +91,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Charenton-le-Pont — Livraison express 94220 | ONE CONNEXION",
-    seoDesc: "Coursier express à Charenton-le-Pont (94). Limitrophe Paris 12e, PME, services. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Charenton-le-Pont (94). Limitrophe Paris 12e, PME, services. Enlèvement < 45 min.",
     seoKeywords: ["coursier Charenton-le-Pont", "livraison express 94220", "coursier 94 Charenton"],
   }),
   makeZone({
@@ -114,7 +114,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~10 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Maurice — Hôpital National, 94410 | ONE CONNEXION",
-    seoDesc: "Coursier express à Saint-Maurice (94). Hôpital National, transport médical urgent. Enlèvement < 15 min (siège One Connexion).",
+    seoDesc: "Coursier moto express à Saint-Maurice (94). Hôpital National, transport médical urgent. Enlèvement < 15 min (siège One Connexion).",
     seoKeywords: ["coursier Saint-Maurice 94", "livraison express 94410", "coursier hôpital Saint-Maurice"],
   }),
   makeZone({
@@ -137,7 +137,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Joinville-le-Pont — Marne, 94340 | ONE CONNEXION",
-    seoDesc: "Coursier express à Joinville-le-Pont (94). Bords de Marne, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Joinville-le-Pont (94). Bords de Marne, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Joinville-le-Pont", "livraison express 94340", "coursier 94 Joinville"],
   }),
   makeZone({
@@ -160,7 +160,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Nogent-sur-Marne — Livraison express 94130 | ONE CONNEXION",
-    seoDesc: "Coursier express à Nogent-sur-Marne (94). Professions libérales, médical. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Nogent-sur-Marne (94). Professions libérales, médical. Enlèvement < 45 min.",
     seoKeywords: ["coursier Nogent-sur-Marne", "livraison express 94130", "coursier 94 Nogent"],
   }),
   makeZone({
@@ -183,7 +183,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Le Perreux-sur-Marne — 94170 | ONE CONNEXION",
-    seoDesc: "Coursier express au Perreux-sur-Marne (94). PME, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express au Perreux-sur-Marne (94). PME, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Le Perreux-sur-Marne", "livraison express 94170", "coursier 94 Perreux"],
   }),
   makeZone({
@@ -206,7 +206,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Fontenay-sous-Bois — Livraison express 94120 | ONE CONNEXION",
-    seoDesc: "Coursier express à Fontenay-sous-Bois (94). PME, médical, agences. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Fontenay-sous-Bois (94). PME, médical, agences. Enlèvement < 45 min.",
     seoKeywords: ["coursier Fontenay-sous-Bois", "livraison express 94120", "coursier 94 Fontenay"],
   }),
   makeZone({
@@ -229,7 +229,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Maur-des-Fossés — Marne, 94100 | ONE CONNEXION",
-    seoDesc: "Coursier express à Saint-Maur-des-Fossés (94). Professions libérales, médical, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Saint-Maur-des-Fossés (94). Professions libérales, médical, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Saint-Maur-des-Fossés", "livraison express 94100", "coursier 94 Saint-Maur"],
   }),
   makeZone({
@@ -252,7 +252,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Champigny-sur-Marne — Livraison express 94500 | ONE CONNEXION",
-    seoDesc: "Coursier express à Champigny-sur-Marne (94). Industries, PME, commerces. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Champigny-sur-Marne (94). Industries, PME, commerces. Enlèvement < 45 min.",
     seoKeywords: ["coursier Champigny-sur-Marne", "livraison express 94500", "coursier 94 Champigny"],
   }),
   makeZone({
@@ -275,7 +275,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~10 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Villejuif — Institut Gustave-Roussy, Paul-Brousse 94800 | ONE CONNEXION",
-    seoDesc: "Coursier express à Villejuif (94). Institut Gustave-Roussy, Paul-Brousse, transport médical oncologie. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Villejuif (94). Institut Gustave-Roussy, Paul-Brousse, transport médical oncologie. Enlèvement < 45 min.",
     seoKeywords: ["coursier Villejuif", "livraison express 94800", "coursier Gustave-Roussy Villejuif", "coursier médical oncologie 94"],
   }),
   makeZone({
@@ -298,7 +298,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Gentilly — Livraison express 94250 | ONE CONNEXION",
-    seoDesc: "Coursier express à Gentilly (94). Limitrophe Paris 13e, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Gentilly (94). Limitrophe Paris 13e, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Gentilly", "livraison express 94250", "coursier 94 Gentilly"],
   }),
   makeZone({
@@ -321,7 +321,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~5 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Arcueil — Tech & R&D, 94110 | ONE CONNEXION",
-    seoDesc: "Coursier express à Arcueil (94). Tech, R&D, PME. Limitrophe Paris 14e. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Arcueil (94). Tech, R&D, PME. Limitrophe Paris 14e. Enlèvement < 45 min.",
     seoKeywords: ["coursier Arcueil", "livraison express 94110", "coursier 94 Arcueil"],
   }),
   makeZone({
@@ -344,7 +344,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~15 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Cachan — Livraison express 94230 | ONE CONNEXION",
-    seoDesc: "Coursier express à Cachan (94). Tech, PME, formation. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Cachan (94). Tech, PME, formation. Enlèvement < 45 min.",
     seoKeywords: ["coursier Cachan", "livraison express 94230", "coursier 94 Cachan"],
   }),
   makeZone({
@@ -367,7 +367,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Rungis — MIN, Marché International 94150 | ONE CONNEXION",
-    seoDesc: "Coursier express à Rungis (94). MIN, marché international, grossistes. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Rungis (94). MIN, marché international, grossistes. Enlèvement < 45 min.",
     seoKeywords: ["coursier Rungis", "livraison express 94150", "coursier MIN Rungis", "coursier marché Rungis"],
   }),
   makeZone({
@@ -390,7 +390,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Orly — Aéroport Paris-Orly, 94310 | ONE CONNEXION",
-    seoDesc: "Coursier express à Orly (94). Aéroport Paris-Orly, fret, zone aéroportuaire. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Orly (94). Aéroport Paris-Orly, fret, zone aéroportuaire. Enlèvement < 45 min.",
     seoKeywords: ["coursier Orly", "livraison express 94310", "coursier aéroport Orly", "coursier 94 Orly"],
   }),
   makeZone({
@@ -413,7 +413,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Chevilly-Larue — Zone logistique Rungis 94550 | ONE CONNEXION",
-    seoDesc: "Coursier express à Chevilly-Larue (94). Zone Rungis, logistique, distribution. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Chevilly-Larue (94). Zone Rungis, logistique, distribution. Enlèvement < 45 min.",
     seoKeywords: ["coursier Chevilly-Larue", "livraison express 94550", "coursier 94 Chevilly"],
   }),
   makeZone({
@@ -436,7 +436,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~20 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier L'Haÿ-les-Roses — Livraison express 94240 | ONE CONNEXION",
-    seoDesc: "Coursier express à L'Haÿ-les-Roses (94). PME, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à L'Haÿ-les-Roses (94). PME, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier L'Haÿ-les-Roses", "livraison express 94240", "coursier 94 Haÿ-les-Roses"],
   }),
   makeZone({
@@ -459,7 +459,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Fresnes — CHSF, 94260 | ONE CONNEXION",
-    seoDesc: "Coursier express à Fresnes (94). CHSF, médical, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Fresnes (94). CHSF, médical, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Fresnes", "livraison express 94260", "coursier 94 Fresnes"],
   }),
   makeZone({
@@ -482,7 +482,7 @@ export const ZONES_94: Zone[] = [
     distanceParis: "~25 min de Paris 13e",
     pricingZone: "standard",
     seoTitle: "Coursier Thiais — Belle Épine, Rungis 94320 | ONE CONNEXION",
-    seoDesc: "Coursier express à Thiais (94). Belle Épine, Rungis, retail, logistique. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Thiais (94). Belle Épine, Rungis, retail, logistique. Enlèvement < 45 min.",
     seoKeywords: ["coursier Thiais", "livraison express 94320", "coursier Belle Épine Thiais"],
   }),
 ];
