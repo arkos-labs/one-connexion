@@ -36,19 +36,21 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
+  title: "Coursier moto B2B à Paris & Île-de-France | ONE CONNEXION",
   description:
-    "One Connexion opère les livraisons urgentes des cabinets juridiques, laboratoires et e-commerçants d'Île-de-France. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
+    "Coursier moto express pour les entreprises à Paris et en Île-de-France : plis juridiques, laboratoires, e-commerce. Traçabilité complète, interlocuteur unique.",
   keywords: [
     "coursier Paris",
     "livraison express Paris",
     "coursier moto",
+    "coursier moto Paris",
+    "coursier moto express",
     "transport plis confidentiels",
     "transport urgent laboratoire",
     "livraison jour même e-commerce",
   ],
   openGraph: {
-    title: "ONE CONNEXION — Coursier B2B, Paris & Île-de-France",
+    title: "Coursier moto B2B à Paris & Île-de-France | ONE CONNEXION",
     description:
       "Le dernier kilomètre, tenu à l'heure. Flotte deux-roues, traçabilité complète, interlocuteur unique.",
     type: "website",

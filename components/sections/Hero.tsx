@@ -45,6 +45,9 @@ export default function Hero() {
               Transport urgent · Depuis {FOUNDED_YEAR}
             </div>
             <h1 className="mb-4 text-balance text-[clamp(36px,5vw,64px)] font-bold leading-[1.05] tracking-[-0.035em]">
+              <span className="mb-2 block text-[clamp(16px,1.6vw,20px)] font-semibold tracking-[-0.01em] text-white/80">
+                Coursier moto express à Paris &amp; Île-de-France
+              </span>
               Le dernier kilomètre, tenu à l&rsquo;heure depuis {FOUNDED_YEAR}.
             </h1>
             <p className="mb-6 max-w-[56ch] text-pretty text-[16px] leading-[1.6] text-white/66">

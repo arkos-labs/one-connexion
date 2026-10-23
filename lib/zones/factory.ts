@@ -88,9 +88,15 @@ export function makeZone(spec: ZoneSpec): Zone {
     seo: {
       title: spec.seoTitle,
       description: spec.seoDesc,
-      keywords: spec.seoKeywords,
+      keywords: withMotoKeyword(spec.seoKeywords, spec.name),
     },
   };
+}
+
+/** Ajoute « coursier moto <Ville> » en tête des mots-clés s'il manque. */
+function withMotoKeyword(keywords: string[], name: string): string[] {
+  const moto = `coursier moto ${name}`;
+  return keywords.includes(moto) ? keywords : [moto, ...keywords];
 }
 
 function deptLabel(dept: string): string {

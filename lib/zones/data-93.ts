@@ -22,7 +22,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~10 min de Paris 19e",
     pricingZone: "standard",
     seoTitle: "Coursier Aubervilliers — Livraison express 93300 | ONE CONNEXION",
-    seoDesc: "Coursier express à Aubervilliers (93). Grossistes, PME, commerce de gros. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Aubervilliers (93). Grossistes, PME, commerce de gros. Enlèvement < 45 min.",
     seoKeywords: ["coursier Aubervilliers", "livraison express 93300", "coursier 93 Aubervilliers"],
   }),
   makeZone({
@@ -45,7 +45,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~10 min de Paris 19e",
     pricingZone: "standard",
     seoTitle: "Coursier Pantin — Chanel, LVMH, Canal Ourcq 93500 | ONE CONNEXION",
-    seoDesc: "Coursier express à Pantin (93). Chanel, LVMH, mode et luxe. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Pantin (93). Chanel, LVMH, mode et luxe. Enlèvement < 45 min.",
     seoKeywords: ["coursier Pantin", "livraison express 93500", "coursier Chanel Pantin", "coursier luxe Pantin"],
   }),
   makeZone({
@@ -68,7 +68,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~5 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Ouen — Puces, 93400 | ONE CONNEXION",
-    seoDesc: "Coursier express à Saint-Ouen (93). Marché aux Puces, antiquaires, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Saint-Ouen (93). Marché aux Puces, antiquaires, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Saint-Ouen", "livraison express 93400", "coursier Puces Saint-Ouen"],
   }),
   makeZone({
@@ -91,7 +91,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~20 min de Paris 19e",
     pricingZone: "standard",
     seoTitle: "Coursier Bobigny — Tribunal, Préfecture 93, Avicenne | ONE CONNEXION",
-    seoDesc: "Coursier express à Bobigny (93). Tribunal, Préfecture, Hôpital Avicenne. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Bobigny (93). Tribunal, Préfecture, Hôpital Avicenne. Enlèvement < 45 min.",
     seoKeywords: ["coursier Bobigny", "livraison express 93000", "coursier tribunal Bobigny", "coursier 93 Bobigny"],
   }),
   makeZone({
@@ -114,7 +114,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~20 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Drancy — Le Bourget, Zone industrielle 93700 | ONE CONNEXION",
-    seoDesc: "Coursier express à Drancy (93). Zone industrielle, Bourget, logistique. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Drancy (93). Zone industrielle, Bourget, logistique. Enlèvement < 45 min.",
     seoKeywords: ["coursier Drancy", "livraison express 93700", "coursier 93 Drancy"],
   }),
   makeZone({
@@ -137,7 +137,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~25 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Aulnay-sous-Bois — Robert-Ballanger, 93600 | ONE CONNEXION",
-    seoDesc: "Coursier express à Aulnay-sous-Bois (93). Hôpital Robert-Ballanger, zones industrielles. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Aulnay-sous-Bois (93). Hôpital Robert-Ballanger, zones industrielles. Enlèvement < 45 min.",
     seoKeywords: ["coursier Aulnay-sous-Bois", "livraison express 93600", "coursier 93 Aulnay"],
   }),
   makeZone({
@@ -160,7 +160,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~25 min de Paris 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Bondy — Livraison express 93140 | ONE CONNEXION",
-    seoDesc: "Coursier express à Bondy (93). PME, artisans, commerces. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Bondy (93). PME, artisans, commerces. Enlèvement < 45 min.",
     seoKeywords: ["coursier Bondy", "livraison express 93140", "coursier 93 Bondy"],
   }),
   makeZone({
@@ -183,7 +183,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~20 min de Paris 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Rosny-sous-Bois — Rosny 2, 93110 | ONE CONNEXION",
-    seoDesc: "Coursier express à Rosny-sous-Bois (93). Rosny 2, retail, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Rosny-sous-Bois (93). Rosny 2, retail, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Rosny-sous-Bois", "livraison express 93110", "coursier Rosny 2"],
   }),
   makeZone({
@@ -206,7 +206,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~20 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Épinay-sur-Seine — Studios, 93800 | ONE CONNEXION",
-    seoDesc: "Coursier express à Épinay-sur-Seine (93). Studios de cinéma, productions, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Épinay-sur-Seine (93). Studios de cinéma, productions, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Épinay-sur-Seine", "livraison express 93800", "coursier studios Épinay"],
   }),
   makeZone({
@@ -229,7 +229,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~20 min de Paris 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Noisy-le-Sec — Livraison express 93130 | ONE CONNEXION",
-    seoDesc: "Coursier express à Noisy-le-Sec (93). PME, industries, fret. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Noisy-le-Sec (93). PME, industries, fret. Enlèvement < 45 min.",
     seoKeywords: ["coursier Noisy-le-Sec", "livraison express 93130", "coursier 93 Noisy-le-Sec"],
   }),
   makeZone({
@@ -252,7 +252,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~25 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Villepinte — Paris Nord Villepinte, Salons 93420 | ONE CONNEXION",
-    seoDesc: "Coursier express à Villepinte (93). Paris Nord Villepinte, salons professionnels. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Villepinte (93). Paris Nord Villepinte, salons professionnels. Enlèvement < 45 min.",
     seoKeywords: ["coursier Villepinte", "livraison express 93420", "coursier salons Villepinte", "coursier Paris Nord Villepinte"],
   }),
   makeZone({
@@ -275,7 +275,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~30 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Tremblay-en-France — Roissy CDG, Zone aéroportuaire 93 | ONE CONNEXION",
-    seoDesc: "Coursier express à Tremblay-en-France (93). Roissy CDG, zone fret, aéroportuaire. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Tremblay-en-France (93). Roissy CDG, zone fret, aéroportuaire. Enlèvement < 45 min.",
     seoKeywords: ["coursier Tremblay-en-France", "livraison express 93290", "coursier Roissy CDG Tremblay"],
   }),
   makeZone({
@@ -298,7 +298,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~25 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Le Blanc-Mesnil — Zone industrielle 93150 | ONE CONNEXION",
-    seoDesc: "Coursier express au Blanc-Mesnil (93). Industries, PME, logistique. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express au Blanc-Mesnil (93). Industries, PME, logistique. Enlèvement < 45 min.",
     seoKeywords: ["coursier Le Blanc-Mesnil", "livraison express 93150", "coursier 93 Blanc-Mesnil"],
   }),
   makeZone({
@@ -321,7 +321,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~30 min de Paris 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Gagny — Livraison express 93220 | ONE CONNEXION",
-    seoDesc: "Coursier express à Gagny (93). PME, professions libérales, commerces. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Gagny (93). PME, professions libérales, commerces. Enlèvement < 45 min.",
     seoKeywords: ["coursier Gagny", "livraison express 93220", "coursier 93 Gagny"],
   }),
   makeZone({
@@ -344,7 +344,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~25 min de Paris 12e",
     pricingZone: "standard",
     seoTitle: "Coursier Neuilly-sur-Marne — Hôpital Maison-Blanche 93330 | ONE CONNEXION",
-    seoDesc: "Coursier express à Neuilly-sur-Marne (93). Hôpital Maison-Blanche, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Neuilly-sur-Marne (93). Hôpital Maison-Blanche, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Neuilly-sur-Marne", "livraison express 93330", "coursier 93 Neuilly-sur-Marne"],
   }),
   makeZone({
@@ -367,7 +367,7 @@ export const ZONES_93: Zone[] = [
     distanceParis: "~30 min de Paris 20e",
     pricingZone: "standard",
     seoTitle: "Coursier Livry-Gargan — 93190 | ONE CONNEXION",
-    seoDesc: "Coursier express à Livry-Gargan (93). PME, médical, artisans. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Livry-Gargan (93). PME, médical, artisans. Enlèvement < 45 min.",
     seoKeywords: ["coursier Livry-Gargan", "livraison express 93190", "coursier 93 Livry-Gargan"],
   }),
 ];

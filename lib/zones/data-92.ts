@@ -22,7 +22,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Nanterre — La Défense, Tribunal judiciaire 92 | ONE CONNEXION",
-    seoDesc: "Coursier express à Nanterre (92). Tribunal de Nanterre, La Défense, grands groupes. Plis confidentiels, course dédiée. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Nanterre (92). Tribunal de Nanterre, La Défense, grands groupes. Plis confidentiels, course dédiée. Enlèvement < 45 min.",
     seoKeywords: ["coursier Nanterre", "livraison express 92000", "coursier La Défense", "coursier tribunal Nanterre"],
   }),
   makeZone({
@@ -45,7 +45,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Courbevoie — EDF, Schneider Electric, La Défense 92 | ONE CONNEXION",
-    seoDesc: "Coursier express à Courbevoie (92). EDF, Schneider Electric, sièges La Défense. Course dédiée, enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Courbevoie (92). EDF, Schneider Electric, sièges La Défense. Course dédiée, enlèvement < 45 min.",
     seoKeywords: ["coursier Courbevoie", "livraison express 92400", "coursier La Défense Courbevoie"],
   }),
   makeZone({
@@ -68,7 +68,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Puteaux — Grande Arche, CNIT, La Défense 92 | ONE CONNEXION",
-    seoDesc: "Coursier express à Puteaux (92). Grande Arche, CNIT, sièges sociaux. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Puteaux (92). Grande Arche, CNIT, sièges sociaux. Enlèvement < 45 min.",
     seoKeywords: ["coursier Puteaux", "livraison express 92800", "coursier CNIT Puteaux"],
   }),
   makeZone({
@@ -91,7 +91,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Suresnes — Hôpital Foch, 92150 | ONE CONNEXION",
-    seoDesc: "Coursier express à Suresnes (92). Hôpital Foch, PME, transport médical. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Suresnes (92). Hôpital Foch, PME, transport médical. Enlèvement < 45 min.",
     seoKeywords: ["coursier Suresnes", "livraison express 92150", "coursier Hôpital Foch Suresnes"],
   }),
   makeZone({
@@ -114,7 +114,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Rueil-Malmaison — L'Oréal, Pfizer, 92500 | ONE CONNEXION",
-    seoDesc: "Coursier express à Rueil-Malmaison (92). L'Oréal, Pfizer, Suez, grands groupes. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Rueil-Malmaison (92). L'Oréal, Pfizer, Suez, grands groupes. Enlèvement < 45 min.",
     seoKeywords: ["coursier Rueil-Malmaison", "livraison express 92500", "coursier L'Oréal Rueil"],
   }),
   makeZone({
@@ -137,7 +137,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~10 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Asnières-sur-Seine — Livraison express 92600 | ONE CONNEXION",
-    seoDesc: "Coursier express à Asnières-sur-Seine (92). PME, cabinets, médical. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Asnières-sur-Seine (92). PME, cabinets, médical. Enlèvement < 45 min.",
     seoKeywords: ["coursier Asnières-sur-Seine", "livraison express 92600", "coursier 92 Asnières"],
   }),
   makeZone({
@@ -161,7 +161,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~5 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Clichy 92 — Livraison express 92110 | ONE CONNEXION",
-    seoDesc: "Coursier express à Clichy (92110). Industries, PME, L'Oréal. Enlèvement < 45 min. Limitrophe Paris 17e.",
+    seoDesc: "Coursier moto express à Clichy (92110). Industries, PME, L'Oréal. Enlèvement < 45 min. Limitrophe Paris 17e.",
     seoKeywords: ["coursier Clichy 92", "livraison express 92110", "coursier 92 Clichy"],
   }),
   makeZone({
@@ -184,7 +184,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier Colombes — Livraison express 92700 | ONE CONNEXION",
-    seoDesc: "Coursier express à Colombes (92). Entreprises, PME, médical. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Colombes (92). Entreprises, PME, médical. Enlèvement < 45 min.",
     seoKeywords: ["coursier Colombes", "livraison express 92700", "coursier 92 Colombes"],
   }),
   makeZone({
@@ -207,7 +207,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 18e",
     pricingZone: "standard",
     seoTitle: "Coursier Gennevilliers — Port, Zone industrielle 92230 | ONE CONNEXION",
-    seoDesc: "Coursier express à Gennevilliers (92). Port fluvial, industries, zones logistiques. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Gennevilliers (92). Port fluvial, industries, zones logistiques. Enlèvement < 45 min.",
     seoKeywords: ["coursier Gennevilliers", "livraison express 92230", "coursier port Gennevilliers"],
   }),
   makeZone({
@@ -230,7 +230,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~5 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Montrouge — Orange France, 92120 | ONE CONNEXION",
-    seoDesc: "Coursier express à Montrouge (92). Orange France, sièges sociaux, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Montrouge (92). Orange France, sièges sociaux, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Montrouge", "livraison express 92120", "coursier 92 Montrouge"],
   }),
   makeZone({
@@ -253,7 +253,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~5 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Malakoff — Livraison express 92240 | ONE CONNEXION",
-    seoDesc: "Coursier express à Malakoff (92). PME, agences, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Malakoff (92). PME, agences, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Malakoff", "livraison express 92240", "coursier 92 Malakoff"],
   }),
   makeZone({
@@ -276,7 +276,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~5 min de Paris 15e",
     pricingZone: "standard",
     seoTitle: "Coursier Vanves — ESCP, Livraison express 92170 | ONE CONNEXION",
-    seoDesc: "Coursier express à Vanves (92). ESCP Europe, PME, services. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Vanves (92). ESCP Europe, PME, services. Enlèvement < 45 min.",
     seoKeywords: ["coursier Vanves", "livraison express 92170", "coursier 92 Vanves"],
   }),
   makeZone({
@@ -299,7 +299,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 15e",
     pricingZone: "standard",
     seoTitle: "Coursier Clamart — Hôpital Percy, CEA 92140 | ONE CONNEXION",
-    seoDesc: "Coursier express à Clamart (92). Hôpital Percy, CEA, transport médical. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Clamart (92). Hôpital Percy, CEA, transport médical. Enlèvement < 45 min.",
     seoKeywords: ["coursier Clamart", "livraison express 92140", "coursier hôpital Percy Clamart"],
   }),
   makeZone({
@@ -322,7 +322,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~10 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Châtillon — Axa France, 92320 | ONE CONNEXION",
-    seoDesc: "Coursier express à Châtillon (92). Axa France, sièges financiers, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Châtillon (92). Axa France, sièges financiers, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Châtillon 92", "livraison express 92320", "coursier Axa France Châtillon"],
   }),
   makeZone({
@@ -345,7 +345,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Bagneux — Livraison express 92220 | ONE CONNEXION",
-    seoDesc: "Coursier express à Bagneux (92). PME, zones d'activités. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Bagneux (92). PME, zones d'activités. Enlèvement < 45 min.",
     seoKeywords: ["coursier Bagneux", "livraison express 92220", "coursier 92 Bagneux"],
   }),
   makeZone({
@@ -368,7 +368,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Antony — SAFRAN, Hôpital Béclère 92160 | ONE CONNEXION",
-    seoDesc: "Coursier express à Antony (92). SAFRAN, Antoine-Béclère, groupes industriels. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Antony (92). SAFRAN, Antoine-Béclère, groupes industriels. Enlèvement < 45 min.",
     seoKeywords: ["coursier Antony", "livraison express 92160", "coursier 92 Antony"],
   }),
   makeZone({
@@ -391,7 +391,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Meudon — ONERA, Observatoire 92190 | ONE CONNEXION",
-    seoDesc: "Coursier express à Meudon (92). ONERA, recherche aérospatiale, résidentiel prestige. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Meudon (92). ONERA, recherche aérospatiale, résidentiel prestige. Enlèvement < 45 min.",
     seoKeywords: ["coursier Meudon", "livraison express 92190", "coursier ONERA Meudon"],
   }),
   makeZone({
@@ -414,7 +414,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Sèvres — Manufacture nationale, INRIA 92310 | ONE CONNEXION",
-    seoDesc: "Coursier express à Sèvres (92). Manufacture nationale, INRIA, résidentiel prestige. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Sèvres (92). Manufacture nationale, INRIA, résidentiel prestige. Enlèvement < 45 min.",
     seoKeywords: ["coursier Sèvres", "livraison express 92310", "coursier 92 Sèvres"],
   }),
   makeZone({
@@ -437,7 +437,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 16e",
     pricingZone: "standard",
     seoTitle: "Coursier Saint-Cloud — ECP, Hippodrome 92210 | ONE CONNEXION",
-    seoDesc: "Coursier express à Saint-Cloud (92). ECP, hippodrome, résidentiel prestige. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Saint-Cloud (92). ECP, hippodrome, résidentiel prestige. Enlèvement < 45 min.",
     seoKeywords: ["coursier Saint-Cloud", "livraison express 92210", "coursier 92 Saint-Cloud"],
   }),
   makeZone({
@@ -460,7 +460,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Châtenay-Malabry — ECP, Sceaux 92290 | ONE CONNEXION",
-    seoDesc: "Coursier express à Châtenay-Malabry (92). ECP, high-tech, parc de Sceaux. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Châtenay-Malabry (92). ECP, high-tech, parc de Sceaux. Enlèvement < 45 min.",
     seoKeywords: ["coursier Châtenay-Malabry", "livraison express 92290", "coursier 92 Châtenay"],
   }),
   makeZone({
@@ -483,7 +483,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~25 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Sceaux — Parc de Sceaux, 92330 | ONE CONNEXION",
-    seoDesc: "Coursier express à Sceaux (92). Professions libérales, études, cliniques. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Sceaux (92). Professions libérales, études, cliniques. Enlèvement < 45 min.",
     seoKeywords: ["coursier Sceaux", "livraison express 92330", "coursier 92 Sceaux"],
   }),
   makeZone({
@@ -506,7 +506,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Bourg-la-Reine — Livraison express 92340 | ONE CONNEXION",
-    seoDesc: "Coursier express à Bourg-la-Reine (92). PME, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Bourg-la-Reine (92). PME, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Bourg-la-Reine", "livraison express 92340", "coursier 92 Bourg-la-Reine"],
   }),
   makeZone({
@@ -529,7 +529,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Fontenay-aux-Roses — CEA, 92260 | ONE CONNEXION",
-    seoDesc: "Coursier express à Fontenay-aux-Roses (92). CEA, recherche nucléaire, PME. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à Fontenay-aux-Roses (92). CEA, recherche nucléaire, PME. Enlèvement < 45 min.",
     seoKeywords: ["coursier Fontenay-aux-Roses", "livraison express 92260", "coursier CEA Fontenay"],
   }),
   makeZone({
@@ -552,7 +552,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~20 min de Paris 14e",
     pricingZone: "standard",
     seoTitle: "Coursier Le Plessis-Robinson — Livraison express 92350 | ONE CONNEXION",
-    seoDesc: "Coursier express au Plessis-Robinson (92). PME, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express au Plessis-Robinson (92). PME, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier Le Plessis-Robinson", "livraison express 92350", "coursier 92 Plessis-Robinson"],
   }),
   makeZone({
@@ -575,7 +575,7 @@ export const ZONES_92: Zone[] = [
     distanceParis: "~15 min de Paris 17e",
     pricingZone: "standard",
     seoTitle: "Coursier La Garenne-Colombes — Livraison express 92250 | ONE CONNEXION",
-    seoDesc: "Coursier express à La Garenne-Colombes (92). PME, professions libérales. Enlèvement < 45 min.",
+    seoDesc: "Coursier moto express à La Garenne-Colombes (92). PME, professions libérales. Enlèvement < 45 min.",
     seoKeywords: ["coursier La Garenne-Colombes", "livraison express 92250", "coursier 92 La Garenne"],
   }),
 ];
